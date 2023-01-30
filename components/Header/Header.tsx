@@ -42,7 +42,9 @@ export default function Header() {
         </div>
       </section>
       <section className="border-b px-8 py-2">
-        <PlaceNav />
+        <div className='w-max'>
+          <PlaceNav />
+        </div>
       </section>
     </header>
   );
