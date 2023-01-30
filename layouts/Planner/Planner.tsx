@@ -1,9 +1,14 @@
 import Header from '~/components/Header';
 
-export default function Planner() {
+interface PlannerProps {
+  tripId: string | null;
+  placeId: string | null;
+}
+
+export default function Planner({ tripId, placeId }: PlannerProps) {
   return (
     <main className="font-sans">
-      <Header />
+      <Header tripId={tripId} placeId={placeId} />
     </main>
   );
 }

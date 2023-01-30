@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import Link from 'next/link';
 import {
   DndContext,
   closestCorners,
@@ -21,7 +22,7 @@ import {
 import { CSS } from '@dnd-kit/utilities';
 
 export default function LocationNav() {
-  const [places, setPlaces] = useState(['edmonton', 'calgary', 'toronto']);
+  const [places, setPlaces] = useState([{ name: 'edmonton', id: 'lololo' }]);
 
   function handleDragEnd(event: any) {
     const { active, over } = event;
@@ -51,7 +52,7 @@ export default function LocationNav() {
         <div className="flex items-center gap-2">
           <ul className="flex gap-2">
             {places.map((place) => (
-              <SortableItem key={place} id={place} value={place} />
+              <SortableItem key={place.id} id={place.id} value={place.name} />
             ))}
           </ul>
           <span className="flex h-7 w-7 cursor-pointer items-center justify-center rounded-full text-lg transition-colors duration-150 hover:bg-black/10">
@@ -86,9 +87,14 @@ function SortableItem({ value, id }: { value: string; id: string }) {
       className="grid place-content-center rounded-2xl border"
       {...attributes}
     >
-      <div {...listeners} className="px-3 py-1">
+      <Link
+        passHref={true}
+        href={{ pathname: `/trip/sadsd/plan`, query: { placeId: id } }}
+        {...listeners}
+        className="px-3 py-1"
+      >
         {value}
-      </div>
+      </Link>
     </li>
   );
 }

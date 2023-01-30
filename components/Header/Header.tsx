@@ -1,6 +1,11 @@
 import PlaceNav from '../PlaceNav/PlaceNav';
 
-export default function Header() {
+interface HeaderProps {
+  tripId: string | null;
+  placeId: string | null;
+}
+
+export default function Header({ tripId, placeId }: HeaderProps) {
   const navs = [
     {
       name: 'planner',
@@ -42,7 +47,7 @@ export default function Header() {
         </div>
       </section>
       <section className="border-b px-8 py-2">
-        <div className='w-max'>
+        <div className="w-max">
           <PlaceNav />
         </div>
       </section>
