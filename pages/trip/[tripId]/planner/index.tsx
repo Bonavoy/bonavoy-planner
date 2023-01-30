@@ -3,7 +3,7 @@ import Planner from '~/layouts/Planner';
 import type { GetServerSidePropsContext } from 'next';
 
 interface PlanProps {
-  tripId: string | null;
+  tripId: string;
   placeId: string | null;
 }
 

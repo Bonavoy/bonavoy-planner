@@ -1,11 +1,8 @@
+import Link from 'next/link';
+
 import PlaceNav from '../PlaceNav/PlaceNav';
 
-interface HeaderProps {
-  tripId: string | null;
-  placeId: string | null;
-}
-
-export default function Header({ tripId, placeId }: HeaderProps) {
+export default function Header({ tripId }: { tripId: string }) {
   const navs = [
     {
       name: 'planner',
@@ -26,14 +23,16 @@ export default function Header({ tripId, placeId }: HeaderProps) {
           <span className="mr-4 text-xl font-bold">bonavoy</span>
           <ul className="flex items-center gap-2 text-sm">
             {navs.map((nav) => (
-              <li
-                key={nav.name}
-                className={
-                  'flex items-center justify-center gap-1 rounded-full border py-1 px-4'
-                }
-              >
-                {nav.icon}
-                {nav.name}
+              <li key={nav.name}>
+                <Link
+                  href={`/trip/${tripId}/${nav.name}`}
+                  className={
+                    'flex items-center justify-center gap-1 rounded-full border py-1 px-4'
+                  }
+                >
+                  {nav.icon}
+                  {nav.name}
+                </Link>
               </li>
             ))}
           </ul>
@@ -48,7 +47,7 @@ export default function Header({ tripId, placeId }: HeaderProps) {
       </section>
       <section className="border-b px-8 py-2">
         <div className="w-max">
-          <PlaceNav />
+          <PlaceNav tripId={tripId} />
         </div>
       </section>
     </header>
