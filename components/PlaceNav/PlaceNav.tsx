@@ -6,6 +6,7 @@ import {
   PointerSensor,
   useSensor,
   useSensors,
+  DragEndEvent,
 } from '@dnd-kit/core';
 import {
   arrayMove,
@@ -26,16 +27,16 @@ export default function PlaceNav({ tripId }: { tripId: string }) {
     { name: 'calgary', id: 'lolwtf' },
   ]);
 
-  function handleDragEnd(event: any) {
+  const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
-    if (active.id !== over.id) {
+    if (active.id !== over?.id) {
       setPlaces((places) => {
         const oldIndex = places.findIndex((place) => place.id === active.id);
         const newIndex = places.findIndex((place) => place.id === over?.id);
         return arrayMove(places, oldIndex, newIndex);
       });
     }
-  }
+  };
 
   return (
     <DndContext
@@ -52,11 +53,12 @@ export default function PlaceNav({ tripId }: { tripId: string }) {
     >
       <SortableContext items={places}>
         <div className="flex items-center gap-2">
-          <ul className="flex gap-2">
-            {places.map((place) => (
+          <ul className="flex gap-3">
+            {places.map((place, index) => (
               <PlaceNavItem
                 key={place.id}
                 id={place.id}
+                placeIndex={index + 1}
                 tripId={tripId}
                 value={place.name}
               />

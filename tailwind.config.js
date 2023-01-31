@@ -14,9 +14,10 @@ module.exports = {
       darkOrange: '#EA7317',
       white: '#FFFFFF',
       black: '#000000',
+      grayPrimary: '#8E9294',
     },
     fontFamily: {
-      sans: 'Unbounded',
+      sans: 'Mulish',
     },
     extend: {},
   },
