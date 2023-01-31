@@ -34,21 +34,21 @@ export default function PlaceNavItem({
     <li
       style={style}
       ref={setNodeRef}
-      className="relative flex items-center gap-2 rounded-lg border"
+      className="relative flex items-center gap-2 rounded-xl border border-grayPrimary text-grayPrimary shadow-md transition-colors duration-150 hover:text-purple"
       {...attributes}
     >
       <Link
         passHref={true}
-        href={{ pathname: `/trip/${tripId}/planner`, query: { placeId: id } }}
-        className="py-1 pl-4 text-sm"
+        href={{ pathname: `/trips/${tripId}/planner`, query: { placeId: id } }}
+        className="py-1 pl-4 text-sm font-bold "
       >
-        <span className='text-xs pr-1 font-bold'>{placeIndex}.</span>
+        <span className="pr-1 text-xs font-normal">{placeIndex}.</span>
         {value}
       </Link>
       <div
         {...listeners}
         className={clsx(
-          'cursor-grab rounded-r-lg py-1 px-2 hover:bg-black/10',
+          'cursor-grab rounded-r-lg py-1 px-2 hover:bg-grayPrimary/10',
           {
             'cursor-grabbing': isSorting,
           },
@@ -56,7 +56,7 @@ export default function PlaceNavItem({
       >
         <i className="fa-solid fa-grip-dots-vertical" />
       </div>
-      <i className="fa-solid fa-solid fa-circle-xmark absolute -translate-y-1/2 -translate-x-1/2 text-xl" />
+      {/* <i className="fa-solid fa-solid fa-circle-xmark absolute -translate-y-1/2 -translate-x-1/2 text-xl" /> */}
     </li>
   );
 }

@@ -1,6 +1,9 @@
+import Image from 'next/image';
+
+//components
 import Planner from '~/layouts/Planner';
-import PlaceNav from '~/components/PlaceNav';
 import Mapbox from '~/components/Map/Map';
+import PlaceNav from '~/components/PlaceNav';
 
 import type { GetServerSidePropsContext } from 'next';
 
@@ -13,14 +16,41 @@ export default function Plan({ tripId, placeId }: PlanProps) {
   return (
     <main className="h-screen">
       <Planner mode="planner" tripId={tripId} placeId={placeId}>
-        {/* <section className="grid flex-grow grid-cols-2">
-          <div>
-            <div className="w-max">
+        <section className="grid flex-grow grid-cols-2 bg-white">
+          <div className="py-8 px-12">
+            <div className="relative h-56 w-full">
+              <Image
+                className="rounded-xl object-cover object-center"
+                fill={true}
+                alt="idk"
+                loader={() =>
+                  'https://images.unsplash.com/photo-1483728642387-6c3bdd6c93e5?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1476&q=80'
+                }
+                src="wtf"
+                quality={100}
+                priority={true}
+              />
+              <div className="absolute left-1/2 bottom-0 grid h-20 w-5/6 -translate-x-1/2 translate-y-1/2 grid-cols-3 rounded-xl bg-white shadow-md [&>div]:flex [&>div]:flex-col [&>div]:items-center [&>div]:justify-center [&>div]:font-bold">
+                <div>
+                  26 <span>days</span>
+                </div>
+                <div>
+                  900 <span>km</span>
+                </div>
+                <div>
+                  5 <span>stops</span>
+                </div>
+              </div>
+            </div>
+            <div className="pt-16">
               <PlaceNav tripId={tripId} />
+            </div>
+            <div className="relative my-6 w-full cursor-pointer border-b border-b-grayPrimary text-2xl text-grayPrimary transition-colors duration-150 hover:text-purple">
+              <i className="fa-solid fa-circle-chevron-up absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-white" />
             </div>
           </div>
           <Mapbox />
-        </section> */}
+        </section>
       </Planner>
     </main>
   );

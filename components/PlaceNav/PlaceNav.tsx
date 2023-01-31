@@ -25,6 +25,9 @@ export default function PlaceNav({ tripId }: { tripId: string }) {
   const [places, setPlaces] = useState([
     { name: 'edmonton', id: 'lololo' },
     { name: 'calgary', id: 'lolwtf' },
+    { name: 'toronto', id: 'lolwtsf' },
+    { name: 'brampton', id: 'lolwtssf' },
+    { name: 'vancouver', id: 'lolwtsssf' },
   ]);
 
   const handleDragEnd = (event: DragEndEvent) => {
@@ -52,8 +55,14 @@ export default function PlaceNav({ tripId }: { tripId: string }) {
       modifiers={[restrictToHorizontalAxis, restrictToParentElement]}
     >
       <SortableContext items={places}>
-        <div className="flex items-center gap-2">
-          <ul className="flex gap-3">
+        <div className="flex items-center justify-between gap-2">
+          <span className="flex h-7 w-7 cursor-pointer items-center justify-center text-grayPrimary transition-colors duration-150 hover:text-purple">
+            <i className="fa-solid fa-house-chimney" />
+          </span>
+          <span className="flex h-7 w-7 cursor-pointer items-center justify-center text-grayPrimary transition-colors duration-150 hover:text-purple">
+            <i className="fa-regular fa-ellipsis-vertical" />
+          </span>
+          <ul className="flex w-full gap-3 overflow-x-auto">
             {places.map((place, index) => (
               <PlaceNavItem
                 key={place.id}
@@ -64,9 +73,6 @@ export default function PlaceNav({ tripId }: { tripId: string }) {
               />
             ))}
           </ul>
-          <span className="flex h-7 w-7 cursor-pointer items-center justify-center rounded-full text-lg transition-colors duration-150 hover:bg-black/10">
-            <i className="fa-regular fa-ellipsis-vertical" />
-          </span>
         </div>
       </SortableContext>
     </DndContext>
