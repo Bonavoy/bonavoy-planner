@@ -1,3 +1,4 @@
+import clsx from 'clsx';
 import Link from 'next/link';
 
 type HeaderProps = {
@@ -51,20 +52,57 @@ export default function Header({ tripId, mode }: HeaderProps) {
       icon: <i className="fa-regular fa-plane" />,
       //   className: 'border-darkOrange bg-darkOrange/50',
     },
+    {
+      name: 'notes',
+      icon: <i className="fa-regular fa-note" />,
+      //   className: 'border-darkOrange bg-darkOrange/50',
+    },
   ];
 
   return (
-    <header className="flex h-16 items-center justify-between border-b border-grayPrimary px-8">
-      <div className="text-2xl font-black">bonavoy</div>
-      <div className='flex gap-8'>
+    <header className="grid h-16 grid-cols-3 items-center justify-between border-b border-grayPrimary px-8">
+      <div className="flex items-center gap-4">
+        <Link
+          href="/trips"
+          className="text-xl font-bold text-black transition-colors duration-150 hover:text-purple"
+        >
+          <i className="fa-solid fa-angle-left" />
+        </Link>
+        <input
+          type="text"
+          autoComplete="off"
+          className="min-w-full rounded-lg bg-opacity-0 py-2 px-4 text-xl font-bold text-black transition-colors duration-150 hover:bg-grayPrimary/20 focus:outline-none"
+          placeholder="Name your adventure"
+        />
+      </div>
+      <div className="flex justify-center gap-8">
         {navs.map((nav) => (
-          <div className='flex gap-2 items-center text-lg text-grayPrimary'>
+          <Link
+            href={`/trips/${tripId}/${nav.name}`}
+            className={clsx('flex items-center gap-2 text-lg', {
+              'text-purple': nav.name === mode,
+              'text-grayPrimary': nav.name !== mode,
+            })}
+          >
             {nav.icon}
             {nav.name}
-          </div>
+          </Link>
         ))}
       </div>
-      <div></div>
+      <div className="flex items-center justify-end gap-5">
+        <i className="fa-regular fa-solid fa-circle-user text-purple text-3xl" />
+        <button
+          title="invite friends"
+          type="button"
+          className="hover:text-white flex items-center gap-2 rounded-lg border-2 border-purple py-2 px-4 text-sm text-purple transition-colors duration-150 hover:bg-purple"
+        >
+          <i className="fa-solid fa-user-plus" />
+          invite people
+        </button>
+        <button type="button">
+          <i className="fa-regular fa-gear text-xl text-black transition-colors duration-150 hover:text-purple" />
+        </button>
+      </div>
     </header>
   );
 }

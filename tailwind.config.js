@@ -10,14 +10,12 @@ module.exports = {
       center: true,
     },
     colors: {
-      lightBlue: '#2364AA',
-      darkOrange: '#EA7317',
-      white: '#FFFFFF',
-      black: '#000000',
+      black: '#0A0521',
+      purple: '#5843BE',
       grayPrimary: '#8E9294',
     },
     fontFamily: {
-      sans: 'Mulish',
+      sans: 'Unbounded',
     },
     extend: {},
   },
