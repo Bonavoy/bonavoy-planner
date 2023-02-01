@@ -28,6 +28,7 @@ export default function PlaceNav({ tripId }: { tripId: string }) {
     { name: 'toronto', id: 'lolwtsf' },
     { name: 'brampton', id: 'lolwtssf' },
     { name: 'vancouver', id: 'lolwtsssf' },
+    { name: 'tokoyo', id: 'lolwtsssfs' },
   ]);
 
   const handleDragEnd = (event: DragEndEvent) => {
@@ -62,7 +63,7 @@ export default function PlaceNav({ tripId }: { tripId: string }) {
           <span className="flex h-7 w-7 cursor-pointer items-center justify-center text-grayPrimary transition-colors duration-150 hover:text-purple">
             <i className="fa-solid fa-gear" />
           </span>
-          <ul className="flex w-full gap-3 overflow-x-auto">
+          <ul className="flex w-full gap-3 overflow-x-auto px-1 py-2">
             {places.map((place, index) => (
               <PlaceNavItem
                 key={place.id}
