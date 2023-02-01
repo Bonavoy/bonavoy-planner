@@ -10,8 +10,12 @@
 
 html,
 body {
+  scrollbar-width: thin;
+  scrollbar-color: #0A0521 #8E9294;
+  scroll-behavior: smooth;
   max-width: 100vw;
   overflow-x: hidden;
+  -webkit-font-smoothing: 'antialiased';
 }
 
 a {
@@ -24,3 +28,20 @@ a {
     color-scheme: dark;
   }
 } */
+
+/* Scrollbar Styles */
+
+::-webkit-scrollbar {
+  width: 5px;
+  height: 3px;
+}
+
+::-webkit-scrollbar-track {
+  background: #8E9294;
+
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #0A0521;
+  border: 3px solid #0A0521;
+}

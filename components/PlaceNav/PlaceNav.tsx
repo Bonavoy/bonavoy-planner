@@ -6,9 +6,9 @@ import {
   PointerSensor,
   useSensor,
   useSensors,
+  DragEndEvent,
 } from '@dnd-kit/core';
 import {
-  useSortable,
   arrayMove,
   SortableContext,
   sortableKeyboardCoordinates,
@@ -18,25 +18,33 @@ import {
   restrictToParentElement,
 } from '@dnd-kit/modifiers';
 
-import { CSS } from '@dnd-kit/utilities';
+//components
+import PlaceNavItem from './PlaceNavItem/PlaceNavItem';
 
-export default function LocationNav() {
-  const [places, setPlaces] = useState(['edmonton', 'calgary', 'toronto']);
+export default function PlaceNav({ tripId }: { tripId: string }) {
+  const [places, setPlaces] = useState([
+    { name: 'edmonton', id: 'lololo' },
+    { name: 'calgary', id: 'lolwtf' },
+    { name: 'toronto', id: 'lolwtsf' },
+    { name: 'brampton', id: 'lolwtssf' },
+    { name: 'vancouver', id: 'lolwtsssf' },
+    { name: 'tokoyo', id: 'lolwtsssfs' },
+  ]);
 
-  function handleDragEnd(event: any) {
+  const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
-    if (active.id !== over.id) {
+    if (active.id !== over?.id) {
       setPlaces((places) => {
-        const oldIndex = places.indexOf(active.id);
-        const newIndex = places.indexOf(over.id);
-
+        const oldIndex = places.findIndex((place) => place.id === active.id);
+        const newIndex = places.findIndex((place) => place.id === over?.id);
         return arrayMove(places, oldIndex, newIndex);
       });
     }
-  }
+  };
 
   return (
     <DndContext
+      id="PlaceNavDND"
       sensors={useSensors(
         useSensor(PointerSensor),
         useSensor(KeyboardSensor, {
@@ -48,47 +56,26 @@ export default function LocationNav() {
       modifiers={[restrictToHorizontalAxis, restrictToParentElement]}
     >
       <SortableContext items={places}>
-        <div className="flex items-center gap-2">
-          <ul className="flex gap-2">
-            {places.map((place) => (
-              <SortableItem key={place} id={place} value={place} />
+        <div className="flex items-center justify-between gap-2">
+          <span className="flex h-7 w-7 cursor-pointer items-center justify-center text-grayPrimary transition-colors duration-150 hover:text-purple">
+            <i className="fa-solid fa-house-chimney" />
+          </span>
+          <span className="flex h-7 w-7 cursor-pointer items-center justify-center text-grayPrimary transition-colors duration-150 hover:text-purple">
+            <i className="fa-solid fa-gear" />
+          </span>
+          <ul className="flex w-full gap-3 overflow-x-auto px-1 py-2">
+            {places.map((place, index) => (
+              <PlaceNavItem
+                key={place.id}
+                id={place.id}
+                placeIndex={index + 1}
+                tripId={tripId}
+                value={place.name}
+              />
             ))}
           </ul>
-          <span className="flex h-7 w-7 cursor-pointer items-center justify-center rounded-full text-lg transition-colors duration-150 hover:bg-black/10">
-            <i className="fa-regular fa-ellipsis-vertical" />
-          </span>
         </div>
       </SortableContext>
     </DndContext>
-  );
-}
-
-function SortableItem({ value, id }: { value: string; id: string }) {
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-    isSorting,
-  } = useSortable({ id });
-
-  const style = {
-    transform: CSS.Translate.toString(transform),
-    transition,
-    cursor: isSorting ? 'grabbing' : 'pointer',
-  };
-
-  return (
-    <li
-      style={style}
-      ref={setNodeRef}
-      className="grid place-content-center rounded-2xl border"
-      {...attributes}
-    >
-      <div {...listeners} className="px-3 py-1">
-        {value}
-      </div>
-    </li>
   );
 }
