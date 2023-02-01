@@ -60,7 +60,7 @@ export default function PlaceNav({ tripId }: { tripId: string }) {
             <i className="fa-solid fa-house-chimney" />
           </span>
           <span className="flex h-7 w-7 cursor-pointer items-center justify-center text-grayPrimary transition-colors duration-150 hover:text-purple">
-            <i className="fa-regular fa-ellipsis-vertical" />
+            <i className="fa-solid fa-gear" />
           </span>
           <ul className="flex w-full gap-3 overflow-x-auto">
             {places.map((place, index) => (

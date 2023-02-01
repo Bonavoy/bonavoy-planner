@@ -30,15 +30,9 @@ export default function Plan({ tripId, placeId }: PlanProps) {
                 quality={100}
                 priority={true}
               />
-              <div className="absolute left-1/2 bottom-0 grid h-20 w-5/6 -translate-x-1/2 translate-y-1/2 grid-cols-3 rounded-xl bg-white shadow-md [&>div]:flex [&>div]:flex-col [&>div]:items-center [&>div]:justify-center [&>div]:font-bold">
+              <div className="absolute left-1/2 bottom-0 grid h-8 w-5/6 -translate-x-1/2 translate-y-1/2 grid-cols-3 rounded-lg bg-white shadow-md text-grayPrimary px-4">
                 <div>
-                  26 <span>days</span>
-                </div>
-                <div>
-                  900 <span>km</span>
-                </div>
-                <div>
-                  5 <span>stops</span>
+                  <i className="fa-solid fa-calendar" />
                 </div>
               </div>
             </div>
