@@ -25,7 +25,7 @@ export default function Plan({ tripId, placeId }: PlanProps) {
   return (
     <main className="h-screen">
       <Planner mode="planner" tripId={tripId} placeId={placeId}>
-        <section className="grid flex-grow grid-cols-2 bg-white overflow-hidden">
+        <section className="grid flex-grow grid-cols-2 bg-bonavoy_bg overflow-hidden">
           <div className="py-8 px-12 overflow-auto">
             <div className="relative h-56 w-full">
               <Image
@@ -39,7 +39,7 @@ export default function Plan({ tripId, placeId }: PlanProps) {
                 quality={100}
                 priority={true}
               />
-              <div className="absolute left-1/2 bottom-0 grid h-8 w-max -translate-x-1/2 translate-y-1/2 grid-cols-3 rounded-lg bg-white text-base text-black shadow-md [&>button]:flex [&>button]:items-center [&>button]:gap-2 [&>button]:border-grayPrimary [&>button]:px-4 [&>button]:transition-colors [&>button]:duration-150">
+              <div className="absolute left-1/2 bottom-0 grid h-8 w-max -translate-x-1/2 translate-y-1/2 grid-cols-3 rounded-lg bg-bonavoy_bg text-base text-black shadow-md [&>button]:flex [&>button]:items-center [&>button]:gap-2 [&>button]:border-grayPrimary [&>button]:px-4 [&>button]:transition-colors [&>button]:duration-150">
                 <button
                   title="Dates Button"
                   type="button"
@@ -72,7 +72,7 @@ export default function Plan({ tripId, placeId }: PlanProps) {
               <PlaceNav tripId={tripId} />
             </div>
             <div className="relative my-6 w-full cursor-pointer border-b border-b-grayPrimary text-2xl text-grayPrimary transition-colors duration-150 hover:text-purple">
-              <i className="fa-solid fa-circle-chevron-up absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-white" />
+              <i className="fa-solid fa-circle-chevron-up absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-bonavoy_bg" />
             </div>
 
             <div>

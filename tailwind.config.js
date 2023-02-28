@@ -10,9 +10,9 @@ module.exports = {
       center: true,
     },
     colors: {
-      white: '#FFFAFA',
+      bonavoy_bg: '#FFFFFF',
       black: '#0A0521',
-      purple: '#5843BE',
+      purple: '#0d736f',
       grayPrimary: '#8E9294',
     },
     fontFamily: {
