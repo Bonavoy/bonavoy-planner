@@ -10,14 +10,18 @@ module.exports = {
       center: true,
     },
     colors: {
-      bonavoy_bg: '#FFFFFF',
+      primary: '#0d736f',
+      background: '#ffffff',
+      surface: '#ecebec',
+      transparent: 'transparent',
+
       black: '#0A0521',
-      purple: '#0d736f',
+      white: '#FFFFFF',
       grayPrimary: '#8E9294',
       transparent: 'transparent',
     },
     fontFamily: {
-      sans: 'Unbounded',
+      sans: 'Anybody',
     },
     extend: {},
   },

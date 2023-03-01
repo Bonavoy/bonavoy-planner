@@ -34,7 +34,7 @@ export default function PlaceNavItem({
     <li
       style={style}
       ref={setNodeRef}
-      className="relative flex items-center gap-2 rounded-xl border border-grayPrimary text-grayPrimary shadow-md transition-colors duration-150 hover:text-purple"
+      className="relative flex items-center gap-2 rounded-xl border border-grayPrimary text-grayPrimary shadow-md transition-colors duration-150 hover:text-primary"
       {...attributes}
     >
       <Link
