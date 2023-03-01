@@ -25,8 +25,8 @@ export default function Plan({ tripId, placeId }: PlanProps) {
   return (
     <main className="h-screen">
       <Planner mode="planner" tripId={tripId} placeId={placeId}>
-        <section className="bg-bonavoy_bg grid flex-grow grid-cols-2 overflow-hidden">
-          <div className="overflow-auto px-12 py-8">
+        <section className="grid flex-grow grid-cols-2 overflow-hidden bg-background">
+          <div className="overflow-auto px-8 py-8">
             <div className="relative h-56 w-full">
               <Image
                 className="rounded-xl object-cover object-center"
@@ -39,7 +39,7 @@ export default function Plan({ tripId, placeId }: PlanProps) {
                 quality={100}
                 priority={true}
               />
-              <div className="bg-bonavoy_bg absolute bottom-0 left-1/2 grid h-8 w-max -translate-x-1/2 translate-y-1/2 grid-cols-3 rounded-lg text-base text-black shadow-md [&>button]:flex [&>button]:items-center [&>button]:gap-2 [&>button]:border-grayPrimary [&>button]:px-4 [&>button]:transition-colors [&>button]:duration-150">
+              <div className="absolute bottom-0 left-1/2 grid h-8 w-max -translate-x-1/2 translate-y-1/2 grid-cols-3 rounded-lg bg-background text-base text-black shadow-md [&>button]:flex [&>button]:items-center [&>button]:gap-2 [&>button]:border-grayPrimary [&>button]:px-4 [&>button]:transition-colors [&>button]:duration-150">
                 <button
                   title="Dates Button"
                   type="button"
@@ -71,8 +71,8 @@ export default function Plan({ tripId, placeId }: PlanProps) {
             <div className="pt-10">
               <PlaceNav tripId={tripId} />
             </div>
-            <div className="hover:text-purple relative my-6 w-full cursor-pointer border-b border-b-grayPrimary text-2xl text-grayPrimary transition-colors duration-150">
-              <i className="fa-solid fa-circle-chevron-up bg-bonavoy_bg absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2" />
+            <div className="relative my-6 w-full cursor-pointer border-b border-b-grayPrimary text-2xl text-grayPrimary transition-colors duration-150 hover:text-primary">
+              <i className="fa-solid fa-circle-chevron-up absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-background" />
             </div>
 
             <div>
