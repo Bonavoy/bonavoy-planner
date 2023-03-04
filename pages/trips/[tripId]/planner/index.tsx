@@ -27,7 +27,7 @@ export default function Plan({ tripId, placeId }: PlanProps) {
       <Planner mode="planner" tripId={tripId} placeId={placeId}>
         <section className="grid flex-grow grid-cols-2 bg-background overflow-hidden">
           <div className="py-8 px-8 overflow-auto">
-            <div className="relative h-56 w-full">
+            <div className="relative h-1/4">
               <Image
                 className="rounded-xl object-cover object-center"
                 fill={true}
