@@ -10,13 +10,17 @@ module.exports = {
       center: true,
     },
     colors: {
-      white: '#FFFAFA',
+      primary: '#0d736f',
+      background: '#ffffff',
+      surface: '#ecebec',
+      transparent: 'transparent',
+
       black: '#0A0521',
-      purple: '#5843BE',
+      white: '#FFFFFF',
       grayPrimary: '#8E9294',
     },
     fontFamily: {
-      sans: 'Unbounded',
+      sans: 'Anybody',
     },
     extend: {},
   },

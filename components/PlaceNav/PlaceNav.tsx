@@ -57,10 +57,10 @@ export default function PlaceNav({ tripId }: { tripId: string }) {
     >
       <SortableContext items={places}>
         <div className="flex items-center justify-between gap-2">
-          <span className="flex h-7 w-7 cursor-pointer items-center justify-center text-grayPrimary transition-colors duration-150 hover:text-purple">
+          <span className="flex h-7 w-7 cursor-pointer items-center justify-center text-grayPrimary transition-colors duration-150 hover:text-primary">
             <i className="fa-solid fa-house-chimney" />
           </span>
-          <span className="flex h-7 w-7 cursor-pointer items-center justify-center text-grayPrimary transition-colors duration-150 hover:text-purple">
+          <span className="flex h-7 w-7 cursor-pointer items-center justify-center text-grayPrimary transition-colors duration-150 hover:text-primary">
             <i className="fa-solid fa-gear" />
           </span>
           <ul className="flex w-full gap-3 overflow-x-auto px-1 py-2">
