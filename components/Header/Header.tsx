@@ -3,7 +3,7 @@ import Link from 'next/link';
 
 type HeaderProps = {
   tripId: string;
-  mode: 'planner' | 'flights';
+  mode: 'planner' | 'transportation';
 };
 
 export default function Header({ tripId, mode }: HeaderProps) {
@@ -14,8 +14,8 @@ export default function Header({ tripId, mode }: HeaderProps) {
       //   className: 'border-lightBlue bg-lightBlue/50',
     },
     {
-      name: 'flights',
-      icon: <i className="fa-solid fa-plane" />,
+      name: 'transportation',
+      icon: <i className="fa-regular fa-plane" />,
       //   className: 'border-darkOrange bg-darkOrange/50',
     },
     {
@@ -35,10 +35,10 @@ export default function Header({ tripId, mode }: HeaderProps) {
           <input
             type="text"
             autoComplete="off"
-            className="w-full rounded-xl bg-transparent py-1 px-4 text-lg font-semibold transition-shadow duration-150 placeholder:font-normal focus:shadow-lg focus:outline-none"
+            className="w-full rounded-xl bg-transparent px-4 py-1 text-lg font-semibold transition-shadow duration-150 placeholder:font-normal focus:shadow-lg focus:outline-none"
             placeholder="Name your adventure"
           />
-          <i className="fa-solid fa-pen absolute top-1/2 right-4 -translate-y-1/2 text-sm text-primary" />
+          <i className="fa-solid fa-pen absolute right-4 top-1/2 -translate-y-1/2 text-sm text-primary" />
         </div>
 
         <div className="flex justify-center rounded-xl bg-surface text-sm">
@@ -63,7 +63,7 @@ export default function Header({ tripId, mode }: HeaderProps) {
         <button
           title="invite friends"
           type="button"
-          className="flex items-center gap-2 rounded-lg border-2 border-primary py-2 px-4 text-sm text-primary transition-colors duration-150 hover:bg-primary hover:text-white"
+          className="flex items-center gap-2 rounded-lg border-2 border-primary px-4 py-2 text-sm text-primary transition-colors duration-150 hover:bg-primary hover:text-white"
         >
           <i className="fa-solid fa-user-plus" />
           invite people
