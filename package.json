@@ -9,18 +9,21 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@dnd-kit/core": "^6.0.7",
+    "@apollo/client": "^3.7.10",
+    "@dnd-kit/core": "^6.0.8",
     "@dnd-kit/modifiers": "^6.0.1",
     "@dnd-kit/sortable": "^7.0.2",
     "clsx": "^1.2.1",
-    "eslint": "8.33.0",
-    "eslint-config-next": "13.1.6",
-    "mapbox-gl": "^2.12.0",
-    "next": "13.1.6",
+    "eslint": "8.35.0",
+    "eslint-config-next": "13.2.1",
+    "graphql": "^16.6.0",
+    "mapbox-gl": "^2.13.0",
+    "next": "13.2.1",
     "react": "18.2.0",
     "react-dom": "18.2.0"
   },
   "devDependencies": {
+    "@types/geojson": "^7946.0.10",
     "@types/mapbox-gl": "^2.7.10",
     "@types/node": "^18.11.18",
     "@types/react": "^18.0.27",
