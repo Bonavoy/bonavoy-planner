@@ -3,7 +3,7 @@ import Link from 'next/link';
 
 type HeaderProps = {
   tripId: string;
-  mode: 'planner' | 'flights';
+  mode: 'planner' | 'transportation';
 };
 
 export default function Header({ tripId, mode }: HeaderProps) {
@@ -14,7 +14,7 @@ export default function Header({ tripId, mode }: HeaderProps) {
       //   className: 'border-lightBlue bg-lightBlue/50',
     },
     {
-      name: 'flights',
+      name: 'transportation',
       icon: <i className="fa-regular fa-plane" />,
       //   className: 'border-darkOrange bg-darkOrange/50',
     },
