@@ -103,9 +103,9 @@ export default function Transportation({
                       <div className="text-sm">Feb 1</div>
                     </div>
                   </div>
-                  <div className="flex items-end gap-4">
+                  <div className="bg-transparent flex items-end gap-4">
                     <textarea
-                      className="relative w-full py-1 text-sm text-grayPrimary outline-none"
+                      className="bg-transparent relative w-full py-1 text-sm text-grayPrimary outline-none"
                       placeholder="notes..."
                       rows={3}
                     />

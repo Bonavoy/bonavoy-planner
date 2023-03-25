@@ -14,6 +14,7 @@ module.exports = {
       black: '#0A0521',
       purple: '#5843BE',
       grayPrimary: '#8E9294',
+      transparent: 'transparent',
     },
     fontFamily: {
       sans: 'Unbounded',
