@@ -27,7 +27,7 @@ export default function Plan({ tripId, placeId }: PlanProps) {
       <Planner mode="planner" tripId={tripId} placeId={placeId}>
         <section className="grid flex-grow grid-cols-2 overflow-hidden bg-background">
           <div className="overflow-auto px-8 py-8">
-            <div className="relative h-56 w-full">
+            <div className="relative h-1/4">
               <Image
                 className="rounded-xl object-cover object-center"
                 fill={true}
@@ -78,7 +78,7 @@ export default function Plan({ tripId, placeId }: PlanProps) {
             <div>
               {places.map((place) => (
                 <div className="py-8" key={place.id}>
-                  <h1 className="text-4xl font-bold text-black">
+                  <h1 className="font-heading text-4xl font-bold text-black">
                     {place.name}
                   </h1>
                   <p>{place.date}</p>

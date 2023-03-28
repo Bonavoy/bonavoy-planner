@@ -18,6 +18,7 @@ const documents = {
     "\n  fragment transportationFull on Transportation {\n    id\n    type\n    departure_location\n    departure_time\n    arrival_location\n    arrival_time\n    details\n  }\n": types.TransportationFullFragmentDoc,
     "\n  fragment tripFull on Trip {\n    id\n    name\n    isPublic\n    authors { \n      ...authorOnTripSnippet\n     }\n    banner\n    startDate\n    endDate\n  }\n": types.TripFullFragmentDoc,
     "\n  fragment userSnippet on User {\n    username\n    avatar\n    id\n  }\n": types.UserSnippetFragmentDoc,
+    "\n  mutation addTransportation($placeId: ID!, $transportation: TransportationInput!) {\n    addTransportation(placeId: $placeId, transportation: $transportation) {\n      id\n    }\n  }\n": types.AddTransportationDocument,
     "\n  mutation getToken {\n    token\n  }\n": types.GetTokenDocument,
     "\n  mutation createUser($userInput: UserInput!) {\n    createUser(userInput: $userInput) {\n      id\n    }\n  }  \n": types.CreateUserDocument,
     "\n  mutation authenticate($username: String!, $password: String!) {\n    authenticate(username: $username, password: $password)\n  }\n": types.AuthenticateDocument,
@@ -59,6 +60,10 @@ export function gql(source: "\n  fragment tripFull on Trip {\n    id\n    name\n
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(source: "\n  fragment userSnippet on User {\n    username\n    avatar\n    id\n  }\n"): (typeof documents)["\n  fragment userSnippet on User {\n    username\n    avatar\n    id\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  mutation addTransportation($placeId: ID!, $transportation: TransportationInput!) {\n    addTransportation(placeId: $placeId, transportation: $transportation) {\n      id\n    }\n  }\n"): (typeof documents)["\n  mutation addTransportation($placeId: ID!, $transportation: TransportationInput!) {\n    addTransportation(placeId: $placeId, transportation: $transportation) {\n      id\n    }\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

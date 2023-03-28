@@ -12,10 +12,10 @@ export interface Location {
 }
 
 interface RouteMapProps {
-  locations: Location[];
+  places: Location[];
 }
 
-export default function RouteMap({ locations }: RouteMapProps) {
+export default function RouteMap({ places }: RouteMapProps) {
   const mapContainer = useRef<null | HTMLDivElement>(null);
   const map = useRef<null | mapboxgl.Map>(null);
 
@@ -33,9 +33,9 @@ export default function RouteMap({ locations }: RouteMapProps) {
     map.current!.on('load', () => {
       const features: Feature[] = [];
 
-      for (let i = 0; i < locations.length - 1; i++) {
-        const src = locations[i];
-        const dest = locations[i + 1];
+      for (let i = 0; i < places.length - 1; i++) {
+        const src = places[i];
+        const dest = places[i + 1];
 
         features.push({
           type: 'Feature',
@@ -75,7 +75,7 @@ export default function RouteMap({ locations }: RouteMapProps) {
         },
       });
     });
-  }, [locations]);
+  }, [places]);
 
   return <div ref={mapContainer} className="map-container h-full w-full" />;
 }

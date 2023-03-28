@@ -1,18 +1,23 @@
-import { TransportationFullFragment } from '~/graphql/generated/graphql';
+import {
+  TransportationFullFragment,
+  TransportationType,
+} from '~/graphql/generated/graphql';
 import DropDownSelect from '../DropDownSelect';
 import { DropDownItem } from '../DropDownSelect/DropDownSelect';
+import { useMutation } from '@apollo/client';
+import { ADD_TRANSPORTATION } from '~/graphql/mutations/transportation';
 
 const transportationOptions: DropDownItem[] = [
   {
-    val: 'Plane',
+    val: 'PLANE',
     view: (
       <div className="flex items-center justify-between gap-2">
-        <span>Place</span> <i className="fa-solid fa-plane"></i>
+        <span>Plane</span> <i className="fa-solid fa-plane"></i>
       </div>
     ),
   },
   {
-    val: 'Car',
+    val: 'CAR',
     view: (
       <div className="flex items-center justify-between gap-2">
         <span>Car</span> <i className="fa-solid fa-car"></i>
@@ -23,44 +28,104 @@ const transportationOptions: DropDownItem[] = [
 
 interface TransportationListProps {
   transportation: TransportationFullFragment[];
+  placeId: string;
 }
 
-const TransportationList = ({ transportation }: TransportationListProps) => {
-  return (
-    <ul>
-      {transportation.map((transport, i) => (
-        <li>
-          <div className="flex items-center justify-between">
-            <div className="grow basis-0 text-left">
-              <div className="font-semibold">
-                {transport.departure_location}
-              </div>
-              <div className="text-sm">Feb 1</div>
-            </div>
-            <DropDownSelect
-              placeholder="transportation"
-              onSelect={(selection: DropDownItem) => console.log(selection)}
-              options={transportationOptions}
-            />
-            <div className="grow basis-0 text-right">
-              <div className="font-semibold">{transport.arrival_location}</div>
-              <div className="text-sm">Feb 1</div>
-            </div>
-          </div>
+const TransportationList = ({
+  transportation,
+  placeId,
+}: TransportationListProps) => {
+  const [addTransportationMutation] = useMutation(ADD_TRANSPORTATION);
 
-          <div className="flex w-full items-end gap-4 bg-transparent">
-            <textarea
-              className="relative w-full rounded-lg bg-transparent p-1 py-1 text-sm text-grayPrimary outline-none hover:bg-grayPrimary/20"
-              placeholder="notes..."
-              rows={3}
-            />
-            <button>
-              <i className="fa-solid fa-paperclip"></i>
-            </button>
+  const addTransportation = () => {
+    addTransportationMutation({
+      variables: {
+        placeId,
+        transportation: {
+          arrival_location: '',
+          departure_location: '',
+          details: '',
+          type: TransportationType.Car,
+        },
+      },
+    });
+  };
+
+  return (
+    <>
+      <ul>
+        {transportation.length ? (
+          transportation.map((transport, i) => (
+            <li className="pb-1" key={i}>
+              <div className="rounded-lg border border-grayPrimary px-4 py-2">
+                <div className="flex items-center justify-between">
+                  <div className="grow basis-0">
+                    <input
+                      placeholder="departure location"
+                      className="transform rounded-md text-left font-semibold outline-none duration-300 ease-in-out focus:bg-surface focus:px-2 focus:shadow-md	"
+                      value={transport.departure_location}
+                    />
+                    <div className="flex items-center justify-start gap-1 py-1 text-sm">
+                      Feb 1
+                      <button>
+                        <i
+                          className="fa fa-calendar cursor"
+                          aria-hidden="true"
+                        ></i>
+                      </button>
+                    </div>
+                  </div>
+                  <DropDownSelect
+                    placeholder="transportation"
+                    onSelect={(selection: DropDownItem) =>
+                      console.log(selection)
+                    }
+                    options={transportationOptions}
+                  />
+                  <div className="grow basis-0 text-right">
+                    <input
+                      placeholder="arrival location"
+                      className="transform-all rounded-md text-right font-semibold outline-none duration-300 ease-in-out focus:bg-surface focus:px-2 focus:text-left focus:shadow-md	"
+                      value={transport.arrival_location}
+                    />
+                    <div className="flex items-center justify-end gap-1 py-1 text-sm">
+                      Feb 1
+                      <button>
+                        <i
+                          className="fa fa-calendar cursor"
+                          aria-hidden="true"
+                        ></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <textarea
+                  className="relative w-full rounded-lg bg-transparent text-sm text-grayPrimary outline-none"
+                  placeholder="details..."
+                  rows={3}
+                />
+                <div className="flex w-full justify-end gap-4 bg-transparent">
+                  <button>
+                    <i className="fa-solid fa-paperclip text-grayPrimary"></i>
+                  </button>
+                </div>
+              </div>
+            </li>
+          ))
+        ) : (
+          <div className="w-full py-4 text-center text-grayPrimary">
+            How exactly are you gonna get between these two places...?
           </div>
-        </li>
-      ))}
-    </ul>
+        )}
+      </ul>
+      <button
+        className="w-full rounded-lg bg-primary py-1 text-sm text-white"
+        onClick={addTransportation}
+      >
+        Add transportation
+      </button>
+    </>
   );
 };
 
