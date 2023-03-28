@@ -2,11 +2,13 @@ import type { GetServerSidePropsContext } from 'next';
 import { useState } from 'react';
 
 import Planner from '~/layouts/Planner';
-import Mapbox from '~/components/Map/Map';
 import DropDownSelect, {
   DropDownItem,
 } from '~/components/DropDownSelect/DropDownSelect';
 import TransportationMap from '~/components/RouteMap/RouteMap';
+import { GET_PLACES } from '~/graphql/queries/place';
+import { useQuery } from '@apollo/client';
+import TransportationList from '~/components/TransportationList/TransportationList';
 
 interface TransportationProps {
   tripId: string;
@@ -17,6 +19,10 @@ export default function Transportation({
   tripId,
   placeId,
 }: TransportationProps) {
+  const { data, error, loading } = useQuery(GET_PLACES, {
+    variables: { tripId },
+  });
+
   const [places] = useState([
     {
       name: 'edmonton',
@@ -55,67 +61,35 @@ export default function Transportation({
     },
   ]);
 
-  const transportationOptions: DropDownItem[] = [
-    {
-      val: 'Plane',
-      view: (
-        <div className="flex items-center justify-between gap-2">
-          <span>Place</span> <i className="fa-solid fa-plane"></i>
-        </div>
-      ),
-    },
-    {
-      val: 'Car',
-      view: (
-        <div className="flex items-center justify-between gap-2">
-          <span>Car</span> <i className="fa-solid fa-car"></i>
-        </div>
-      ),
-    },
-  ];
-
   return (
     <main className="h-screen">
       <Planner mode="transportation" tripId={tripId} placeId={placeId}>
         <section className="grid flex-grow grid-cols-2 overflow-hidden bg-white">
           <div className="overflow-auto py-8 px-12">
-            {places.map((place, i) =>
-              i < places.length - 1 ? (
-                <div className="pb-8">
-                  <div className="flex items-center justify-between">
-                    <div className="grow basis-0 text-left">
-                      <div className="text-2xl font-semibold">
-                        {places[i].name}
+            {data?.places.map((place, i) => {
+              if (i < data?.places.length - 1) {
+                return (
+                  <div className="pb-8" key={i}>
+                    <div className="flex items-center justify-between">
+                      <div className="grow basis-0 text-left">
+                        <div className="text-2xl font-semibold">
+                          {data?.places[i]?.place_name}
+                        </div>
+                        <div className="text-sm">Feb 1</div>
                       </div>
-                      <div className="text-sm">Feb 1</div>
-                    </div>
-                    <DropDownSelect
-                      placeholder="transportation"
-                      onSelect={(selection: DropDownItem) =>
-                        console.log(selection)
-                      }
-                      options={transportationOptions}
-                    />
-                    <div className="grow basis-0 text-right">
-                      <div className="text-2xl font-semibold">
-                        {places[i + 1].name}
+
+                      <div className="grow basis-0 text-right">
+                        <div className="text-2xl font-semibold">
+                          {data?.places[i + 1]?.place_name}
+                        </div>
+                        <div className="text-sm">Feb 1</div>
                       </div>
-                      <div className="text-sm">Feb 1</div>
                     </div>
+                    <TransportationList transportation={place.transportation} />
                   </div>
-                  <div className="bg-transparent flex items-end gap-4">
-                    <textarea
-                      className="bg-transparent relative w-full py-1 text-sm text-grayPrimary outline-none"
-                      placeholder="notes..."
-                      rows={3}
-                    />
-                    <button>
-                      <i className="fa-solid fa-paperclip"></i>
-                    </button>
-                  </div>
-                </div>
-              ) : null,
-            )}
+                );
+              }
+            })}
           </div>
           <TransportationMap locations={places} />
         </section>
