@@ -1,7 +1,8 @@
 import { useState, ReactNode, useEffect } from 'react';
+import { TransportationType } from '~/graphql/generated/graphql';
 
 export interface DropDownItem {
-  val: string;
+  val: TransportationType;
   view: ReactNode;
 }
 
@@ -9,15 +10,19 @@ interface DropDownSelectInterface {
   onSelect: (selection: DropDownItem) => void;
   placeholder: string;
   options: DropDownItem[];
+  defaultValue: DropDownItem;
 }
 
 const DropDownSelect = ({
   onSelect,
   options,
   placeholder,
+  defaultValue,
 }: DropDownSelectInterface) => {
   const [showDropDown, setShowDropDown] = useState(false);
-  const [selectedItem, setSelectedItem] = useState<DropDownItem | null>(null);
+  const [selectedItem, setSelectedItem] = useState<DropDownItem | null>(
+    defaultValue,
+  );
 
   useEffect(() => {}, []);
 
@@ -26,11 +31,11 @@ const DropDownSelect = ({
   return (
     <div
       id="dropDownSelect"
-      className="relative h-min cursor-pointer select-none rounded-lg border border-white text-sm duration-100 hover:border-grayPrimary hover:shadow-md"
+      className="relative h-min cursor-pointer select-none rounded-lg border border-white text-sm duration-100 hover:border-surface hover:shadow-md"
     >
       <div
         onClick={toggleDropdown}
-        className="group relative flex items-center px-2 py-1 text-grayPrimary"
+        className="group relative flex items-center py-1 text-grayPrimary duration-100 hover:px-2"
       >
         {selectedItem ? selectedItem?.view : placeholder}
         <i className="fa-solid fa-caret-down pl-2 text-white duration-100 group-hover:text-black" />
@@ -40,7 +45,7 @@ const DropDownSelect = ({
           <ul className="rounded-lg border border-grayPrimary bg-white shadow-md">
             {options.map((option, i) => (
               <li
-                className="px-2 py-1 hover:bg-grayPrimary/10"
+                className="px-2 py-1 text-grayPrimary hover:bg-grayPrimary/10"
                 key={i}
                 onClick={() => {
                   setSelectedItem(option);

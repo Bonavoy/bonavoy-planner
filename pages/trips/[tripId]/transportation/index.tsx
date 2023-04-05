@@ -50,6 +50,7 @@ export default function Transportation({
                     <TransportationList
                       transportation={place.transportation}
                       placeId={place.id}
+                      tripId={tripId}
                     />
                   </div>
                 );
