@@ -9,9 +9,14 @@ interface LocationSearchProps {
     location: string,
     coords?: { lat: number; lng: number },
   ) => void;
+  placeholder: string;
 }
 
-const LocationSearch = ({ value, updateLocation }: LocationSearchProps) => {
+const LocationSearch = ({
+  value,
+  updateLocation,
+  placeholder,
+}: LocationSearchProps) => {
   const [location, setLocation] = useState(value);
   const [focused, setFocused] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -27,7 +32,7 @@ const LocationSearch = ({ value, updateLocation }: LocationSearchProps) => {
   return (
     <div className="relative grow">
       <input
-        placeholder="departure location"
+        placeholder={placeholder}
         className="relative w-full rounded-md bg-surface text-left text-sm outline-none"
         onChange={(e) => setLocation(e.target.value)}
         onFocus={() => {

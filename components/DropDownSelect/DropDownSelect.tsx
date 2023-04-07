@@ -31,14 +31,13 @@ const DropDownSelect = ({
   return (
     <div
       id="dropDownSelect"
-      className="relative h-min cursor-pointer select-none rounded-lg border border-white text-sm duration-100 hover:border-surface hover:shadow-md"
+      className="group relative flex h-8 w-8 cursor-pointer select-none items-center justify-center rounded-full bg-surface duration-100 hover:border-surface  hover:bg-primary hover:shadow-md"
     >
       <div
         onClick={toggleDropdown}
-        className="group relative flex items-center py-1 text-grayPrimary duration-100 hover:px-2"
+        className="relative flex items-center py-1 text-grayPrimary duration-100 group-hover:text-white "
       >
         {selectedItem ? selectedItem?.view : placeholder}
-        <i className="fa-solid fa-caret-down pl-2 text-white duration-100 group-hover:text-black" />
       </div>
       {showDropDown ? (
         <div className="absolute z-10 w-fit pt-1">
