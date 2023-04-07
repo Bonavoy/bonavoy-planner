@@ -1,14 +1,13 @@
-import { isAfter, isBefore, isSameDay } from 'date-fns';
+import { isAfter, isBefore, isSameDay, isToday } from 'date-fns';
 import clsx from 'clsx';
 
 //utils
 import { WEEKDAYS } from '~/constants/date';
-import { formatDate } from '../../../bonavoy-plannerOLD/utils/date';
+import { formatDate } from '~/utils/date';
 
 interface CalendarProps {
   today: Date;
   daysOfMonth: (Date | null)[];
-  dateRange: { startDate: Date | null; endDate: Date | null; colour: string };
   dateOnClickHandler: (date: Date) => void;
   onHoverHandler: (date: Date) => void;
 }
@@ -16,7 +15,6 @@ interface CalendarProps {
 export default function Calendar({
   today,
   daysOfMonth,
-  dateRange,
   dateOnClickHandler,
   onHoverHandler,
 }: CalendarProps) {
@@ -76,13 +74,14 @@ export default function Calendar({
           //   ? categorizeDateColor(date)
           //   : {};
 
+          const isTodayDate = isToday(date);
           const isBeforeToday = isBefore(date, today);
-          const isStartOrEnd =
-            isSameDay(dateRange.startDate as Date, date) ||
-            isSameDay(dateRange.endDate as Date, date);
-          const isBetweenStartAndEnd =
-            isAfter(date, dateRange.startDate as Date) &&
-            isBefore(date, dateRange.endDate as Date);
+          // const isStartOrEnd =
+          //   isSameDay(dateRange.startDate as Date, date) ||
+          //   isSameDay(dateRange.endDate as Date, date);
+          // const isBetweenStartAndEnd =
+          //   isAfter(date, dateRange.startDate as Date) &&
+          //   isBefore(date, dateRange.endDate as Date);
 
           return (
             <div
@@ -91,18 +90,20 @@ export default function Calendar({
               onPointerEnter={() => onHoverHandler(date)}
               style={{
                 background: clsx({
-                  [`${dateRange.colour}` + 30]: isBetweenStartAndEnd,
-                  [`${dateRange.colour}`]: isStartOrEnd,
+                  // [`${dateRange.colour}` + 30]: isBetweenStartAndEnd,
+                  // [`${dateRange.colour}`]: isStartOrEnd,
                 }),
 
                 // ...otherPlacesStyles,
               }}
               className={clsx(
-                'relative flex h-10 w-full cursor-pointer items-center justify-center text-center',
+                'relative flex h-10 w-10 cursor-pointer items-center justify-center rounded-full text-center duration-100 hover:bg-grayTertiary hover:text-white',
                 {
-                  'text-disabled pointer-events-none': isBeforeToday,
-                  'before:bg-inherit rounded-full bg-gradient-to-r from-black to-black font-semibold text-white before:absolute before:h-full before:w-full before:opacity-20':
-                    isStartOrEnd,
+                  'bg-primary text-white': isTodayDate,
+                  'text-disabled pointer-events-none text-grayPrimary':
+                    isBeforeToday,
+                  // 'before:bg-inherit rounded-full bg-gradient-to-r from-black to-black font-semibold text-white before:absolute before:h-full before:w-full before:opacity-20':
+                  // isStartOrEnd,
                 },
               )}
             >

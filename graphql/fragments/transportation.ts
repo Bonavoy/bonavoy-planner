@@ -9,5 +9,13 @@ export const TRANSPORTATION_FULL = gql(`
     arrival_location
     arrival_time
     details
+    departureCoords {
+      lat
+      lng
+    }
+    arrivalCoords {
+      lat
+      lng
+    }
   }
 `);

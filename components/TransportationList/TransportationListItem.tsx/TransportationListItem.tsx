@@ -1,13 +1,17 @@
+import { useState } from 'react';
+import { useMutation } from '@apollo/client';
+import { format } from 'date-fns';
+
 import {
   TransportationFullFragment,
   TransportationType,
 } from '~/graphql/generated/graphql';
-import { useState } from 'react';
 import DropDownSelect from '~/components/DropDownSelect';
 import type { DropDownItem } from '~/components/DropDownSelect';
-import { useMutation } from '@apollo/client';
 import { UPDATE_TRANSPORTATION } from '~/graphql/mutations/transportation';
 import LocationSearch from '../LocationSearch';
+import Datepicker from '~/components/Datepicker/Datepicker';
+import Modal from '~/components/Modal/Modal';
 
 const transportationOptions: DropDownItem[] = [
   {
@@ -35,6 +39,14 @@ interface UpdateTransportationInput {
   departure_time?: Date;
   details?: string;
   type?: TransportationType;
+  arrivalCoords?: {
+    lng: number;
+    lat: number;
+  };
+  departureCoords?: {
+    lng: number;
+    lat: number;
+  };
 }
 
 interface TransportationListItemProps {
@@ -46,6 +58,8 @@ const TransportationListItem = ({
   transportationId,
   transport,
 }: TransportationListItemProps) => {
+  const [showDepartureDatePicker, setShowDepartureDatePicker] = useState(false);
+  const [showArrivalDatepicker, setShowArrivalDatepicker] = useState(false);
   const [departureLocation, setDepartureLocation] = useState(
     transport.departure_location,
   );
@@ -65,9 +79,12 @@ const TransportationListItem = ({
     });
   };
 
+  const formatDatetime = (date?: string): string =>
+    date ? format(new Date(date), 'MMM d h:mm a') : '';
+
   return (
     <div className="pb-2">
-      <div className="transform cursor-pointer rounded-xl border border-grayTertiary px-4 py-2 duration-200 hover:shadow-lg">
+      <div className="cursor-pointer rounded-xl border border-grayTertiary bg-white px-4 py-2 duration-200 hover:shadow-lg">
         <div className="w-fit pb-1">
           <DropDownSelect
             placeholder="travel options"
@@ -84,36 +101,102 @@ const TransportationListItem = ({
         </div>
 
         <div className="pb-1">
-          <div className="flex items-center gap-2 rounded-lg border border-grayTertiary px-2">
+          <div className="flex items-center gap-2 rounded-lg bg-surface px-2">
             <LocationSearch
               value={departureLocation}
-              updateLocation={(location) =>
-                updateTransportation({ departure_location: location })
+              updateLocation={(location, coords) =>
+                updateTransportation({
+                  departure_location: location,
+                  departureCoords: coords,
+                })
               }
             />
-            <div className="flex items-center justify-start gap-1 py-1 text-sm">
-              Feb 1
-              <button>
-                <i className="fa fa-calendar cursor" aria-hidden="true"></i>
-              </button>
-            </div>
+            <button
+              className="flex items-center justify-end gap-1 py-1 text-sm duration-150 hover:text-grayPrimary"
+              onClick={() => {
+                setShowDepartureDatePicker(true);
+              }}
+            >
+              <span>{formatDatetime(transport.departure_time)}</span>
+              <i className="fa fa-calendar cursor" aria-hidden="true"></i>
+            </button>
+
+            {showDepartureDatePicker && (
+              <Modal>
+                {/* modal bg */}
+                <div className="fixed bottom-0 left-0 right-0 top-0 flex justify-center bg-black bg-opacity-70">
+                  {/* content */}
+                  <div className="pt-24">
+                    <div className="flex justify-end rounded-t-xl bg-white">
+                      <button
+                        className="right-0 p-3"
+                        onClick={() => setShowDepartureDatePicker(false)}
+                      >
+                        close
+                      </button>
+                    </div>
+                    <div className="rounded-b-xl bg-white px-3 pb-3">
+                      <Datepicker
+                        onSelect={(date) => {
+                          updateTransportation({ departure_time: date });
+                          setShowDepartureDatePicker(false);
+                        }}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </Modal>
+            )}
           </div>
         </div>
 
         <div className="pb-1">
-          <div className="flex items-center gap-2 rounded-lg border border-grayTertiary px-2">
+          <div className="flex items-center gap-2 rounded-lg bg-surface px-2">
             <LocationSearch
               value={arrivalLocation}
-              updateLocation={(location) =>
-                updateTransportation({ arrival_location: location })
+              updateLocation={(location, coords) =>
+                updateTransportation({
+                  arrival_location: location,
+                  arrivalCoords: coords,
+                })
               }
             />
-            <div className="flex items-center justify-end gap-1 py-1 text-sm">
-              Feb 1
-              <button>
-                <i className="fa fa-calendar cursor" aria-hidden="true"></i>
-              </button>
-            </div>
+            <button
+              className="flex items-center justify-end gap-1 py-1 text-sm duration-150 hover:text-grayPrimary"
+              onClick={() => {
+                setShowArrivalDatepicker(true);
+              }}
+            >
+              <span>{formatDatetime(transport.arrival_time)}</span>
+              <i className="fa fa-calendar cursor" aria-hidden="true"></i>
+            </button>
+
+            {showArrivalDatepicker && (
+              <Modal>
+                {/* modal bg */}
+                <div className="fixed bottom-0 left-0 right-0 top-0 flex justify-center bg-black bg-opacity-70">
+                  {/* content */}
+                  <div className="pt-24">
+                    <div className="flex justify-end rounded-t-xl bg-white">
+                      <button
+                        className="right-0 p-3"
+                        onClick={() => setShowArrivalDatepicker(false)}
+                      >
+                        close
+                      </button>
+                    </div>
+                    <div className="rounded-b-xl bg-white px-3 pb-3">
+                      <Datepicker
+                        onSelect={(date) => {
+                          updateTransportation({ arrival_time: date });
+                          setShowArrivalDatepicker(false);
+                        }}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </Modal>
+            )}
           </div>
         </div>
 

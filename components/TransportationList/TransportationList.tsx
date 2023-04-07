@@ -76,7 +76,8 @@ const TransportationList = ({
           ))
         ) : (
           <div className="w-full py-4 text-center text-grayPrimary">
-            How exactly are you gonna get between these two places...?
+            I hope you're not walking (add how you're gonna get to the next
+            location here)
           </div>
         )}
       </ul>

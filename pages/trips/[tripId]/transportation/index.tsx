@@ -5,6 +5,7 @@ import Planner from '~/layouts/Planner';
 import TransportationMap from '~/components/RouteMap/RouteMap';
 import { GET_PLACES } from '~/graphql/queries/place';
 import TransportationList from '~/components/TransportationList/TransportationList';
+import { useState } from 'react';
 
 interface TransportationProps {
   tripId: string;
@@ -23,41 +24,24 @@ export default function Transportation({
     <main className="h-screen">
       <Planner mode="transportation" tripId={tripId} placeId={placeId}>
         <section className="grid flex-grow grid-cols-2 overflow-hidden bg-white">
-          <div className="overflow-auto py-8 px-12">
-            {getPlacesQuery?.places.map((place, i) => {
-              if (i < getPlacesQuery?.places.length - 1) {
-                return (
-                  <div className="pb-8" key={i}>
-                    <div className="flex items-center justify-between">
-                      <div className="grow basis-0 text-left">
-                        <div className="font-heading text-2xl font-bold">
-                          {getPlacesQuery?.places[i]?.place_name}
-                        </div>
-                        <div className="font-heading text-sm font-medium">
-                          Feb 1
-                        </div>
-                      </div>
-
-                      <div className="grow basis-0 text-right">
-                        <div className="font-heading text-2xl font-bold">
-                          {getPlacesQuery?.places[i + 1]?.place_name}
-                        </div>
-                        <div className="font-heading text-sm font-medium">
-                          Feb 1
-                        </div>
-                      </div>
-                    </div>
-                    <TransportationList
-                      transportation={place.transportation}
-                      placeId={place.id}
-                      tripId={tripId}
-                    />
+          <div className="overflow-auto px-12 py-8">
+            {getPlacesQuery?.places.map((place, i) => (
+              <div className="pb-8" key={i}>
+                <div className="flex items-baseline justify-start gap-2">
+                  <div className="font-heading text-2xl font-bold">
+                    {place.place_name}
                   </div>
-                );
-              }
-            })}
+                  <div className="font-heading text-sm font-medium">Feb 1</div>
+                </div>
+                <TransportationList
+                  transportation={place.transportation}
+                  placeId={place.id}
+                  tripId={tripId}
+                />
+              </div>
+            ))}
           </div>
-          <TransportationMap places={[]} />
+          <TransportationMap places={getPlacesQuery?.places} />
         </section>
       </Planner>
     </main>

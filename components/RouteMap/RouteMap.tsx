@@ -1,6 +1,7 @@
 import { useRef, useEffect } from 'react';
 import mapboxgl from 'mapbox-gl'; // eslint-disable-line import/no-webpack-loader-syntax
 import { Feature } from 'geojson';
+import { Place } from '~/graphql/generated/graphql';
 
 mapboxgl.accessToken =
   'pk.eyJ1IjoibmVpbHpvbiIsImEiOiJja2R5MjNkc3cyNDd5MnVudWVvaXptY3IyIn0.t7H18YFnJnci9cvjd3Q-Tg';
@@ -12,7 +13,7 @@ export interface Location {
 }
 
 interface RouteMapProps {
-  places: Location[];
+  places: Place[];
 }
 
 export default function RouteMap({ places }: RouteMapProps) {
@@ -26,11 +27,12 @@ export default function RouteMap({ places }: RouteMapProps) {
       container: mapContainer.current as HTMLElement,
       style: 'mapbox://styles/mapbox/streets-v12',
     });
-  });
+  }, []);
 
   useEffect(() => {
     if (!map.current) return; // initialize map only once
     map.current!.on('load', () => {
+      if (!places) return;
       const features: Feature[] = [];
 
       for (let i = 0; i < places.length - 1; i++) {
@@ -43,8 +45,8 @@ export default function RouteMap({ places }: RouteMapProps) {
           geometry: {
             type: 'LineString',
             coordinates: [
-              [src.lng, src.lat],
-              [dest.lng, dest.lat],
+              [src.center[0], src.center[1]],
+              [dest.center[0], dest.center[1]],
             ],
           },
         });
