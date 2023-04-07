@@ -25,8 +25,8 @@ export default function Plan({ tripId, placeId }: PlanProps) {
   return (
     <main className="h-screen">
       <Planner mode="planner" tripId={tripId} placeId={placeId}>
-        <section className="grid flex-grow grid-cols-2 bg-background overflow-hidden">
-          <div className="py-8 px-8 overflow-auto">
+        <section className="grid flex-grow grid-cols-2 overflow-hidden bg-background">
+          <div className="overflow-auto px-8 py-8">
             <div className="relative h-1/4">
               <Image
                 className="rounded-xl object-cover object-center"
@@ -39,11 +39,11 @@ export default function Plan({ tripId, placeId }: PlanProps) {
                 quality={100}
                 priority={true}
               />
-              <div className="absolute left-1/2 bottom-0 grid h-8 w-max -translate-x-1/2 translate-y-1/2 grid-cols-3 rounded-lg bg-background text-base text-black shadow-md [&>button]:flex [&>button]:items-center [&>button]:gap-2 [&>button]:border-grayPrimary [&>button]:px-4 [&>button]:transition-colors [&>button]:duration-150">
+              <div className="absolute bottom-0 left-1/2 grid h-8 w-max -translate-x-1/2 translate-y-1/2 grid-cols-3 rounded-lg bg-background text-base text-black shadow-md [&>button]:flex [&>button]:items-center [&>button]:gap-2 [&>button]:border-grayPrimary [&>button]:px-4 [&>button]:transition-colors [&>button]:duration-150">
                 <button
                   title="Dates Button"
                   type="button"
-                  className="gap-2 rounded-l-lg border-l border-t border-b hover:border-primary"
+                  className="gap-2 rounded-l-lg border-b border-l border-t hover:border-primary"
                 >
                   <i className="fa-regular fa-calendar text-sm" />
                   <span className="font-bold">Feb 2 - 15</span>
@@ -61,7 +61,7 @@ export default function Plan({ tripId, placeId }: PlanProps) {
                   disabled={true}
                   title="Distance Button"
                   type="button"
-                  className="justify-end gap-2 rounded-r-lg border-r border-t border-b"
+                  className="justify-end gap-2 rounded-r-lg border-b border-r border-t"
                 >
                   <i className="fa-regular fa-earth-americas text-sm" />
                   <span className="font-bold">1000km</span>
@@ -77,8 +77,8 @@ export default function Plan({ tripId, placeId }: PlanProps) {
 
             <div>
               {places.map((place) => (
-                <div className='py-8' key={place.id}>
-                  <h1 className="text-4xl font-bold text-black">
+                <div className="py-8" key={place.id}>
+                  <h1 className="font-heading text-4xl font-bold text-black">
                     {place.name}
                   </h1>
                   <p>{place.date}</p>
