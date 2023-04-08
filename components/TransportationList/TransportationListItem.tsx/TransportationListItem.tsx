@@ -84,24 +84,23 @@ const TransportationListItem = ({
 
   return (
     <div className="pb-2">
-      <div className="flex cursor-pointer gap-2 rounded-xl border border-grayTertiary bg-white px-2 py-2 duration-200 hover:shadow-lg">
-        <div className="w-fit shrink pb-1">
+      <div className="flex cursor-pointer gap-2 rounded-xl border border-grayTertiary p-3 duration-200 hover:shadow-lg">
+        <div className="flex w-fit flex-col items-center">
           <DropDownSelect
             placeholder="travel options"
             onSelect={(selection: DropDownItem) => {
               updateTransportation({ type: selection.val });
             }}
             options={transportationOptions}
-            defaultValue={
+            value={
               transportationOptions.find(
                 (transportation) => transportation.val === transport.type,
               )!
             }
           />
         </div>
-
         <div className="flex-1">
-          <div className="pb-1">
+          <div className="pb-2">
             <div className="flex items-center gap-2 rounded-lg bg-surface px-2">
               <LocationSearch
                 placeholder="Departure Location"
@@ -152,7 +151,7 @@ const TransportationListItem = ({
             </div>
           </div>
 
-          <div className="pb-1">
+          <div className="pb-2">
             <div className="flex items-center gap-2 rounded-lg bg-surface px-2">
               <LocationSearch
                 placeholder="Arrival Location"
@@ -203,7 +202,7 @@ const TransportationListItem = ({
             </div>
           </div>
 
-          {transport.details.length ? (
+          {transport.details?.length ? (
             <textarea
               className="w-full rounded-lg pb-1 text-sm text-grayPrimary outline-none"
               placeholder="details..."
@@ -217,7 +216,7 @@ const TransportationListItem = ({
               <button className="text-grayPrimary duration-100 hover:text-grayPrimary/50">
                 <i className="fa-solid fa-paperclip "></i>
               </button>
-              {transport.details.length ? (
+              {transport.details?.length ? (
                 <button className="text-xs font-medium text-grayPrimary duration-100 hover:text-grayPrimary/50">
                   remove details
                 </button>
@@ -230,6 +229,33 @@ const TransportationListItem = ({
             <button className="h-6 w-6 rounded-full text-grayPrimary duration-100 hover:bg-surface hover:text-white">
               <i className="fa-solid fa-ellipsis" />
             </button>
+
+            {showDepartureDatePicker && (
+              <Modal>
+                {/* modal bg */}
+                <div className="fixed bottom-0 left-0 right-0 top-0 flex justify-center bg-black bg-opacity-70">
+                  {/* content */}
+                  <div className="pt-24">
+                    <div className="flex justify-end rounded-t-xl bg-white">
+                      <button
+                        className="right-0 p-3"
+                        onClick={() => setShowDepartureDatePicker(false)}
+                      >
+                        close
+                      </button>
+                    </div>
+                    <div className="rounded-b-xl bg-white px-3 pb-3">
+                      <Datepicker
+                        onSelect={(date) => {
+                          updateTransportation({ departure_time: date });
+                          setShowDepartureDatePicker(false);
+                        }}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </Modal>
+            )}
           </div>
         </div>
       </div>

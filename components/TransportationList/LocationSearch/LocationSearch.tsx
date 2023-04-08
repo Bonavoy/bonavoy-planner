@@ -26,8 +26,9 @@ const LocationSearch = ({
   );
 
   useEffect(() => {
+    if (!focused) return;
     getLocationSuggestionsQuery({ variables: { query: location } });
-  }, [location]);
+  }, [location, focused]);
 
   return (
     <div className="relative grow">

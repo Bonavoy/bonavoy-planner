@@ -1,7 +1,13 @@
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import mapboxgl from 'mapbox-gl'; // eslint-disable-line import/no-webpack-loader-syntax
-import { Feature } from 'geojson';
-import { Place } from '~/graphql/generated/graphql';
+import { Feature, Position } from 'geojson';
+import {
+  InputCoords,
+  Place,
+  TransportationType,
+} from '~/graphql/generated/graphql';
+import { useLazyQuery } from '@apollo/client';
+import { GET_ROUTE_SEGMENTS } from '~/graphql/queries/route';
 
 mapboxgl.accessToken =
   'pk.eyJ1IjoibmVpbHpvbiIsImEiOiJja2R5MjNkc3cyNDd5MnVudWVvaXptY3IyIn0.t7H18YFnJnci9cvjd3Q-Tg';
@@ -18,7 +24,9 @@ interface RouteMapProps {
 
 export default function RouteMap({ places }: RouteMapProps) {
   const mapContainer = useRef<null | HTMLDivElement>(null);
+  const [isLoaded, setIsLoaded] = useState(false);
   const map = useRef<null | mapboxgl.Map>(null);
+  const [geRouteSegments] = useLazyQuery(GET_ROUTE_SEGMENTS);
 
   useEffect(() => {
     if (map.current) return; // initialize map only once
@@ -30,43 +38,98 @@ export default function RouteMap({ places }: RouteMapProps) {
   }, []);
 
   useEffect(() => {
-    if (!map.current) return; // initialize map only once
-    map.current!.on('load', () => {
-      if (!places) return;
-      const features: Feature[] = [];
+    if (!map.current) return;
+    drawRouteSegments();
 
-      for (let i = 0; i < places.length - 1; i++) {
-        const src = places[i];
-        const dest = places[i + 1];
+    map.current.on('load', () => {
+      drawRouteSegments();
+      setIsLoaded(true);
+    });
+  }, [places, isLoaded]);
 
+  const drawRouteSegments = async () => {
+    if (!map.current || !isLoaded) return;
+
+    if (!places) return;
+    const features: Feature[] = [];
+
+    let i = 0;
+    const waypointSegments: InputCoords[][] = [];
+    const transportArr = places.flatMap((place) => place.transportation);
+    while (i < transportArr.length) {
+      let transport = transportArr[i];
+      if (
+        !transport.arrivalCoords?.lng ||
+        !transport.arrivalCoords?.lat ||
+        !transport.departureCoords?.lng ||
+        !transport.departureCoords?.lat
+      ) {
+        i++;
+      } else if (transport.type === TransportationType.Plane) {
         features.push({
           type: 'Feature',
           properties: {},
           geometry: {
             type: 'LineString',
             coordinates: [
-              [src.center[0], src.center[1]],
-              [dest.center[0], dest.center[1]],
+              [transport.departureCoords.lng, transport.departureCoords.lat],
+              [transport.arrivalCoords.lng, transport.arrivalCoords.lat],
             ],
           },
         });
+        i++;
+      } else if (transport.type === TransportationType.Car) {
+        const waypointSegment: InputCoords[] = [];
+
+        while (
+          i < transportArr.length &&
+          transportArr[i].type === TransportationType.Car
+        ) {
+          waypointSegment.push({
+            lat: transportArr[i].departureCoords!.lat,
+            lng: transportArr[i].departureCoords!.lng,
+          });
+          i++;
+        }
+
+        if (i - 1 < transportArr.length) {
+          waypointSegment.push({
+            lat: transportArr[i - 1].arrivalCoords!.lat,
+            lng: transportArr[i - 1].arrivalCoords!.lng,
+          });
+        }
+
+        waypointSegments.push(waypointSegment);
       }
+    }
 
-      const route: GeoJSON.FeatureCollection = {
-        type: 'FeatureCollection',
-        features: features,
-      };
+    const routeSegments = await geRouteSegments({
+      variables: { segmentWaypoints: waypointSegments },
+    });
 
-      const routeSource = map.current!.getSource('route');
-      if (!routeSource) {
-        map.current!.addSource('route', {
-          type: 'geojson',
-          data: route,
-        });
-      } else {
-        routeSource.setData(route);
-      }
+    features.push({
+      type: 'Feature',
+      properties: {},
+      geometry: {
+        type: 'MultiLineString',
+        coordinates: routeSegments.data?.routeSegments!,
+      },
+    });
 
+    const route: GeoJSON.FeatureCollection = {
+      type: 'FeatureCollection',
+      features: features,
+    };
+
+    const routeSource = map.current!.getSource(
+      'route',
+    ) as mapboxgl.GeoJSONSource;
+
+    if (!routeSource) {
+      map.current!.addSource('route', {
+        type: 'geojson',
+        data: route,
+      });
       map.current!.addLayer({
         id: 'route',
         source: 'route',
@@ -76,8 +139,10 @@ export default function RouteMap({ places }: RouteMapProps) {
           'line-color': '#5843BE',
         },
       });
-    });
-  }, [places]);
+    } else {
+      routeSource.setData(route);
+    }
+  };
 
   return <div ref={mapContainer} className="map-container h-full w-full" />;
 }

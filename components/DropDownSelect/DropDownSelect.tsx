@@ -10,19 +10,17 @@ interface DropDownSelectInterface {
   onSelect: (selection: DropDownItem) => void;
   placeholder: string;
   options: DropDownItem[];
-  defaultValue: DropDownItem;
+  value: DropDownItem;
 }
 
 const DropDownSelect = ({
   onSelect,
   options,
   placeholder,
-  defaultValue,
+  value,
 }: DropDownSelectInterface) => {
   const [showDropDown, setShowDropDown] = useState(false);
-  const [selectedItem, setSelectedItem] = useState<DropDownItem | null>(
-    defaultValue,
-  );
+  const [selectedItem, setSelectedItem] = useState<DropDownItem>(value);
 
   useEffect(() => {}, []);
 
@@ -35,7 +33,7 @@ const DropDownSelect = ({
     >
       <div
         onClick={toggleDropdown}
-        className="relative flex items-center py-1 text-grayPrimary duration-100 group-hover:text-white "
+        className="relative flex items-center py-1 text-grayPrimary duration-100 group-hover:text-white"
       >
         {selectedItem ? selectedItem?.view : placeholder}
       </div>
