@@ -26,7 +26,7 @@ export default function Header({ tripId, mode }: HeaderProps) {
   ];
 
   return (
-    <header className="flex h-20 items-center justify-between bg-background px-8 shadow-lg">
+    <header className="flex h-20 items-center justify-between bg-background px-8 shadow-lg border-b border-b-grayPrimary/20">
       <div className="flex items-center gap-6">
         <Link href="/trips">
           <i className="fa-solid fa-chevron-left text-lg text-primary" />

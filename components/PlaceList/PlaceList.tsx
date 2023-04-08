@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useId } from 'react';
 import {
   DndContext,
   closestCorners,
@@ -14,21 +14,52 @@ import {
   sortableKeyboardCoordinates,
 } from '@dnd-kit/sortable';
 import {
-  restrictToHorizontalAxis,
   restrictToParentElement,
+  restrictToVerticalAxis,
 } from '@dnd-kit/modifiers';
 
 //components
-import PlaceNavItem from './PlaceNavItem/PlaceNavItem';
+import PlaceNavItem from './PlaceListItem/PlaceListItem';
+import { Place } from '~/graphql/generated/graphql';
 
 export default function PlaceNav({ tripId }: { tripId: string }) {
+  const id = useId();
   const [places, setPlaces] = useState([
-    { name: 'edmonton', id: 'lololo' },
-    { name: 'calgary', id: 'lolwtf' },
-    { name: 'toronto', id: 'lolwtsf' },
-    { name: 'brampton', id: 'lolwtssf' },
-    { name: 'vancouver', id: 'lolwtsssf' },
-    { name: 'tokoyo', id: 'lolwtsssfs' },
+    {
+      place_name: 'edmonton',
+      id: 'lololo',
+      startDate: 'Feb 1',
+      endDate: 'Feb 3',
+      colour: '#ab9df9',
+    },
+    {
+      place_name: 'calgary',
+      id: 'lolwtf',
+      startDate: 'Feb 3',
+      endDate: ' Feb 5',
+      colour: '#AF2B1E',
+    },
+    {
+      place_name: 'toronto',
+      id: 'lolwtsf',
+      startDate: 'Feb 5',
+      endDate: ' Feb 7',
+      colour: '#F39F18',
+    },
+    {
+      place_name: 'brampton',
+      id: 'lolwtssf',
+      startDate: 'Feb 7',
+      endDate: ' Feb 12',
+      colour: '#8F8F8F',
+    },
+    {
+      place_name: 'vancouver',
+      id: 'lolwtsssf',
+      startDate: 'Feb 12',
+      endDate: 'Feb 16',
+      colour: '#2D572C',
+    },
   ]);
 
   const handleDragEnd = (event: DragEndEvent) => {
@@ -44,7 +75,7 @@ export default function PlaceNav({ tripId }: { tripId: string }) {
 
   return (
     <DndContext
-      id="PlaceNavDND"
+      id={id}
       sensors={useSensors(
         useSensor(PointerSensor),
         useSensor(KeyboardSensor, {
@@ -53,24 +84,20 @@ export default function PlaceNav({ tripId }: { tripId: string }) {
       )}
       collisionDetection={closestCorners}
       onDragEnd={handleDragEnd}
-      modifiers={[restrictToHorizontalAxis, restrictToParentElement]}
+      modifiers={[restrictToVerticalAxis, restrictToParentElement]}
     >
       <SortableContext items={places}>
         <div className="flex items-center justify-between gap-2">
-          <span className="flex h-7 w-7 cursor-pointer items-center justify-center text-grayPrimary transition-colors duration-150 hover:text-primary">
-            <i className="fa-solid fa-house-chimney" />
-          </span>
-          <span className="flex h-7 w-7 cursor-pointer items-center justify-center text-grayPrimary transition-colors duration-150 hover:text-primary">
-            <i className="fa-solid fa-gear" />
-          </span>
-          <ul className="flex w-full gap-3 overflow-x-auto px-1 py-2">
+          <ul className="flex w-full flex-col gap-3">
             {places.map((place, index) => (
               <PlaceNavItem
                 key={place.id}
-                id={place.id}
-                placeIndex={index + 1}
                 tripId={tripId}
-                value={place.name}
+                place={
+                  { ...place, index: index + 1 } as unknown as Place & {
+                    index: number;
+                  }
+                }
               />
             ))}
           </ul>
