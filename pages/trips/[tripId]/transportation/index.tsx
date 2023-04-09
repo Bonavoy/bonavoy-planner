@@ -5,7 +5,6 @@ import Planner from '~/layouts/Planner';
 import TransportationMap from '~/components/RouteMap/RouteMap';
 import { GET_PLACES } from '~/graphql/queries/place';
 import TransportationList from '~/components/TransportationList/TransportationList';
-import { useState } from 'react';
 
 interface TransportationProps {
   tripId: string;
@@ -25,21 +24,54 @@ export default function Transportation({
       <Planner mode="transportation" tripId={tripId} placeId={placeId}>
         <section className="grid flex-grow grid-cols-2 overflow-hidden bg-white">
           <div className="overflow-auto px-12 py-8">
-            {getPlacesQuery?.places.map((place, i) => (
-              <div className="pb-8" key={i}>
-                <div className="flex items-baseline justify-start gap-2">
-                  <div className="font-heading text-2xl font-bold">
-                    {place.place_name}
+            {getPlacesQuery?.places.map((place, i) => {
+              if (i < getPlacesQuery?.places.length - 1) {
+                return (
+                  <div className="pb-8" key={i}>
+                    <div className="flex items-center justify-center gap-2 pb-2">
+                      {/* departure place */}
+                      <div className="flex flex-1 justify-center">
+                        <div className="flex flex-col items-center">
+                          <div className="text-xs text-grayTertiary">
+                            Departing from:
+                          </div>
+                          <div className="cursor-pointer font-heading text-2xl font-bold duration-100 hover:underline">
+                            {place.place_name}
+                          </div>
+                          <div className="font-heading text-sm font-medium text-grayPrimary duration-100">
+                            Feb 1
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="shrink text-graySecondary">
+                        <i className="fa-regular fa-arrow-right" />
+                      </div>
+
+                      {/* arrival place */}
+                      <div className="flex flex-1 justify-center">
+                        <div className="flex flex-col items-center">
+                          <div className="text-xs text-grayTertiary">
+                            Arriving at:
+                          </div>
+                          <div className="cursor-pointer font-heading text-2xl font-bold duration-100 hover:underline">
+                            {getPlacesQuery.places[i + 1].place_name}
+                          </div>
+                          <div className="font-heading text-sm font-medium text-grayPrimary duration-100">
+                            Feb 1
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <TransportationList
+                      transportation={place.transportation}
+                      placeId={place.id}
+                      tripId={tripId}
+                    />
                   </div>
-                  <div className="font-heading text-sm font-medium">Feb 1</div>
-                </div>
-                <TransportationList
-                  transportation={place.transportation}
-                  placeId={place.id}
-                  tripId={tripId}
-                />
-              </div>
-            ))}
+                );
+              }
+            })}
           </div>
           <TransportationMap places={getPlacesQuery?.places} />
         </section>
