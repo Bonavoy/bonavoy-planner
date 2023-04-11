@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useMutation } from '@apollo/client';
 import { format } from 'date-fns';
 
@@ -78,6 +78,16 @@ const TransportationListItem = ({
       },
     });
   };
+
+  // react to subscription data
+  useEffect(() => {
+    setArrivalLocation(transport.arrival_location);
+  }, [transport.arrival_location]);
+
+  // react to subscription data
+  useEffect(() => {
+    setDepartureLocation(transport.departure_location);
+  }, [transport.departure_location]);
 
   const formatDatetime = (date?: string): string =>
     date ? format(new Date(date), 'MMM d h:mm a') : '';
