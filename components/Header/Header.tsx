@@ -26,7 +26,7 @@ export default function Header({ tripId, mode }: HeaderProps) {
   ];
 
   return (
-    <header className="flex h-20 items-center justify-between bg-background px-8 shadow-lg border-b border-b-grayPrimary/20">
+    <header className="flex h-20 items-center justify-between border-b border-b-grayPrimary/20 bg-background px-8 shadow-lg">
       <div className="flex items-center gap-6">
         <Link href="/trips">
           <i className="fa-solid fa-chevron-left text-lg text-primary" />
@@ -60,16 +60,16 @@ export default function Header({ tripId, mode }: HeaderProps) {
 
       <div className="flex items-center justify-end gap-5">
         <i className="fa-regular fa-solid fa-circle-user text-3xl text-primary" />
-        <button
+        {/* <button
           title="invite friends"
           type="button"
-          className="flex items-center gap-2 rounded-lg border-2 border-primary px-4 py-2 text-sm text-primary transition-colors duration-150 hover:bg-primary hover:text-white"
+          className="flex items-center gap-2 rounded-xl border-2 border-primary px-4 py-2 text-sm text-primary transition-colors duration-150 hover:bg-primary hover:text-white"
         >
           <i className="fa-solid fa-user-plus" />
           invite people
-        </button>
+        </button> */}
         <button type="button">
-          <i className="fa-regular fa-gear text-xl text-black transition-colors duration-150 hover:text-primary" />
+          <i className="fa-regular fa-gear text-xl text-grayPrimary transition-colors duration-150 hover:text-primary" />
         </button>
       </div>
     </header>

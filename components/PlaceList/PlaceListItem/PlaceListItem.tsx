@@ -37,16 +37,18 @@ export default function PlaceNavItem({ place, tripId }: PlaceNavItemProps) {
       {...attributes}
     >
       <div className="flex justify-between">
-        <div className="relative z-20 px-6 py-8">
-          <div className="flex items-end gap-2 font-heading text-2xl font-bold">
-            <span style={{ color: place.colour }}>{index + 1}.</span>
-            <h1 className="font-heading text-4xl font-bold">
-              {place.place_name}
-            </h1>
+        <div className="relative z-20 px-6 py-8 font-heading">
+          <div className="flex items-end gap-4 text-2xl font-bold">
+            <span className="self-center" style={{ color: place.colour }}>
+              {index + 1}.
+            </span>
+            <div>
+              <h1 className=" text-4xl">{place.place_name}</h1>
+              <p className="text-base font-medium">
+                {place.startDate} - {place.endDate}
+              </p>
+            </div>
           </div>
-          <p>
-            {place.startDate} - {place.endDate}
-          </p>
         </div>
         <div
           {...listeners}

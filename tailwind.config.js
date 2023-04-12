@@ -23,8 +23,7 @@ module.exports = {
       transparent: 'transparent',
     },
     fontFamily: {
-      // sans: 'Anybody',
-      sans: ['Open Sans', 'sans-serif'],
+      sans: ['Rubik', 'sans-serif'],
       heading: ['Montserrat', 'sans-serif'],
     },
     extend: {},
