@@ -254,6 +254,7 @@ export type Query = {
   getLocationSuggestions: Array<LocationSuggestion>;
   place: Place;
   places: Array<Place>;
+  routeSegments: Array<Array<Array<Scalars['Float']>>>;
   transportation: Array<Transportation>;
   trip: Trip;
   trips: TripConnection;
@@ -283,6 +284,11 @@ export type QueryPlaceArgs = {
 
 export type QueryPlacesArgs = {
   tripId: Scalars['ID'];
+};
+
+
+export type QueryRouteSegmentsArgs = {
+  segmentWaypoints: Array<Array<InputCoords>>;
 };
 
 
@@ -502,6 +508,13 @@ export type PlacesQueryVariables = Exact<{
 
 export type PlacesQuery = { __typename?: 'Query', places: Array<{ __typename?: 'Place', id: string, text: string, place_name: string, mapbox_id: string, startDate?: any | null, endDate?: any | null, colour: string, center: Array<number>, transportation: Array<{ __typename?: 'Transportation', id: string, type: TransportationType, departure_location: string, departure_time?: any | null, arrival_location: string, arrival_time?: any | null, details: string, departureCoords?: { __typename?: 'Coords', lat: number, lng: number } | null, arrivalCoords?: { __typename?: 'Coords', lat: number, lng: number } | null }> }> };
 
+export type RouteSegmentsQueryVariables = Exact<{
+  segmentWaypoints: Array<Array<InputCoords> | InputCoords> | Array<InputCoords> | InputCoords;
+}>;
+
+
+export type RouteSegmentsQuery = { __typename?: 'Query', routeSegments: Array<Array<Array<number>>> };
+
 export type TripsQueryVariables = Exact<{
   limit: Scalars['Int'];
   after?: InputMaybe<Scalars['ID']>;
@@ -522,6 +535,7 @@ export const CreateUserDocument = {"kind":"Document","definitions":[{"kind":"Ope
 export const AuthenticateDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"authenticate"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"username"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"password"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"authenticate"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"username"},"value":{"kind":"Variable","name":{"kind":"Name","value":"username"}}},{"kind":"Argument","name":{"kind":"Name","value":"password"},"value":{"kind":"Variable","name":{"kind":"Name","value":"password"}}}]}]}}]} as unknown as DocumentNode<AuthenticateMutation, AuthenticateMutationVariables>;
 export const GetLocationSuggestionsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getLocationSuggestions"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"query"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getLocationSuggestions"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"query"},"value":{"kind":"Variable","name":{"kind":"Name","value":"query"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"text"}},{"kind":"Field","name":{"kind":"Name","value":"center"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"lat"}},{"kind":"Field","name":{"kind":"Name","value":"lng"}}]}}]}}]}}]} as unknown as DocumentNode<GetLocationSuggestionsQuery, GetLocationSuggestionsQueryVariables>;
 export const PlacesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"places"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"tripId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"places"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"tripId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"tripId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"placesFull"}},{"kind":"Field","name":{"kind":"Name","value":"transportation"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"transportationFull"}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"placesFull"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Place"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"text"}},{"kind":"Field","name":{"kind":"Name","value":"place_name"}},{"kind":"Field","name":{"kind":"Name","value":"mapbox_id"}},{"kind":"Field","name":{"kind":"Name","value":"startDate"}},{"kind":"Field","name":{"kind":"Name","value":"endDate"}},{"kind":"Field","name":{"kind":"Name","value":"colour"}},{"kind":"Field","name":{"kind":"Name","value":"center"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"transportationFull"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Transportation"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"departure_location"}},{"kind":"Field","name":{"kind":"Name","value":"departure_time"}},{"kind":"Field","name":{"kind":"Name","value":"arrival_location"}},{"kind":"Field","name":{"kind":"Name","value":"arrival_time"}},{"kind":"Field","name":{"kind":"Name","value":"details"}},{"kind":"Field","name":{"kind":"Name","value":"departureCoords"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"lat"}},{"kind":"Field","name":{"kind":"Name","value":"lng"}}]}},{"kind":"Field","name":{"kind":"Name","value":"arrivalCoords"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"lat"}},{"kind":"Field","name":{"kind":"Name","value":"lng"}}]}}]}}]} as unknown as DocumentNode<PlacesQuery, PlacesQueryVariables>;
+export const RouteSegmentsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"routeSegments"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"segmentWaypoints"}},"type":{"kind":"NonNullType","type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"InputCoords"}}}}}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"routeSegments"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"segmentWaypoints"},"value":{"kind":"Variable","name":{"kind":"Name","value":"segmentWaypoints"}}}]}]}}]} as unknown as DocumentNode<RouteSegmentsQuery, RouteSegmentsQueryVariables>;
 export const TripsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Trips"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"limit"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"after"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"trips"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"limit"},"value":{"kind":"Variable","name":{"kind":"Name","value":"limit"}}},{"kind":"Argument","name":{"kind":"Name","value":"after"},"value":{"kind":"Variable","name":{"kind":"Name","value":"after"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"edges"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"node"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"tripFull"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"pageInfo"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"endCursor"}},{"kind":"Field","name":{"kind":"Name","value":"hasNextPage"}}]}},{"kind":"Field","name":{"kind":"Name","value":"totalCount"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"userSnippet"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"User"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"avatar"}},{"kind":"Field","name":{"kind":"Name","value":"id"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"authorOnTripSnippet"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"AuthorsOnTrips"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"userSnippet"}}]}},{"kind":"Field","name":{"kind":"Name","value":"role"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"tripFull"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Trip"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"isPublic"}},{"kind":"Field","name":{"kind":"Name","value":"authors"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"authorOnTripSnippet"}}]}},{"kind":"Field","name":{"kind":"Name","value":"banner"}},{"kind":"Field","name":{"kind":"Name","value":"startDate"}},{"kind":"Field","name":{"kind":"Name","value":"endDate"}}]}}]} as unknown as DocumentNode<TripsQuery, TripsQueryVariables>;
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
@@ -772,6 +786,7 @@ export type Query = {
   getLocationSuggestions: Array<LocationSuggestion>;
   place: Place;
   places: Array<Place>;
+  routeSegments: Array<Array<Array<Scalars['Float']>>>;
   transportation: Array<Transportation>;
   trip: Trip;
   trips: TripConnection;
@@ -801,6 +816,11 @@ export type QueryPlaceArgs = {
 
 export type QueryPlacesArgs = {
   tripId: Scalars['ID'];
+};
+
+
+export type QueryRouteSegmentsArgs = {
+  segmentWaypoints: Array<Array<InputCoords>>;
 };
 
 

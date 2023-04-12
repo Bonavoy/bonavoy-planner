@@ -56,7 +56,7 @@ const TransportationList = ({
           arrival_location: '',
           departure_location: '',
           details: '',
-          type: TransportationType.Car,
+          type: TransportationType.Plane,
         },
       },
     });
