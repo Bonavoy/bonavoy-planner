@@ -4,6 +4,7 @@ import { Feature, Position } from 'geojson';
 import {
   InputCoords,
   Place,
+  PlacesQuery,
   TransportationType,
 } from '~/graphql/generated/graphql';
 import { useLazyQuery } from '@apollo/client';
@@ -19,11 +20,10 @@ export interface Location {
 }
 
 interface RouteMapProps {
-  places: Place[];
+  places: PlacesQuery['places'];
 }
 
 export default function RouteMap({ places }: RouteMapProps) {
-  console.log('osidjfs', places);
   const mapContainer = useRef<null | HTMLDivElement>(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const map = useRef<null | mapboxgl.Map>(null);

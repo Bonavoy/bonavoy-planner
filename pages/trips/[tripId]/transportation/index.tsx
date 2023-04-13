@@ -7,6 +7,7 @@ import { GET_PLACES } from '~/graphql/queries/place';
 import TransportationList from '~/components/TransportationList/TransportationList';
 import { TRANSPORTATION_UPDATED } from '~/graphql/subscriptions/transportation';
 import { TRANSPORTATION_FULL } from '~/graphql/fragments/transportation';
+import { cloneDeep } from '@apollo/client/utilities';
 
 interface TransportationProps {
   tripId: string;
@@ -27,26 +28,45 @@ export default function Transportation({
       placeIds: getPlacesQuery?.places.map((place) => place.id) ?? [],
     },
     onData: ({ data, client }) => {
-      if (!data.data?.transportation) return;
+      const transportationNotification = data.data?.transportation;
+      if (!transportationNotification) return;
 
-      console.log(
-        'we got this and probably why delete no worky',
-        data.data.transportation,
-      );
+      const { deleted, transportation } = transportationNotification;
+
+      const placesQuery = client.readQuery({
+        query: GET_PLACES,
+        variables: { tripId: tripId },
+      });
+
+      if (!placesQuery?.places) return;
+
+      const newPlaces = cloneDeep(placesQuery);
+
+      if (deleted) {
+        for (let place of newPlaces.places) {
+          place.transportation = place.transportation.filter(
+            (transp) => transportation.id !== transp.id,
+          );
+        }
+        client.writeQuery({ query: GET_PLACES, id: tripId, data: newPlaces });
+        return;
+      }
+
+      // TODO: create transportation
 
       client.writeFragment({
-        id: `Transportation:${data.data.transportation.id}`,
+        id: `Transportation:${transportation.id}`,
         fragment: TRANSPORTATION_FULL,
         data: {
-          id: data.data.transportation.id,
-          type: data.data.transportation.type,
-          departure_location: data.data.transportation.departure_location,
-          arrival_location: data.data.transportation.arrival_location,
-          departure_time: data.data.transportation.departure_time ?? null,
-          arrival_time: data.data.transportation.arrival_time ?? null,
-          details: data.data.transportation.details,
-          arrivalCoords: data.data.transportation.arrivalCoords ?? null,
-          departureCoords: data.data.transportation.departureCoords ?? null,
+          id: transportation.id,
+          type: transportation.type,
+          departure_location: transportation.departure_location,
+          arrival_location: transportation.arrival_location,
+          departure_time: transportation.departure_time ?? null,
+          arrival_time: transportation.arrival_time ?? null,
+          details: transportation.details,
+          arrivalCoords: transportation.arrivalCoords ?? null,
+          departureCoords: transportation.departureCoords ?? null,
         },
       });
     },
@@ -106,7 +126,7 @@ export default function Transportation({
               }
             })}
           </div>
-          <TransportationMap places={getPlacesQuery?.places} />
+          <TransportationMap places={getPlacesQuery?.places ?? []} />
         </section>
       </Planner>
     </main>

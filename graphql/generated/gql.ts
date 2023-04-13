@@ -28,7 +28,7 @@ const documents = {
     "\n  query places($tripId: ID!) {\n    places(tripId: $tripId) {\n      ...placesFull\n      transportation {\n        ...transportationFull\n      }\n    }\n  }\n": types.PlacesDocument,
     "\n  query routeSegments($segmentWaypoints: [[InputCoords!]!]!) {\n    routeSegments(segmentWaypoints: $segmentWaypoints)\n  }\n": types.RouteSegmentsDocument,
     "\n  query Trips($limit: Int!, $after: ID) {\n    trips(limit: $limit, after: $after) {\n      edges {\n        node {\n          ...tripFull    \n        }\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n      totalCount\n    }\n  }\n": types.TripsDocument,
-    "\n  subscription Subscription($placeIds: [ID!]!) {\n    transportation(placeIds: $placeIds) {\n      ...transportationFull\n    }\n  }\n": types.SubscriptionDocument,
+    "\n  subscription Subscription($placeIds: [ID!]!) {\n    transportation(placeIds: $placeIds) {\n      transportation {\n        ...transportationFull\n      }\n      deleted\n    }\n  }\n": types.SubscriptionDocument,
 };
 
 /**
@@ -108,7 +108,7 @@ export function gql(source: "\n  query Trips($limit: Int!, $after: ID) {\n    tr
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "\n  subscription Subscription($placeIds: [ID!]!) {\n    transportation(placeIds: $placeIds) {\n      ...transportationFull\n    }\n  }\n"): (typeof documents)["\n  subscription Subscription($placeIds: [ID!]!) {\n    transportation(placeIds: $placeIds) {\n      ...transportationFull\n    }\n  }\n"];
+export function gql(source: "\n  subscription Subscription($placeIds: [ID!]!) {\n    transportation(placeIds: $placeIds) {\n      transportation {\n        ...transportationFull\n      }\n      deleted\n    }\n  }\n"): (typeof documents)["\n  subscription Subscription($placeIds: [ID!]!) {\n    transportation(placeIds: $placeIds) {\n      transportation {\n        ...transportationFull\n      }\n      deleted\n    }\n  }\n"];
 
 export function gql(source: string) {
   return (documents as any)[source] ?? {};

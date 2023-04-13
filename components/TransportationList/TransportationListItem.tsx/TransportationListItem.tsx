@@ -101,8 +101,7 @@ const TransportationListItem = ({
 
       if (newPlaces === null) return;
 
-      console.log(newPlaces);
-      let deleted = false;
+      let deleted = false; // TODO: early stop optimization
       for (let place of newPlaces.places) {
         place.transportation = place.transportation.filter((transportation) => {
           if (transportation.id !== transportationId) {
@@ -112,7 +111,7 @@ const TransportationListItem = ({
           return false;
         });
       }
-      console.log(newPlaces);
+
       cache.writeQuery({ query: GET_PLACES, id: tripId, data: newPlaces });
     },
     optimisticResponse: {
