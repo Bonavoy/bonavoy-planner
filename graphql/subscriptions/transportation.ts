@@ -6,6 +6,7 @@ export const TRANSPORTATION_UPDATED = gql(`
       transportation {
         ...transportationFull
       }
+      placeId
       deleted
     }
   }

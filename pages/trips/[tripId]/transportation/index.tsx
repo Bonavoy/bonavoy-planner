@@ -31,7 +31,7 @@ export default function Transportation({
       const transportationNotification = data.data?.transportation;
       if (!transportationNotification) return;
 
-      const { deleted, transportation } = transportationNotification;
+      const { deleted, transportation, placeId } = transportationNotification;
 
       const placesQuery = client.readQuery({
         query: GET_PLACES,
@@ -42,6 +42,7 @@ export default function Transportation({
 
       const newPlaces = cloneDeep(placesQuery);
 
+      // deletion
       if (deleted) {
         for (let place of newPlaces.places) {
           place.transportation = place.transportation.filter(
@@ -52,23 +53,52 @@ export default function Transportation({
         return;
       }
 
-      // TODO: create transportation
-
-      client.writeFragment({
-        id: `Transportation:${transportation.id}`,
-        fragment: TRANSPORTATION_FULL,
-        data: {
-          id: transportation.id,
-          type: transportation.type,
-          departure_location: transportation.departure_location,
-          arrival_location: transportation.arrival_location,
-          departure_time: transportation.departure_time ?? null,
-          arrival_time: transportation.arrival_time ?? null,
-          details: transportation.details,
-          arrivalCoords: transportation.arrivalCoords ?? null,
-          departureCoords: transportation.departureCoords ?? null,
-        },
-      });
+      // update
+      if (placeId) {
+        for (let place of newPlaces.places) {
+          if (place.id === placeId) {
+            const transportationToUpdate = place.transportation.find(
+              (transp) => transp.id === transportation.id,
+            );
+            if (transportationToUpdate) {
+              client.writeFragment({
+                id: `Transportation:${transportation.id}`,
+                fragment: TRANSPORTATION_FULL,
+                data: {
+                  id: transportation.id,
+                  type: transportation.type,
+                  departure_location: transportation.departure_location,
+                  arrival_location: transportation.arrival_location,
+                  departure_time: transportation.departure_time ?? null,
+                  arrival_time: transportation.arrival_time ?? null,
+                  details: transportation.details,
+                  arrivalCoords: transportation.arrivalCoords ?? null,
+                  departureCoords: transportation.departureCoords ?? null,
+                },
+              });
+            } else {
+              place.transportation.push({
+                id: transportation.id,
+                type: transportation.type,
+                departure_location: transportation.departure_location,
+                arrival_location: transportation.arrival_location,
+                departure_time: transportation.departure_time ?? null,
+                arrival_time: transportation.arrival_time ?? null,
+                details: transportation.details,
+                arrivalCoords: transportation.arrivalCoords ?? null,
+                departureCoords: transportation.departureCoords ?? null,
+              });
+              client.writeQuery({
+                query: GET_PLACES,
+                id: tripId,
+                data: newPlaces,
+              });
+              return;
+            }
+          }
+        }
+        return;
+      }
     },
   });
 
