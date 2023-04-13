@@ -26,6 +26,11 @@ const LocationSearch = ({
   );
 
   useEffect(() => {
+    // react to new subscription data
+    setLocation(value);
+  }, [value]);
+
+  useEffect(() => {
     if (!focused) return;
     getLocationSuggestionsQuery({ variables: { query: location } });
   }, [location, focused]);

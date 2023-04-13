@@ -1,10 +1,12 @@
-import { useQuery } from '@apollo/client';
+import { useQuery, useSubscription } from '@apollo/client';
 import type { GetServerSidePropsContext } from 'next';
 
 import Planner from '~/layouts/Planner';
 import TransportationMap from '~/components/RouteMap/RouteMap';
 import { GET_PLACES } from '~/graphql/queries/place';
 import TransportationList from '~/components/TransportationList/TransportationList';
+import { TRANSPORTATION_UPDATED } from '~/graphql/subscriptions/transportation';
+import { TRANSPORTATION_FULL } from '~/graphql/fragments/transportation';
 
 interface TransportationProps {
   tripId: string;
@@ -17,6 +19,32 @@ export default function Transportation({
 }: TransportationProps) {
   const { data: getPlacesQuery } = useQuery(GET_PLACES, {
     variables: { tripId },
+  });
+
+  useSubscription(TRANSPORTATION_UPDATED, {
+    skip: !getPlacesQuery?.places,
+    variables: {
+      placeIds: getPlacesQuery?.places.map((place) => place.id) ?? [],
+    },
+    onData: ({ data, client }) => {
+      if (!data.data?.transportation) return;
+
+      client.writeFragment({
+        id: `Transportation:${data.data.transportation.id}`,
+        fragment: TRANSPORTATION_FULL,
+        data: {
+          id: data.data.transportation.id,
+          type: data.data.transportation.type,
+          departure_location: data.data.transportation.departure_location,
+          arrival_location: data.data.transportation.arrival_location,
+          departure_time: data.data.transportation.departure_time ?? null,
+          arrival_time: data.data.transportation.arrival_time ?? null,
+          details: data.data.transportation.details,
+          arrivalCoords: data.data.transportation.arrivalCoords ?? null,
+          departureCoords: data.data.transportation.departureCoords ?? null,
+        },
+      });
+    },
   });
 
   return (
