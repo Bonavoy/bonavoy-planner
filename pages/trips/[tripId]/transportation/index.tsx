@@ -53,51 +53,41 @@ export default function Transportation({
         return;
       }
 
-      // update
+      const newTransportation = {
+        id: transportation.id,
+        type: transportation.type,
+        departure_location: transportation.departure_location,
+        arrival_location: transportation.arrival_location,
+        departure_time: transportation.departure_time ?? null,
+        arrival_time: transportation.arrival_time ?? null,
+        details: transportation.details,
+        arrivalCoords: transportation.arrivalCoords ?? null,
+        departureCoords: transportation.departureCoords ?? null,
+      };
       if (placeId) {
         for (let place of newPlaces.places) {
           if (place.id === placeId) {
             const transportationToUpdate = place.transportation.find(
               (transp) => transp.id === transportation.id,
             );
+            // update
             if (transportationToUpdate) {
               client.writeFragment({
                 id: `Transportation:${transportation.id}`,
                 fragment: TRANSPORTATION_FULL,
-                data: {
-                  id: transportation.id,
-                  type: transportation.type,
-                  departure_location: transportation.departure_location,
-                  arrival_location: transportation.arrival_location,
-                  departure_time: transportation.departure_time ?? null,
-                  arrival_time: transportation.arrival_time ?? null,
-                  details: transportation.details,
-                  arrivalCoords: transportation.arrivalCoords ?? null,
-                  departureCoords: transportation.departureCoords ?? null,
-                },
+                data: newTransportation,
               });
+              // create
             } else {
-              place.transportation.push({
-                id: transportation.id,
-                type: transportation.type,
-                departure_location: transportation.departure_location,
-                arrival_location: transportation.arrival_location,
-                departure_time: transportation.departure_time ?? null,
-                arrival_time: transportation.arrival_time ?? null,
-                details: transportation.details,
-                arrivalCoords: transportation.arrivalCoords ?? null,
-                departureCoords: transportation.departureCoords ?? null,
-              });
+              place.transportation.push(newTransportation);
               client.writeQuery({
                 query: GET_PLACES,
                 id: tripId,
                 data: newPlaces,
               });
-              return;
             }
           }
         }
-        return;
       }
     },
   });
