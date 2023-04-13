@@ -20,6 +20,7 @@ const documents = {
     "\n  fragment userSnippet on User {\n    username\n    avatar\n    id\n  }\n": types.UserSnippetFragmentDoc,
     "\n  mutation addTransportation($placeId: ID!, $transportation: TransportationInput!) {\n    addTransportation(placeId: $placeId, transportation: $transportation) {\n      ...transportationFull\n    }\n  }\n": types.AddTransportationDocument,
     "\n  mutation updateTransportation($id: ID!, $transportation: UpdateTransportationInput!) {\n    updateTransportation(id: $id, transportation: $transportation) {\n      ...transportationFull \n    }\n  }\n": types.UpdateTransportationDocument,
+    "\n  mutation deleteTransportation($id: ID!) {\n    deleteTransportation(id: $id)\n  }\n": types.DeleteTransportationDocument,
     "\n  mutation getToken {\n    token\n  }\n": types.GetTokenDocument,
     "\n  mutation createUser($userInput: UserInput!) {\n    createUser(userInput: $userInput) {\n      id\n    }\n  }  \n": types.CreateUserDocument,
     "\n  mutation authenticate($username: String!, $password: String!) {\n    authenticate(username: $username, password: $password)\n  }\n": types.AuthenticateDocument,
@@ -72,6 +73,10 @@ export function gql(source: "\n  mutation addTransportation($placeId: ID!, $tran
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(source: "\n  mutation updateTransportation($id: ID!, $transportation: UpdateTransportationInput!) {\n    updateTransportation(id: $id, transportation: $transportation) {\n      ...transportationFull \n    }\n  }\n"): (typeof documents)["\n  mutation updateTransportation($id: ID!, $transportation: UpdateTransportationInput!) {\n    updateTransportation(id: $id, transportation: $transportation) {\n      ...transportationFull \n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  mutation deleteTransportation($id: ID!) {\n    deleteTransportation(id: $id)\n  }\n"): (typeof documents)["\n  mutation deleteTransportation($id: ID!) {\n    deleteTransportation(id: $id)\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

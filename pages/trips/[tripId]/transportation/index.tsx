@@ -29,6 +29,11 @@ export default function Transportation({
     onData: ({ data, client }) => {
       if (!data.data?.transportation) return;
 
+      console.log(
+        'we got this and probably why delete no worky',
+        data.data.transportation,
+      );
+
       client.writeFragment({
         id: `Transportation:${data.data.transportation.id}`,
         fragment: TRANSPORTATION_FULL,

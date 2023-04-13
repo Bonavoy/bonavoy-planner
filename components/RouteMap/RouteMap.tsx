@@ -23,6 +23,7 @@ interface RouteMapProps {
 }
 
 export default function RouteMap({ places }: RouteMapProps) {
+  console.log('osidjfs', places);
   const mapContainer = useRef<null | HTMLDivElement>(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const map = useRef<null | mapboxgl.Map>(null);
