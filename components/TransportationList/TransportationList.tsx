@@ -37,6 +37,8 @@ const TransportationList = ({
         },
       },
       update: (cache, { data }) => {
+        if (!data) return;
+
         const placesQuery = cache.readQuery({
           query: GET_PLACES,
           variables: { tripId: tripId },
@@ -45,23 +47,26 @@ const TransportationList = ({
         const newPlaces = cloneDeep(placesQuery);
 
         const place = newPlaces?.places.find((place) => place.id === placeId);
-        if (!data?.addTransportation) {
-          return;
-        }
         place!.transportation = [
           ...place!.transportation,
-          data!.addTransportation,
+          data.addTransportation,
         ];
 
         cache.writeQuery({ query: GET_PLACES, id: tripId, data: newPlaces });
       },
       optimisticResponse: {
         addTransportation: {
+          __typename: 'Transportation',
           id: uuidv4(),
           arrival_location: '',
           departure_location: '',
           details: '',
           type: TransportationType.Plane,
+          departure_time: null,
+          arrival_time: null,
+          departureCoords: null,
+          arrivalCoords: null,
+          order: transportation.length,
         },
       },
     });

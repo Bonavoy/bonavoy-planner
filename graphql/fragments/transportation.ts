@@ -17,5 +17,6 @@ export const TRANSPORTATION_FULL = gql(`
       lat
       lng
     }
+    order
   }
 `);

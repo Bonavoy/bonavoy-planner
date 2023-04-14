@@ -86,6 +86,7 @@ const TransportationListItem = ({
         departure_location: departureLocation,
         arrival_location: arrivalLocation,
         details: details,
+        order: transport.order,
       },
     },
   });

@@ -8,13 +8,14 @@ import TransportationList from '~/components/TransportationList/TransportationLi
 import { TRANSPORTATION_UPDATED } from '~/graphql/subscriptions/transportation';
 import { TRANSPORTATION_FULL } from '~/graphql/fragments/transportation';
 import { cloneDeep } from '@apollo/client/utilities';
+import { Transportation } from '~/graphql/generated/graphql';
 
 interface TransportationProps {
   tripId: string;
   placeId: string | null;
 }
 
-export default function Transportation({
+export default function TransportationPage({
   tripId,
   placeId,
 }: TransportationProps) {
@@ -53,7 +54,8 @@ export default function Transportation({
         return;
       }
 
-      const newTransportation = {
+      const newTransportation: Transportation = {
+        __typename: 'Transportation',
         id: transportation.id,
         type: transportation.type,
         departure_location: transportation.departure_location,
@@ -63,6 +65,7 @@ export default function Transportation({
         details: transportation.details,
         arrivalCoords: transportation.arrivalCoords ?? null,
         departureCoords: transportation.departureCoords ?? null,
+        order: transportation.order,
       };
       if (placeId) {
         for (let place of newPlaces.places) {
