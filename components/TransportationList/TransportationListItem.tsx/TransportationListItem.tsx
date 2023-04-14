@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react';
+import { cache, useEffect, useState } from 'react';
 import { useMutation } from '@apollo/client';
 import { format } from 'date-fns';
+import { cloneDeep } from '@apollo/client/utilities';
 
 import {
   TransportationFullFragment,
@@ -8,10 +9,14 @@ import {
 } from '~/graphql/generated/graphql';
 import DropDownSelect from '~/components/DropDownSelect';
 import type { DropDownItem } from '~/components/DropDownSelect';
-import { UPDATE_TRANSPORTATION } from '~/graphql/mutations/transportation';
+import {
+  DELETE_TRANSPORTATION,
+  UPDATE_TRANSPORTATION,
+} from '~/graphql/mutations/transportation';
 import LocationSearch from '../LocationSearch';
 import Datepicker from '~/components/Datepicker/Datepicker';
 import Modal from '~/components/Modal/Modal';
+import { GET_PLACES } from '~/graphql/queries/place';
 
 const transportationOptions: DropDownItem[] = [
   {
@@ -52,11 +57,13 @@ interface UpdateTransportationInput {
 interface TransportationListItemProps {
   transportationId: string;
   transport: TransportationFullFragment;
+  tripId: string;
 }
 
 const TransportationListItem = ({
   transportationId,
   transport,
+  tripId,
 }: TransportationListItemProps) => {
   const [showDepartureDatePicker, setShowDepartureDatePicker] = useState(false);
   const [showArrivalDatepicker, setShowArrivalDatepicker] = useState(false);
@@ -66,9 +73,52 @@ const TransportationListItem = ({
   const [arrivalLocation, setArrivalLocation] = useState(
     transport.arrival_location,
   );
+  const [showOptionsMenu, setShowOptionsMenu] = useState(false);
   const [details, setDetails] = useState(transport.details);
   const [type, setType] = useState<TransportationType>(transport.type);
-  const [updateTransportationMutation] = useMutation(UPDATE_TRANSPORTATION);
+  const [updateTransportationMutation] = useMutation(UPDATE_TRANSPORTATION, {
+    // update: {},
+    optimisticResponse: {
+      __typename: 'Mutation',
+      updateTransportation: {
+        id: Math.random().toString(),
+        type: type,
+        departure_location: departureLocation,
+        arrival_location: arrivalLocation,
+        details: details,
+      },
+    },
+  });
+
+  const [deleteTransportationMutation] = useMutation(DELETE_TRANSPORTATION, {
+    update: (cache, { data }) => {
+      const transportationId = data?.deleteTransportation;
+      if (!transportationId) return;
+
+      const placesQuery = cache.readQuery({ query: GET_PLACES });
+
+      const newPlaces = cloneDeep(placesQuery);
+
+      if (newPlaces === null) return;
+
+      let deleted = false; // TODO: early stop optimization
+      for (let place of newPlaces.places) {
+        place.transportation = place.transportation.filter((transportation) => {
+          if (transportation.id !== transportationId) {
+            return true;
+          }
+          deleted = true;
+          return false;
+        });
+      }
+
+      cache.writeQuery({ query: GET_PLACES, id: tripId, data: newPlaces });
+    },
+    optimisticResponse: {
+      __typename: 'Mutation',
+      deleteTransportation: transportationId,
+    },
+  });
 
   const updateTransportation = (transportation: UpdateTransportationInput) => {
     updateTransportationMutation({
@@ -236,9 +286,28 @@ const TransportationListItem = ({
                 </button>
               )}
             </div>
-            <button className="h-6 w-6 rounded-full text-grayPrimary duration-100 hover:bg-surface hover:text-white">
-              <i className="fa-solid fa-ellipsis" />
-            </button>
+            <div className="relative">
+              <button
+                className="h-6 w-6 rounded-full text-grayPrimary duration-100 hover:bg-surface hover:text-white"
+                onClick={() => setShowOptionsMenu(!showOptionsMenu)}
+              >
+                <i className="fa-solid fa-ellipsis relative" />
+              </button>
+              {showOptionsMenu && (
+                <ul className="absolute top-full rounded-lg border border-surface bg-white text-xs shadow-md">
+                  <li
+                    className="rounded-lg px-2 py-1 text-red hover:bg-surface"
+                    onClick={() =>
+                      deleteTransportationMutation({
+                        variables: { id: transportationId },
+                      })
+                    }
+                  >
+                    Delete
+                  </li>
+                </ul>
+              )}
+            </div>
 
             {showDepartureDatePicker && (
               <Modal>

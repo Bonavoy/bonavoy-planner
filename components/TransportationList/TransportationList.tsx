@@ -1,13 +1,17 @@
+import { useMutation } from '@apollo/client';
+import { v4 as uuidv4 } from 'uuid';
+
+import {
+  ADD_TRANSPORTATION,
+  DELETE_TRANSPORTATION,
+} from '~/graphql/mutations/transportation';
+import { GET_PLACES } from '~/graphql/queries/place';
+import { cloneDeep } from '@apollo/client/utilities';
 import {
   TransportationFullFragment,
   TransportationType,
 } from '~/graphql/generated/graphql';
-import { useMutation } from '@apollo/client';
-import { ADD_TRANSPORTATION } from '~/graphql/mutations/transportation';
-import { GET_PLACES } from '~/graphql/queries/place';
-import { cloneDeep } from '@apollo/client/utilities';
 import TransportationListItem from './TransportationListItem.tsx';
-
 interface TransportationListProps {
   transportation: TransportationFullFragment[];
   tripId: string;
@@ -41,18 +45,19 @@ const TransportationList = ({
         const newPlaces = cloneDeep(placesQuery);
 
         const place = newPlaces?.places.find((place) => place.id === placeId);
-        if (data?.addTransportation) {
-          place!.transportation = [
-            ...place!.transportation,
-            data!.addTransportation,
-          ];
+        if (!data?.addTransportation) {
+          return;
         }
+        place!.transportation = [
+          ...place!.transportation,
+          data!.addTransportation,
+        ];
 
         cache.writeQuery({ query: GET_PLACES, id: tripId, data: newPlaces });
       },
       optimisticResponse: {
         addTransportation: {
-          id: 'temp-id',
+          id: uuidv4(),
           arrival_location: '',
           departure_location: '',
           details: '',
@@ -69,6 +74,7 @@ const TransportationList = ({
           transportation.map((transport, i) => (
             <li className="pb-1" key={i}>
               <TransportationListItem
+                tripId={tripId}
                 transportationId={transport.id}
                 transport={transport}
               />
