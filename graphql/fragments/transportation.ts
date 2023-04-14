@@ -4,10 +4,10 @@ export const TRANSPORTATION_FULL = gql(`
   fragment transportationFull on Transportation {
     id
     type
-    departure_location
-    departure_time
-    arrival_location
-    arrival_time
+    departureLocation
+    departureTime
+    arrivalLocation
+    arrivalTime
     details
     departureCoords {
       lat

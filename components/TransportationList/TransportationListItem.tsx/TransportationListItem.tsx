@@ -38,10 +38,10 @@ const transportationOptions: DropDownItem[] = [
 ];
 
 interface UpdateTransportationInput {
-  arrival_location?: string;
-  arrival_time?: Date;
-  departure_location?: string;
-  departure_time?: Date;
+  arrivalLocation?: string;
+  arrivalTime?: Date;
+  departureLocation?: string;
+  departureTime?: Date;
   details?: string;
   type?: TransportationType;
   arrivalCoords?: {
@@ -68,10 +68,10 @@ const TransportationListItem = ({
   const [showDepartureDatePicker, setShowDepartureDatePicker] = useState(false);
   const [showArrivalDatepicker, setShowArrivalDatepicker] = useState(false);
   const [departureLocation, setDepartureLocation] = useState(
-    transport.departure_location,
+    transport.departureLocation,
   );
   const [arrivalLocation, setArrivalLocation] = useState(
-    transport.arrival_location,
+    transport.arrivalLocation,
   );
   const [showOptionsMenu, setShowOptionsMenu] = useState(false);
   const [details, setDetails] = useState(transport.details);
@@ -83,8 +83,8 @@ const TransportationListItem = ({
       updateTransportation: {
         id: Math.random().toString(),
         type: type,
-        departure_location: departureLocation,
-        arrival_location: arrivalLocation,
+        departureLocation: departureLocation,
+        arrivalLocation: arrivalLocation,
         details: details,
         order: transport.order,
       },
@@ -132,13 +132,13 @@ const TransportationListItem = ({
 
   // react to subscription data
   useEffect(() => {
-    setArrivalLocation(transport.arrival_location);
-  }, [transport.arrival_location]);
+    setArrivalLocation(transport.arrivalLocation);
+  }, [transport.arrivalLocation]);
 
   // react to subscription data
   useEffect(() => {
-    setDepartureLocation(transport.departure_location);
-  }, [transport.departure_location]);
+    setDepartureLocation(transport.departureLocation);
+  }, [transport.departureLocation]);
 
   const formatDatetime = (date?: string): string =>
     date ? format(new Date(date), 'MMM d h:mm a') : '';
@@ -168,7 +168,7 @@ const TransportationListItem = ({
                 value={departureLocation}
                 updateLocation={(location, coords) =>
                   updateTransportation({
-                    departure_location: location,
+                    departureLocation: location,
                     departureCoords: coords,
                   })
                 }
@@ -179,7 +179,7 @@ const TransportationListItem = ({
                   setShowDepartureDatePicker(true);
                 }}
               >
-                <span>{formatDatetime(transport.departure_time)}</span>
+                <span>{formatDatetime(transport.departureTime)}</span>
                 <i className="fa fa-calendar cursor" aria-hidden="true"></i>
               </button>
 
@@ -200,7 +200,7 @@ const TransportationListItem = ({
                       <div className="rounded-b-xl bg-white px-3 pb-3">
                         <Datepicker
                           onSelect={(date) => {
-                            updateTransportation({ departure_time: date });
+                            updateTransportation({ departureTime: date });
                             setShowDepartureDatePicker(false);
                           }}
                         />
@@ -219,7 +219,7 @@ const TransportationListItem = ({
                 value={arrivalLocation}
                 updateLocation={(location, coords) =>
                   updateTransportation({
-                    arrival_location: location,
+                    arrivalLocation: location,
                     arrivalCoords: coords,
                   })
                 }
@@ -230,7 +230,7 @@ const TransportationListItem = ({
                   setShowArrivalDatepicker(true);
                 }}
               >
-                <span>{formatDatetime(transport.arrival_time)}</span>
+                <span>{formatDatetime(transport.arrivalTime)}</span>
                 <i className="fa fa-calendar cursor" aria-hidden="true"></i>
               </button>
 
@@ -251,7 +251,7 @@ const TransportationListItem = ({
                       <div className="rounded-b-xl bg-white px-3 pb-3">
                         <Datepicker
                           onSelect={(date) => {
-                            updateTransportation({ arrival_time: date });
+                            updateTransportation({ arrivalTime: date });
                             setShowArrivalDatepicker(false);
                           }}
                         />
@@ -327,7 +327,7 @@ const TransportationListItem = ({
                     <div className="rounded-b-xl bg-white px-3 pb-3">
                       <Datepicker
                         onSelect={(date) => {
-                          updateTransportation({ departure_time: date });
+                          updateTransportation({ departureTime: date });
                           setShowDepartureDatePicker(false);
                         }}
                       />
