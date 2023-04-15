@@ -1,13 +1,17 @@
+import { useMutation } from '@apollo/client';
+import { v4 as uuidv4 } from 'uuid';
+
+import {
+  ADD_TRANSPORTATION,
+  DELETE_TRANSPORTATION,
+} from '~/graphql/mutations/transportation';
+import { GET_PLACES } from '~/graphql/queries/place';
+import { cloneDeep } from '@apollo/client/utilities';
 import {
   TransportationFullFragment,
   TransportationType,
 } from '~/graphql/generated/graphql';
-import { useMutation } from '@apollo/client';
-import { ADD_TRANSPORTATION } from '~/graphql/mutations/transportation';
-import { GET_PLACES } from '~/graphql/queries/place';
-import { cloneDeep } from '@apollo/client/utilities';
 import TransportationListItem from './TransportationListItem.tsx';
-
 interface TransportationListProps {
   transportation: TransportationFullFragment[];
   tripId: string;
@@ -26,13 +30,15 @@ const TransportationList = ({
       variables: {
         placeId,
         transportation: {
-          arrival_location: '',
-          departure_location: '',
+          arrivalLocation: '',
+          departureLocation: '',
           details: '',
           type: TransportationType.Plane,
         },
       },
       update: (cache, { data }) => {
+        if (!data) return;
+
         const placesQuery = cache.readQuery({
           query: GET_PLACES,
           variables: { tripId: tripId },
@@ -41,22 +47,26 @@ const TransportationList = ({
         const newPlaces = cloneDeep(placesQuery);
 
         const place = newPlaces?.places.find((place) => place.id === placeId);
-        if (data?.addTransportation) {
-          place!.transportation = [
-            ...place!.transportation,
-            data!.addTransportation,
-          ];
-        }
+        place!.transportation = [
+          ...place!.transportation,
+          data.addTransportation,
+        ];
 
         cache.writeQuery({ query: GET_PLACES, id: tripId, data: newPlaces });
       },
       optimisticResponse: {
         addTransportation: {
-          id: 'temp-id',
-          arrival_location: '',
-          departure_location: '',
+          __typename: 'Transportation',
+          id: uuidv4(),
+          arrivalLocation: '',
+          departureLocation: '',
           details: '',
           type: TransportationType.Plane,
+          departureTime: null,
+          arrivalTime: null,
+          departureCoords: null,
+          arrivalCoords: null,
+          order: transportation.length,
         },
       },
     });
@@ -69,6 +79,7 @@ const TransportationList = ({
           transportation.map((transport, i) => (
             <li className="pb-1" key={i}>
               <TransportationListItem
+                tripId={tripId}
                 transportationId={transport.id}
                 transport={transport}
               />
@@ -76,8 +87,8 @@ const TransportationList = ({
           ))
         ) : (
           <div className="w-full py-4 text-center text-grayPrimary">
-            I hope you're not walking (add how you're gonna get to the next
-            location here)
+            I hope you&apos;re not walking (add how you&apos;re gonna get to the
+            next location here)
           </div>
         )}
       </ul>

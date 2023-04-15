@@ -15,3 +15,9 @@ export const UPDATE_TRANSPORTATION = gql(`
     }
   }
 `);
+
+export const DELETE_TRANSPORTATION = gql(`
+  mutation deleteTransportation($id: ID!) {
+    deleteTransportation(id: $id)
+  }
+`);

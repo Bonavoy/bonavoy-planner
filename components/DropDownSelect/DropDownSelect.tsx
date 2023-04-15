@@ -20,7 +20,6 @@ const DropDownSelect = ({
   value,
 }: DropDownSelectInterface) => {
   const [showDropDown, setShowDropDown] = useState(false);
-  const [selectedItem, setSelectedItem] = useState<DropDownItem>(value);
 
   useEffect(() => {}, []);
 
@@ -35,7 +34,7 @@ const DropDownSelect = ({
         onClick={toggleDropdown}
         className="relative flex items-center py-1 text-grayPrimary duration-100 group-hover:text-white"
       >
-        {selectedItem ? selectedItem?.view : placeholder}
+        {value ? value.view : placeholder}
       </div>
       {showDropDown ? (
         <div className="absolute z-10 w-fit pt-1">
@@ -45,7 +44,6 @@ const DropDownSelect = ({
                 className="px-2 py-1 text-grayPrimary hover:bg-grayPrimary/10"
                 key={i}
                 onClick={() => {
-                  setSelectedItem(option);
                   onSelect(option);
                   toggleDropdown();
                 }}

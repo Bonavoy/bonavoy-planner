@@ -15,12 +15,15 @@ module.exports = {
       surface: '#ecebec',
       transparent: 'transparent',
 
+      red: '#ff0000',
       black: '#0A0521',
       white: '#FFFFFF',
       grayPrimary: '#8E9294',
       graySecondary: '#A3A6A8',
       grayTertiary: '#B8BABC',
       transparent: 'transparent',
+
+      error: '#ff0000',
     },
     fontFamily: {
       sans: ['Rubik', 'sans-serif'],

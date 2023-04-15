@@ -1,9 +1,10 @@
-import { useRef, useEffect, useState } from 'react';
+import { useRef, useEffect, useState, useCallback } from 'react';
 import mapboxgl from 'mapbox-gl'; // eslint-disable-line import/no-webpack-loader-syntax
 import { Feature, Position } from 'geojson';
 import {
   InputCoords,
   Place,
+  PlacesQuery,
   TransportationType,
 } from '~/graphql/generated/graphql';
 import { useLazyQuery } from '@apollo/client';
@@ -19,14 +20,14 @@ export interface Location {
 }
 
 interface RouteMapProps {
-  places: Place[];
+  places: PlacesQuery['places'];
 }
 
 export default function RouteMap({ places }: RouteMapProps) {
   const mapContainer = useRef<null | HTMLDivElement>(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const map = useRef<null | mapboxgl.Map>(null);
-  const [geRouteSegments] = useLazyQuery(GET_ROUTE_SEGMENTS);
+  const [getRouteSegments] = useLazyQuery(GET_ROUTE_SEGMENTS);
 
   useEffect(() => {
     if (map.current) return; // initialize map only once
@@ -37,17 +38,7 @@ export default function RouteMap({ places }: RouteMapProps) {
     });
   }, []);
 
-  useEffect(() => {
-    if (!map.current) return;
-    drawRouteSegments();
-
-    map.current.on('load', () => {
-      drawRouteSegments();
-      setIsLoaded(true);
-    });
-  }, [places, isLoaded]);
-
-  const drawRouteSegments = async () => {
+  const drawRouteSegments = useCallback(async () => {
     if (!map.current || !isLoaded) return;
 
     if (!places) return;
@@ -103,7 +94,7 @@ export default function RouteMap({ places }: RouteMapProps) {
       }
     }
 
-    const routeSegments = await geRouteSegments({
+    const routeSegments = await getRouteSegments({
       variables: { segmentWaypoints: waypointSegments },
     });
 
@@ -142,7 +133,17 @@ export default function RouteMap({ places }: RouteMapProps) {
     } else {
       routeSource.setData(route);
     }
-  };
+  }, [places, isLoaded, getRouteSegments]);
+
+  useEffect(() => {
+    if (!map.current) return;
+    drawRouteSegments();
+
+    map.current.on('load', () => {
+      drawRouteSegments();
+      setIsLoaded(true);
+    });
+  }, [isLoaded, drawRouteSegments]);
 
   return <div ref={mapContainer} className="map-container h-full w-full" />;
 }

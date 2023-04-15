@@ -1,22 +1,98 @@
-import { useQuery } from '@apollo/client';
+import { useQuery, useSubscription } from '@apollo/client';
 import type { GetServerSidePropsContext } from 'next';
 
 import Planner from '~/layouts/Planner';
 import TransportationMap from '~/components/RouteMap/RouteMap';
 import { GET_PLACES } from '~/graphql/queries/place';
 import TransportationList from '~/components/TransportationList/TransportationList';
+import { TRANSPORTATION_UPDATED } from '~/graphql/subscriptions/transportation';
+import { TRANSPORTATION_FULL } from '~/graphql/fragments/transportation';
+import { cloneDeep } from '@apollo/client/utilities';
+import { Transportation } from '~/graphql/generated/graphql';
 
 interface TransportationProps {
   tripId: string;
   placeId: string | null;
 }
 
-export default function Transportation({
+export default function TransportationPage({
   tripId,
   placeId,
 }: TransportationProps) {
   const { data: getPlacesQuery } = useQuery(GET_PLACES, {
     variables: { tripId },
+  });
+
+  useSubscription(TRANSPORTATION_UPDATED, {
+    skip: !getPlacesQuery?.places,
+    variables: {
+      placeIds: getPlacesQuery?.places.map((place) => place.id) ?? [],
+    },
+    onData: ({ data, client }) => {
+      const transportationNotification = data.data?.transportation;
+      if (!transportationNotification) return;
+
+      const { deleted, transportation, placeId } = transportationNotification;
+
+      const placesQuery = client.readQuery({
+        query: GET_PLACES,
+        variables: { tripId: tripId },
+      });
+
+      if (!placesQuery?.places) return;
+
+      const newPlaces = cloneDeep(placesQuery);
+
+      // deletion
+      if (deleted) {
+        for (let place of newPlaces.places) {
+          place.transportation = place.transportation.filter(
+            (transp) => transportation.id !== transp.id,
+          );
+        }
+        client.writeQuery({ query: GET_PLACES, id: tripId, data: newPlaces });
+        return;
+      }
+
+      const newTransportation: Transportation = {
+        __typename: 'Transportation',
+        id: transportation.id,
+        type: transportation.type,
+        departureLocation: transportation.departureLocation,
+        arrivalLocation: transportation.arrivalLocation,
+        departureTime: transportation.departureTime ?? null,
+        arrivalTime: transportation.arrivalTime ?? null,
+        details: transportation.details,
+        arrivalCoords: transportation.arrivalCoords ?? null,
+        departureCoords: transportation.departureCoords ?? null,
+        order: transportation.order,
+      };
+      if (placeId) {
+        for (let place of newPlaces.places) {
+          if (place.id === placeId) {
+            const transportationToUpdate = place.transportation.find(
+              (transp) => transp.id === transportation.id,
+            );
+            // update
+            if (transportationToUpdate) {
+              client.writeFragment({
+                id: `Transportation:${transportation.id}`,
+                fragment: TRANSPORTATION_FULL,
+                data: newTransportation,
+              });
+              // create
+            } else {
+              place.transportation.push(newTransportation);
+              client.writeQuery({
+                query: GET_PLACES,
+                id: tripId,
+                data: newPlaces,
+              });
+            }
+          }
+        }
+      }
+    },
   });
 
   return (
@@ -36,7 +112,7 @@ export default function Transportation({
                             Departing from:
                           </div>
                           <div className="cursor-pointer font-heading text-2xl font-bold duration-100 hover:underline">
-                            {place.place_name}
+                            {place.placeName}
                           </div>
                           <div className="font-heading text-sm font-medium text-grayPrimary duration-100">
                             Feb 1
@@ -55,7 +131,7 @@ export default function Transportation({
                             Arriving at:
                           </div>
                           <div className="cursor-pointer font-heading text-2xl font-bold duration-100 hover:underline">
-                            {getPlacesQuery.places[i + 1].place_name}
+                            {getPlacesQuery.places[i + 1].placeName}
                           </div>
                           <div className="font-heading text-sm font-medium text-grayPrimary duration-100">
                             Feb 1
@@ -73,7 +149,7 @@ export default function Transportation({
               }
             })}
           </div>
-          <TransportationMap places={getPlacesQuery?.places} />
+          <TransportationMap places={getPlacesQuery?.places ?? []} />
         </section>
       </Planner>
     </main>
