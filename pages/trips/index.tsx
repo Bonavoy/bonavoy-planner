@@ -7,8 +7,6 @@ export default function Trips() {
     variables: { limit: 16 },
   });
 
-  const hi = [1, 2, 34, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5];
-
   return (
     <>
       <div className="h-16 border-b border-grayTertiary">
