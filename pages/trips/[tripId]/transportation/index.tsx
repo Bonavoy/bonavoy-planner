@@ -58,10 +58,10 @@ export default function TransportationPage({
         __typename: 'Transportation',
         id: transportation.id,
         type: transportation.type,
-        departure_location: transportation.departure_location,
-        arrival_location: transportation.arrival_location,
-        departure_time: transportation.departure_time ?? null,
-        arrival_time: transportation.arrival_time ?? null,
+        departureLocation: transportation.departureLocation,
+        arrivalLocation: transportation.arrivalLocation,
+        departureTime: transportation.departureTime ?? null,
+        arrivalTime: transportation.arrivalTime ?? null,
         details: transportation.details,
         arrivalCoords: transportation.arrivalCoords ?? null,
         departureCoords: transportation.departureCoords ?? null,
@@ -112,7 +112,7 @@ export default function TransportationPage({
                             Departing from:
                           </div>
                           <div className="cursor-pointer font-heading text-2xl font-bold duration-100 hover:underline">
-                            {place.place_name}
+                            {place.placeName}
                           </div>
                           <div className="font-heading text-sm font-medium text-grayPrimary duration-100">
                             Feb 1
@@ -131,7 +131,7 @@ export default function TransportationPage({
                             Arriving at:
                           </div>
                           <div className="cursor-pointer font-heading text-2xl font-bold duration-100 hover:underline">
-                            {getPlacesQuery.places[i + 1].place_name}
+                            {getPlacesQuery.places[i + 1].placeName}
                           </div>
                           <div className="font-heading text-sm font-medium text-grayPrimary duration-100">
                             Feb 1

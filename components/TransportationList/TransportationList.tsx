@@ -30,8 +30,8 @@ const TransportationList = ({
       variables: {
         placeId,
         transportation: {
-          arrival_location: '',
-          departure_location: '',
+          arrivalLocation: '',
+          departureLocation: '',
           details: '',
           type: TransportationType.Plane,
         },
@@ -58,12 +58,12 @@ const TransportationList = ({
         addTransportation: {
           __typename: 'Transportation',
           id: uuidv4(),
-          arrival_location: '',
-          departure_location: '',
+          arrivalLocation: '',
+          departureLocation: '',
           details: '',
           type: TransportationType.Plane,
-          departure_time: null,
-          arrival_time: null,
+          departureTime: null,
+          arrivalTime: null,
           departureCoords: null,
           arrivalCoords: null,
           order: transportation.length,
