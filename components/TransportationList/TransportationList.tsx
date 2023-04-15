@@ -30,13 +30,15 @@ const TransportationList = ({
       variables: {
         placeId,
         transportation: {
-          arrival_location: '',
-          departure_location: '',
+          arrivalLocation: '',
+          departureLocation: '',
           details: '',
           type: TransportationType.Plane,
         },
       },
       update: (cache, { data }) => {
+        if (!data) return;
+
         const placesQuery = cache.readQuery({
           query: GET_PLACES,
           variables: { tripId: tripId },
@@ -45,23 +47,26 @@ const TransportationList = ({
         const newPlaces = cloneDeep(placesQuery);
 
         const place = newPlaces?.places.find((place) => place.id === placeId);
-        if (!data?.addTransportation) {
-          return;
-        }
         place!.transportation = [
           ...place!.transportation,
-          data!.addTransportation,
+          data.addTransportation,
         ];
 
         cache.writeQuery({ query: GET_PLACES, id: tripId, data: newPlaces });
       },
       optimisticResponse: {
         addTransportation: {
+          __typename: 'Transportation',
           id: uuidv4(),
-          arrival_location: '',
-          departure_location: '',
+          arrivalLocation: '',
+          departureLocation: '',
           details: '',
           type: TransportationType.Plane,
+          departureTime: null,
+          arrivalTime: null,
+          departureCoords: null,
+          arrivalCoords: null,
+          order: transportation.length,
         },
       },
     });
@@ -82,8 +87,8 @@ const TransportationList = ({
           ))
         ) : (
           <div className="w-full py-4 text-center text-grayPrimary">
-            I hope you're not walking (add how you're gonna get to the next
-            location here)
+            I hope you&apos;re not walking (add how you&apos;re gonna get to the
+            next location here)
           </div>
         )}
       </ul>

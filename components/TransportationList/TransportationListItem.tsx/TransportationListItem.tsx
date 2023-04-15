@@ -1,4 +1,4 @@
-import { cache, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useMutation } from '@apollo/client';
 import { format } from 'date-fns';
 import { cloneDeep } from '@apollo/client/utilities';
@@ -38,10 +38,10 @@ const transportationOptions: DropDownItem[] = [
 ];
 
 interface UpdateTransportationInput {
-  arrival_location?: string;
-  arrival_time?: Date;
-  departure_location?: string;
-  departure_time?: Date;
+  arrivalLocation?: string;
+  arrivalTime?: Date;
+  departureLocation?: string;
+  departureTime?: Date;
   details?: string;
   type?: TransportationType;
   arrivalCoords?: {
@@ -68,13 +68,16 @@ const TransportationListItem = ({
   const [showDepartureDatePicker, setShowDepartureDatePicker] = useState(false);
   const [showArrivalDatepicker, setShowArrivalDatepicker] = useState(false);
   const [departureLocation, setDepartureLocation] = useState(
-    transport.departure_location,
+    transport.departureLocation,
   );
   const [arrivalLocation, setArrivalLocation] = useState(
-    transport.arrival_location,
+    transport.arrivalLocation,
   );
   const [showOptionsMenu, setShowOptionsMenu] = useState(false);
   const [details, setDetails] = useState(transport.details);
+  const [showDetails, setShowDetails] = useState<boolean>(
+    transport.details.length > 0,
+  );
   const [type, setType] = useState<TransportationType>(transport.type);
   const [updateTransportationMutation] = useMutation(UPDATE_TRANSPORTATION, {
     // update: {},
@@ -83,9 +86,10 @@ const TransportationListItem = ({
       updateTransportation: {
         id: Math.random().toString(),
         type: type,
-        departure_location: departureLocation,
-        arrival_location: arrivalLocation,
+        departureLocation: departureLocation,
+        arrivalLocation: arrivalLocation,
         details: details,
+        order: transport.order,
       },
     },
   });
@@ -95,7 +99,10 @@ const TransportationListItem = ({
       const transportationId = data?.deleteTransportation;
       if (!transportationId) return;
 
-      const placesQuery = cache.readQuery({ query: GET_PLACES });
+      const placesQuery = cache.readQuery({
+        query: GET_PLACES,
+        variables: { tripId },
+      });
 
       const newPlaces = cloneDeep(placesQuery);
 
@@ -131,20 +138,20 @@ const TransportationListItem = ({
 
   // react to subscription data
   useEffect(() => {
-    setArrivalLocation(transport.arrival_location);
-  }, [transport.arrival_location]);
+    setArrivalLocation(transport.arrivalLocation);
+  }, [transport.arrivalLocation]);
 
   // react to subscription data
   useEffect(() => {
-    setDepartureLocation(transport.departure_location);
-  }, [transport.departure_location]);
+    setDepartureLocation(transport.departureLocation);
+  }, [transport.departureLocation]);
 
   const formatDatetime = (date?: string): string =>
     date ? format(new Date(date), 'MMM d h:mm a') : '';
 
   return (
     <div className="pb-2">
-      <div className="flex cursor-pointer gap-2 rounded-xl border border-grayTertiary p-3 duration-200 hover:shadow-lg">
+      <div className="flex cursor-pointer gap-2 rounded-xl border border-grayTertiary px-3 pt-3 duration-200 hover:shadow-lg">
         <div className="flex w-fit flex-col items-center">
           <DropDownSelect
             placeholder="travel options"
@@ -167,7 +174,7 @@ const TransportationListItem = ({
                 value={departureLocation}
                 updateLocation={(location, coords) =>
                   updateTransportation({
-                    departure_location: location,
+                    departureLocation: location,
                     departureCoords: coords,
                   })
                 }
@@ -178,7 +185,7 @@ const TransportationListItem = ({
                   setShowDepartureDatePicker(true);
                 }}
               >
-                <span>{formatDatetime(transport.departure_time)}</span>
+                <span>{formatDatetime(transport.departureTime)}</span>
                 <i className="fa fa-calendar cursor" aria-hidden="true"></i>
               </button>
 
@@ -199,7 +206,7 @@ const TransportationListItem = ({
                       <div className="rounded-b-xl bg-white px-3 pb-3">
                         <Datepicker
                           onSelect={(date) => {
-                            updateTransportation({ departure_time: date });
+                            updateTransportation({ departureTime: date });
                             setShowDepartureDatePicker(false);
                           }}
                         />
@@ -218,7 +225,7 @@ const TransportationListItem = ({
                 value={arrivalLocation}
                 updateLocation={(location, coords) =>
                   updateTransportation({
-                    arrival_location: location,
+                    arrivalLocation: location,
                     arrivalCoords: coords,
                   })
                 }
@@ -229,7 +236,7 @@ const TransportationListItem = ({
                   setShowArrivalDatepicker(true);
                 }}
               >
-                <span>{formatDatetime(transport.arrival_time)}</span>
+                <span>{formatDatetime(transport.arrivalTime)}</span>
                 <i className="fa fa-calendar cursor" aria-hidden="true"></i>
               </button>
 
@@ -250,7 +257,7 @@ const TransportationListItem = ({
                       <div className="rounded-b-xl bg-white px-3 pb-3">
                         <Datepicker
                           onSelect={(date) => {
-                            updateTransportation({ arrival_time: date });
+                            updateTransportation({ arrivalTime: date });
                             setShowArrivalDatepicker(false);
                           }}
                         />
@@ -262,7 +269,7 @@ const TransportationListItem = ({
             </div>
           </div>
 
-          {transport.details?.length ? (
+          {showDetails ? (
             <textarea
               className="w-full rounded-lg pb-1 text-sm text-grayPrimary outline-none"
               placeholder="details..."
@@ -271,20 +278,17 @@ const TransportationListItem = ({
               rows={2}
             />
           ) : null}
-          <div className="text-md flex w-full items-center justify-between gap-4 bg-transparent">
+          <div className="text-md flex w-full items-center justify-between gap-4 bg-transparent pb-2">
             <div className="flex gap-3">
+              <button
+                className="text-xs font-medium text-grayPrimary duration-100 hover:text-grayPrimary/50"
+                onClick={() => setShowDetails(!showDetails)}
+              >
+                {showDetails ? 'Hide details' : 'Show details'}
+              </button>
               <button className="text-grayPrimary duration-100 hover:text-grayPrimary/50">
                 <i className="fa-solid fa-paperclip "></i>
               </button>
-              {transport.details?.length ? (
-                <button className="text-xs font-medium text-grayPrimary duration-100 hover:text-grayPrimary/50">
-                  remove details
-                </button>
-              ) : (
-                <button className="text-xs font-medium text-grayPrimary duration-100 hover:text-grayPrimary/50">
-                  + add details
-                </button>
-              )}
             </div>
             <div className="relative">
               <button
@@ -297,44 +301,18 @@ const TransportationListItem = ({
                 <ul className="absolute top-full rounded-lg border border-surface bg-white text-xs shadow-md">
                   <li
                     className="rounded-lg px-2 py-1 text-red hover:bg-surface"
-                    onClick={() =>
+                    onClick={() => {
+                      console.log(transportationId);
                       deleteTransportationMutation({
                         variables: { id: transportationId },
-                      })
-                    }
+                      });
+                    }}
                   >
                     Delete
                   </li>
                 </ul>
               )}
             </div>
-
-            {showDepartureDatePicker && (
-              <Modal>
-                {/* modal bg */}
-                <div className="fixed bottom-0 left-0 right-0 top-0 flex justify-center bg-black bg-opacity-70">
-                  {/* content */}
-                  <div className="pt-24">
-                    <div className="flex justify-end rounded-t-xl bg-white">
-                      <button
-                        className="right-0 p-3"
-                        onClick={() => setShowDepartureDatePicker(false)}
-                      >
-                        close
-                      </button>
-                    </div>
-                    <div className="rounded-b-xl bg-white px-3 pb-3">
-                      <Datepicker
-                        onSelect={(date) => {
-                          updateTransportation({ departure_time: date });
-                          setShowDepartureDatePicker(false);
-                        }}
-                      />
-                    </div>
-                  </div>
-                </div>
-              </Modal>
-            )}
           </div>
         </div>
       </div>

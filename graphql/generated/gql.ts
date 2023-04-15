@@ -14,8 +14,8 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  */
 const documents = {
     "\n  fragment authorOnTripSnippet on AuthorsOnTrips {\n    user {\n      ...userSnippet\n    }\n    role\n  }\n": types.AuthorOnTripSnippetFragmentDoc,
-    "\n  fragment placesFull on Place {\n    id\n    text\n    place_name\n    mapbox_id\n    startDate\n    endDate\n    colour\n    center\n  }\n": types.PlacesFullFragmentDoc,
-    "\n  fragment transportationFull on Transportation {\n    id\n    type\n    departure_location\n    departure_time\n    arrival_location\n    arrival_time\n    details\n    departureCoords {\n      lat\n      lng\n    }\n    arrivalCoords {\n      lat\n      lng\n    }\n  }\n": types.TransportationFullFragmentDoc,
+    "\n  fragment placesFull on Place {\n    id\n    text\n    placeName\n    mapboxId\n    startDate\n    endDate\n    colour\n    center\n  }\n": types.PlacesFullFragmentDoc,
+    "\n  fragment transportationFull on Transportation {\n    id\n    type\n    departureLocation\n    departureTime\n    arrivalLocation\n    arrivalTime\n    details\n    departureCoords {\n      lat\n      lng\n    }\n    arrivalCoords {\n      lat\n      lng\n    }\n    order\n  }\n": types.TransportationFullFragmentDoc,
     "\n  fragment tripFull on Trip {\n    id\n    name\n    isPublic\n    authors { \n      ...authorOnTripSnippet\n     }\n    banner\n    startDate\n    endDate\n  }\n": types.TripFullFragmentDoc,
     "\n  fragment userSnippet on User {\n    username\n    avatar\n    id\n  }\n": types.UserSnippetFragmentDoc,
     "\n  mutation addTransportation($placeId: ID!, $transportation: TransportationInput!) {\n    addTransportation(placeId: $placeId, transportation: $transportation) {\n      ...transportationFull\n    }\n  }\n": types.AddTransportationDocument,
@@ -52,11 +52,11 @@ export function gql(source: "\n  fragment authorOnTripSnippet on AuthorsOnTrips 
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "\n  fragment placesFull on Place {\n    id\n    text\n    place_name\n    mapbox_id\n    startDate\n    endDate\n    colour\n    center\n  }\n"): (typeof documents)["\n  fragment placesFull on Place {\n    id\n    text\n    place_name\n    mapbox_id\n    startDate\n    endDate\n    colour\n    center\n  }\n"];
+export function gql(source: "\n  fragment placesFull on Place {\n    id\n    text\n    placeName\n    mapboxId\n    startDate\n    endDate\n    colour\n    center\n  }\n"): (typeof documents)["\n  fragment placesFull on Place {\n    id\n    text\n    placeName\n    mapboxId\n    startDate\n    endDate\n    colour\n    center\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "\n  fragment transportationFull on Transportation {\n    id\n    type\n    departure_location\n    departure_time\n    arrival_location\n    arrival_time\n    details\n    departureCoords {\n      lat\n      lng\n    }\n    arrivalCoords {\n      lat\n      lng\n    }\n  }\n"): (typeof documents)["\n  fragment transportationFull on Transportation {\n    id\n    type\n    departure_location\n    departure_time\n    arrival_location\n    arrival_time\n    details\n    departureCoords {\n      lat\n      lng\n    }\n    arrivalCoords {\n      lat\n      lng\n    }\n  }\n"];
+export function gql(source: "\n  fragment transportationFull on Transportation {\n    id\n    type\n    departureLocation\n    departureTime\n    arrivalLocation\n    arrivalTime\n    details\n    departureCoords {\n      lat\n      lng\n    }\n    arrivalCoords {\n      lat\n      lng\n    }\n    order\n  }\n"): (typeof documents)["\n  fragment transportationFull on Transportation {\n    id\n    type\n    departureLocation\n    departureTime\n    arrivalLocation\n    arrivalTime\n    details\n    departureCoords {\n      lat\n      lng\n    }\n    arrivalCoords {\n      lat\n      lng\n    }\n    order\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

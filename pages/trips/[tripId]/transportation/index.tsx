@@ -8,13 +8,14 @@ import TransportationList from '~/components/TransportationList/TransportationLi
 import { TRANSPORTATION_UPDATED } from '~/graphql/subscriptions/transportation';
 import { TRANSPORTATION_FULL } from '~/graphql/fragments/transportation';
 import { cloneDeep } from '@apollo/client/utilities';
+import { Transportation } from '~/graphql/generated/graphql';
 
 interface TransportationProps {
   tripId: string;
   placeId: string | null;
 }
 
-export default function Transportation({
+export default function TransportationPage({
   tripId,
   placeId,
 }: TransportationProps) {
@@ -53,16 +54,18 @@ export default function Transportation({
         return;
       }
 
-      const newTransportation = {
+      const newTransportation: Transportation = {
+        __typename: 'Transportation',
         id: transportation.id,
         type: transportation.type,
-        departure_location: transportation.departure_location,
-        arrival_location: transportation.arrival_location,
-        departure_time: transportation.departure_time ?? null,
-        arrival_time: transportation.arrival_time ?? null,
+        departureLocation: transportation.departureLocation,
+        arrivalLocation: transportation.arrivalLocation,
+        departureTime: transportation.departureTime ?? null,
+        arrivalTime: transportation.arrivalTime ?? null,
         details: transportation.details,
         arrivalCoords: transportation.arrivalCoords ?? null,
         departureCoords: transportation.departureCoords ?? null,
+        order: transportation.order,
       };
       if (placeId) {
         for (let place of newPlaces.places) {
@@ -109,7 +112,7 @@ export default function Transportation({
                             Departing from:
                           </div>
                           <div className="cursor-pointer font-heading text-2xl font-bold duration-100 hover:underline">
-                            {place.place_name}
+                            {place.placeName}
                           </div>
                           <div className="font-heading text-sm font-medium text-grayPrimary duration-100">
                             Feb 1
@@ -128,7 +131,7 @@ export default function Transportation({
                             Arriving at:
                           </div>
                           <div className="cursor-pointer font-heading text-2xl font-bold duration-100 hover:underline">
-                            {getPlacesQuery.places[i + 1].place_name}
+                            {getPlacesQuery.places[i + 1].placeName}
                           </div>
                           <div className="font-heading text-sm font-medium text-grayPrimary duration-100">
                             Feb 1
