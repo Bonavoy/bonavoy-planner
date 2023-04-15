@@ -20,14 +20,14 @@ export default function Login() {
   });
 
   return (
-    <div className="border-gray-500 w-full rounded-lg border p-5 shadow-lg sm:w-96">
+    <div className="border-gray-500 w-full rounded-lg border border-grayPrimary p-5 shadow-lg sm:w-96">
       <div className="flex w-full flex-col items-center justify-center">
-        <h1 className="py-4 text-lg">Bonavoy</h1>
+        <h1 className="py-4 font-heading text-xl font-bold">Bonavoy</h1>
         <div className="w-full pt-2">
           <input
             placeholder="username"
             onChange={(e) => setUsername(e.target.value)}
-            className="border-gray-200 w-full rounded-lg border py-2 px-4 text-sm"
+            className="border-gray-200 w-full rounded-lg border border-grayPrimary px-4 py-2 text-sm outline-none"
           />
         </div>
         <div className="w-full pt-2">
@@ -35,12 +35,12 @@ export default function Login() {
             placeholder="password"
             type="password"
             onChange={(e) => setPassword(e.target.value)}
-            className="border-gray-200 w-full rounded-lg border py-2 px-4 text-sm"
+            className="border-gray-200 w-full rounded-lg border border-grayPrimary px-4 py-2 text-sm outline-none"
           />
         </div>
         <div className="w-full pt-4">
           <button
-            className="w-full rounded-lg bg-purple p-1 text-white"
+            className="w-full rounded-lg bg-primary p-1.5 text-sm text-white duration-100 hover:shadow-lg"
             onClick={login}
           >
             Login
