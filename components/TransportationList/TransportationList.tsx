@@ -87,8 +87,8 @@ const TransportationList = ({
           ))
         ) : (
           <div className="w-full py-4 text-center text-grayPrimary">
-            I hope you're not walking (add how you're gonna get to the next
-            location here)
+            I hope you&apos;re not walking (add how you&apos;re gonna get to the
+            next location here)
           </div>
         )}
       </ul>
