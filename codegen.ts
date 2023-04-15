@@ -6,7 +6,6 @@ const config: CodegenConfig = {
   generates: {
     './graphql/generated/': {
       preset: 'client',
-      plugins: ['typescript'],
       presetConfig: {
         gqlTagName: 'gql',
         fragmentMasking: false, // HERE
