@@ -22,6 +22,8 @@ module.exports = {
       graySecondary: '#A3A6A8',
       grayTertiary: '#B8BABC',
       transparent: 'transparent',
+
+      error: '#ff0000',
     },
     fontFamily: {
       // sans: 'Anybody',
