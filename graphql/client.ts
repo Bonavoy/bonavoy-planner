@@ -11,7 +11,7 @@ const wsLink =
   typeof window !== 'undefined'
     ? new GraphQLWsLink(
         createClient({
-          url: 'ws://localhost:4000/graphql',
+          url: `wss://${process.env.NEXT_PUBLIC_BONAVOY_API_HOSTNAME}/graphql`,
         }),
       )
     : null;
@@ -38,7 +38,7 @@ const client = new ApolloClient({
     query: { errorPolicy: 'all' },
     mutate: { errorPolicy: 'all' },
   },
-  uri: process.env.NEXT_PUBLIC_BONAVOY_GRAPHQL_API,
+  uri: `https://${process.env.NEXT_PUBLIC_BONAVOY_API_HOSTNAME}/graphql`,
 });
 
 export default client;

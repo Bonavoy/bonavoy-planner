@@ -51,9 +51,10 @@ export default function Login() {
         <div className="w-full pt-4">
           <button
             type="submit"
+            disabled={loading}
             className="w-full rounded-lg bg-primary p-1.5 text-sm text-white duration-100 hover:shadow-lg"
           >
-            Login
+            {loading ? 'loading...' : 'Login'}
           </button>
         </div>
         <div className="flex w-full justify-between pt-4 text-sm">
