@@ -302,7 +302,6 @@ const TransportationListItem = ({
                   <li
                     className="rounded-lg px-2 py-1 text-red hover:bg-surface"
                     onClick={() => {
-                      console.log(transportationId);
                       deleteTransportationMutation({
                         variables: { id: transportationId },
                       });
