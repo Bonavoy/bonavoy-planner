@@ -12,7 +12,7 @@ import { LISTEN_AUTHORS_PRESENT } from '~/graphql/subscriptions/planner';
 
 type HeaderProps = {
   tripId: string;
-  mode: 'planner' | 'transportation';
+  mode: 'planner' | 'transportation' | 'notes';
 };
 
 export default function Header({ tripId, mode }: HeaderProps) {
