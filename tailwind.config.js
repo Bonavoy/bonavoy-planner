@@ -10,7 +10,7 @@ module.exports = {
       center: true,
     },
     colors: {
-      primary: '#473BF0',
+      primary: '#5D3FD3',
       background: '#ffffff',
       surface: '#ecebec',
       transparent: 'transparent',

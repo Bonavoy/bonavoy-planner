@@ -26,7 +26,7 @@ export default function Header({ tripId, mode }: HeaderProps) {
   ];
 
   return (
-    <header className="flex h-20 items-center justify-between border-b border-b-grayPrimary/20 bg-background px-8 shadow-lg">
+    <header className="flex h-20 items-center justify-between border-b border-b-grayPrimary/20 bg-background px-8 shadow-lg flex-shrink-0">
       <div className="flex items-center gap-6">
         <Link href="/trips">
           <i className="fa-solid fa-chevron-left text-lg text-primary" />
@@ -35,10 +35,10 @@ export default function Header({ tripId, mode }: HeaderProps) {
           <input
             type="text"
             autoComplete="off"
-            className="w-full rounded-xl bg-transparent px-4 py-1 text-lg font-semibold transition-shadow duration-150 placeholder:font-normal focus:shadow-lg focus:outline-none"
+            className="w-full rounded-xl bg-transparent px-4 py-1 text-lg font-semibold transition-shadow duration-150 placeholder:font-normal focus:shadow-md focus:outline-none"
             placeholder="Name your adventure"
           />
-          <i className="fa-solid fa-pen absolute right-4 top-1/2 -translate-y-1/2 text-sm text-primary" />
+          <i className="fa-regular fa-pen absolute right-4 top-1/2 -translate-y-1/2 text-sm text-grayPrimary" />
         </div>
 
         <div className="flex justify-center rounded-xl bg-surface text-sm">

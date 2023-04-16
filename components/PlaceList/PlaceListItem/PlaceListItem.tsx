@@ -30,26 +30,32 @@ export default function PlaceNavItem({ place, tripId }: PlaceNavItemProps) {
   };
 
   return (
-    <li
+    <article
       style={style}
       ref={setNodeRef}
       className="relative w-full overflow-hidden rounded-xl bg-surface transition-colors duration-150"
       {...attributes}
     >
       <div className="flex justify-between">
-        <div className="relative z-20 px-6 py-8 font-heading">
+        <Link
+          href={{
+            pathname: `/trips/${tripId}/planner`,
+            query: { place: place.id },
+          }}
+          className="relative z-20 w-full px-6 py-8 font-heading"
+        >
           <div className="flex items-end gap-4 text-2xl font-bold">
             <span className="self-center" style={{ color: place.colour }}>
               {index + 1}.
             </span>
             <div>
-              <h1 className=" text-4xl">{place.place_name}</h1>
+              <h1 className="text-4xl">{place.placeName}</h1>
               <p className="text-base font-medium">
                 {place.startDate} - {place.endDate}
               </p>
             </div>
           </div>
-        </div>
+        </Link>
         <div
           {...listeners}
           style={{ color: place.colour }}
@@ -63,6 +69,6 @@ export default function PlaceNavItem({ place, tripId }: PlaceNavItemProps) {
           <i className="fa-solid fa-grip-dots-vertical" />
         </div>
       </div>
-    </li>
+    </article>
   );
 }

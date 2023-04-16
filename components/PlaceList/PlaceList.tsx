@@ -26,35 +26,35 @@ export default function PlaceNav({ tripId }: { tripId: string }) {
   const id = useId();
   const [places, setPlaces] = useState([
     {
-      place_name: 'edmonton',
+      placeName: 'edmonton',
       id: 'lololo',
       startDate: 'Feb 1',
       endDate: 'Feb 3',
       colour: '#ab9df9',
     },
     {
-      place_name: 'calgary',
+      placeName: 'calgary',
       id: 'lolwtf',
       startDate: 'Feb 3',
       endDate: ' Feb 5',
       colour: '#AF2B1E',
     },
     {
-      place_name: 'toronto',
+      placeName: 'toronto',
       id: 'lolwtsf',
       startDate: 'Feb 5',
       endDate: ' Feb 7',
       colour: '#F39F18',
     },
     {
-      place_name: 'brampton',
+      placeName: 'brampton',
       id: 'lolwtssf',
       startDate: 'Feb 7',
       endDate: ' Feb 12',
       colour: '#8F8F8F',
     },
     {
-      place_name: 'vancouver',
+      placeName: 'vancouver',
       id: 'lolwtsssf',
       startDate: 'Feb 12',
       endDate: 'Feb 16',
@@ -88,7 +88,7 @@ export default function PlaceNav({ tripId }: { tripId: string }) {
     >
       <SortableContext items={places}>
         <div className="flex items-center justify-between gap-2">
-          <ul className="flex w-full flex-col gap-3">
+          <section className="flex w-full flex-col gap-3">
             {places.map((place, index) => (
               <PlaceNavItem
                 key={place.id}
@@ -100,7 +100,7 @@ export default function PlaceNav({ tripId }: { tripId: string }) {
                 }
               />
             ))}
-          </ul>
+          </section>
         </div>
       </SortableContext>
     </DndContext>

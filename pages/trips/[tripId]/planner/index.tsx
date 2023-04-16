@@ -13,15 +13,53 @@ interface PlanProps {
 }
 
 export default function Plan({ tripId, placeId }: PlanProps) {
+  const places = [
+    {
+      placeName: 'edmonton',
+      id: 'lololo',
+      startDate: 'Feb 1',
+      endDate: 'Feb 3',
+      colour: '#ab9df9',
+    },
+    {
+      placeName: 'calgary',
+      id: 'lolwtf',
+      startDate: 'Feb 3',
+      endDate: ' Feb 5',
+      colour: '#AF2B1E',
+    },
+    {
+      placeName: 'toronto',
+      id: 'lolwtsf',
+      startDate: 'Feb 5',
+      endDate: ' Feb 7',
+      colour: '#F39F18',
+    },
+    {
+      placeName: 'brampton',
+      id: 'lolwtssf',
+      startDate: 'Feb 7',
+      endDate: ' Feb 12',
+      colour: '#8F8F8F',
+    },
+    {
+      placeName: 'vancouver',
+      id: 'lolwtsssf',
+      startDate: 'Feb 12',
+      endDate: 'Feb 16',
+      colour: '#2D572C',
+    },
+  ];
+
   return (
     <main className="h-screen">
       <Planner mode="planner" tripId={tripId} placeId={placeId}>
         <div className="grid flex-grow grid-cols-2 bg-background">
           <section className="overflow-y-auto">
             <div className="h-full overflow-y-auto px-16 py-8">
-              <div className="relative mb-14 flex h-2/6 items-center justify-center rounded-xl bg-surface">
-                <p className="text-grayPrimary">+ Add a photo</p>
-                {/* <Image
+              <div className="relative mb-4 flex h-2/6 items-center justify-center rounded-xl bg-surface">
+                {/* <p className="text-grayPrimary">+ Add a photo</p> */}
+                <Image
                   className="rounded-xl object-cover object-center"
                   fill={true}
                   alt="banner"
@@ -31,47 +69,31 @@ export default function Plan({ tripId, placeId }: PlanProps) {
                   src="banner"
                   quality={100}
                   priority={true}
-                /> */}
-                <div className="absolute bottom-0 flex w-5/6 translate-y-1/2 flex-col items-center rounded-xl bg-primary py-4 font-sans text-white">
-                  lol
-                  {/* <button className="flex items-center gap-2 rounded-lg bg-primary px-3 py-1 font-sans text-sm text-white">
-                    <i className="fa-regular fa-plus" /> add place
+                />
+              </div>
+              <div className="mb-10 flex items-center justify-between rounded-xl font-sans text-white">
+                <div className="grid grid-cols-2 gap-3">
+                  <button className="flex items-center justify-center gap-2 rounded-xl bg-primary px-4 py-2">
+                    <i className="fa-solid fa-calendar" />
+                    Feb 2 - 15 (13 days)
+                  </button>
+                  <div className="flex items-center justify-center gap-2 rounded-xl bg-primary px-4 py-2">
+                    <i className="fa-solid fa-location-dot" />5 stops (234 km)
+                  </div>
+                </div>
+                <div className="flex items-center justify-center gap-4 text-primary">
+                  {/* <button>
+                    <i className="fa-solid fa-plus-large" />
                   </button> */}
+                  <button>
+                    <i className="fa-solid fa-gear text-lg" />
+                  </button>
                 </div>
               </div>
-              {/* <div className="my-4 flex justify-center gap-2 font-heading">
-                <button
-                  title="Dates Button"
-                  type="button"
-                  className="flex items-center gap-2 rounded-xl bg-primary text-white px-4 py-1"
-                >
-                  <i className="fa-regular fa-calendar text-sm" />
-                  <span className="font-medium">Feb 2 - 15</span>
-                </button>
-                <button
-                  disabled={true}
-                  title="Stops Button"
-                  type="button"
-                  className="flex items-center gap-2 rounded-xl bg-primary text-white px-4 py-1"
-                >
-                  <i className="fa-regular fa-location-dot text-sm" />
-                  <span className="font-medium">5 stops</span>
-                </button>
-                <button
-                  disabled={true}
-                  title="Distance Button"
-                  type="button"
-                  className="flex items-center gap-2 rounded-xl bg-primary text-white px-4 py-1"
-                >
-                  <i className="fa-regular fa-earth-americas text-sm" />
-                  <span className="font-medium">1000km</span>
-                </button>
-              </div> */}
-
               <PlaceList tripId={tripId} />
             </div>
           </section>
-          <Mapbox />
+          <Mapbox places={places} />
         </div>
       </Planner>
     </main>
