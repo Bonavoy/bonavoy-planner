@@ -36,8 +36,8 @@ const Invite = ({ tripId, onClose }: InviteProps) => {
       </form>
       {data?.authorsOnTrips.length && data.authorsOnTrips.length > 0 ? (
         <ul className="pt-4 text-grayPrimary">
-          {data.authorsOnTrips.map((author) => (
-            <div className="flex justify-between text-sm">
+          {data.authorsOnTrips.map((author, i) => (
+            <div className="flex justify-between text-sm" key={i}>
               <div>{author.user.email}</div>
               <div>{author.role}</div>
             </div>
