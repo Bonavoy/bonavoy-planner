@@ -1,8 +1,14 @@
+import { useQuery, useSubscription } from '@apollo/client';
+import { cloneDeep } from '@apollo/client/utilities';
 import clsx from 'clsx';
+import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
 import Invite from '~/components/Invite';
 import Modal from '../Modal/Modal';
+import { GET_AUTHORS_PRESENT } from '~/graphql/queries/planner';
+import { GET_USER } from '~/graphql/queries/user';
+import { LISTEN_AUTHORS_PRESENT } from '~/graphql/subscriptions/planner';
 
 type HeaderProps = {
   tripId: string;
@@ -11,6 +17,65 @@ type HeaderProps = {
 
 export default function Header({ tripId, mode }: HeaderProps) {
   const [showInviteModal, setShowInviteModal] = useState(false);
+  const { data: userData } = useQuery(GET_USER);
+
+  const { data, loading: getAuthorsPresentLoading } = useQuery(
+    GET_AUTHORS_PRESENT,
+    { variables: { tripId }, skip: !userData?.user },
+  );
+
+  useSubscription(LISTEN_AUTHORS_PRESENT, {
+    skip: !userData?.user,
+    variables: { tripId },
+    onData: ({ data, client }) => {
+      const authorPresent = data.data?.listenAuthorPresent;
+      if (!authorPresent) return;
+
+      const getAuthorsPresentQuery = client.readQuery({
+        query: GET_AUTHORS_PRESENT,
+        variables: { tripId: tripId },
+      });
+
+      const newAuthorsPresent = cloneDeep(getAuthorsPresentQuery);
+
+      if (!newAuthorsPresent?.authorsPresent) return;
+
+      // need this so cache knows what this is
+      authorPresent.__typename = 'AuthorPresent';
+
+      if (authorPresent.connected) {
+        const curAuthorPresent = newAuthorsPresent.authorsPresent.find(
+          (curAuthorPresent) => curAuthorPresent.id === authorPresent.id,
+        );
+        if (curAuthorPresent) return; // already in cache
+        newAuthorsPresent.authorsPresent = [
+          ...newAuthorsPresent.authorsPresent,
+          authorPresent,
+        ];
+      } else {
+        newAuthorsPresent.authorsPresent =
+          newAuthorsPresent.authorsPresent.filter(
+            (curAuthorPresent) => authorPresent.id !== curAuthorPresent.id,
+          );
+      }
+
+      // don't show the current logged in user in this list
+      if (userData?.user) {
+        newAuthorsPresent.authorsPresent =
+          newAuthorsPresent.authorsPresent.filter(
+            (curAuthorPresent) => curAuthorPresent.id !== userData.user.id,
+          );
+      }
+
+      client.writeQuery({
+        query: GET_AUTHORS_PRESENT,
+        variables: {
+          tripId,
+        },
+        data: newAuthorsPresent,
+      });
+    },
+  });
 
   const navs = [
     {
@@ -66,6 +131,20 @@ export default function Header({ tripId, mode }: HeaderProps) {
 
         <div className="flex items-center justify-end gap-5">
           <i className="fa-regular fa-solid fa-circle-user text-3xl text-primary" />
+          <div className="flex">
+            {!getAuthorsPresentLoading
+              ? data?.authorsPresent.map((authorPresent, i) => (
+                  <Image
+                    key={i}
+                    src={authorPresent.avatar}
+                    alt={authorPresent.username}
+                    width={32}
+                    height={32}
+                    className="rounded-full border border-grayPrimary"
+                  />
+                ))
+              : 'loading'}
+          </div>
           <button
             title="invite friends"
             type="button"
