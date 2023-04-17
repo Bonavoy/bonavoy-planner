@@ -93,7 +93,7 @@ export default function Plan({ tripId, placeId }: PlanProps) {
               <PlaceList tripId={tripId} />
             </div>
           </section>
-          <Mapbox places={places} />
+          <Mapbox />
         </div>
       </Planner>
     </main>
