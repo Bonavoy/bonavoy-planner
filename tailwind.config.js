@@ -10,7 +10,7 @@ module.exports = {
       center: true,
     },
     colors: {
-      primary: '#473BF0',
+      primary: '#5D3FD3',
       background: '#ffffff',
       surface: '#ecebec',
       transparent: 'transparent',
@@ -26,8 +26,7 @@ module.exports = {
       error: '#ff0000',
     },
     fontFamily: {
-      // sans: 'Anybody',
-      sans: ['Open Sans', 'sans-serif'],
+      sans: ['Rubik', 'sans-serif'],
       heading: ['Montserrat', 'sans-serif'],
     },
     extend: {},
