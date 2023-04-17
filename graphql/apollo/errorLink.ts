@@ -26,7 +26,7 @@ const getNewToken = async () => {
 const errorLink = onError(({ graphQLErrors, operation, forward }) => {
   if (graphQLErrors) {
     for (const err of graphQLErrors) {
-      switch (err.extensions.code) {
+      switch (err.extensions?.code) {
         case 'TOKEN_EXPIRED':
           if (!isRefreshing) {
             setIsRefreshing(true);
