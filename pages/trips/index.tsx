@@ -17,7 +17,7 @@ export default function Trips() {
       </div>
 
       {/* content */}
-      <div className="container mx-auto pt-8">
+      <div className="container mx-auto px-2 pt-8">
         <div className="flex items-center justify-between pb-8">
           <h1 className="font-heading text-4xl font-bold">Trips</h1>
           <button className="h-fit rounded-lg bg-primary p-2 text-sm text-white duration-150 hover:bg-primary/80">
@@ -25,12 +25,12 @@ export default function Trips() {
           </button>
         </div>
 
-        <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
           {data?.trips.edges.map((trip, i) => (
             <Link
               href={`/trips/${trip.node.id}/planner`}
               key={i}
-              className="aspect flex aspect-[4/3] items-center justify-center rounded-md bg-surface text-center duration-150 hover:bg-grayPrimary/80"
+              className="aspect relative flex aspect-[4/3] items-center justify-center rounded-md border border-surface"
             >
               <Image
                 src="https://banffnationalpark.com/wp-content/uploads/2022/04/banff-guide-1536x1024.jpg"
