@@ -20,7 +20,7 @@ export default function Trips() {
       <div className="container mx-auto pt-8">
         <div className="flex items-center justify-between pb-8">
           <h1 className="font-heading text-4xl font-bold">Trips</h1>
-          <button className="h-fit rounded-lg bg-primary p-1 text-sm text-white">
+          <button className="h-fit rounded-lg bg-primary p-2 text-sm text-white duration-150 hover:bg-primary/80">
             + New trip
           </button>
         </div>
@@ -30,7 +30,7 @@ export default function Trips() {
             <Link
               href={`/trips/${trip.node.id}/planner`}
               key={i}
-              className="aspect relative aspect-[4/3] rounded-md border border-surface"
+              className="aspect flex aspect-[4/3] items-center justify-center rounded-md bg-surface text-center duration-150 hover:bg-grayPrimary/80"
             >
               <Image
                 src="https://banffnationalpark.com/wp-content/uploads/2022/04/banff-guide-1536x1024.jpg"

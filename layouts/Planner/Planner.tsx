@@ -3,7 +3,7 @@ import Header from '~/components/Header';
 
 interface PlannerProps {
   children: ReactNode;
-  mode: 'planner' | 'transportation';
+  mode: 'planner' | 'transportation' | 'notes';
   tripId: string;
   placeId: string | null;
 }
