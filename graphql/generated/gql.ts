@@ -24,6 +24,7 @@ const documents = {
     "\n  mutation getToken {\n    token\n  }\n": types.GetTokenDocument,
     "\n  mutation createUser($userInput: UserInput!) {\n    createUser(userInput: $userInput) {\n      id\n    }\n  }  \n": types.CreateUserDocument,
     "\n  mutation authenticate($username: String!, $password: String!) {\n    authenticate(username: $username, password: $password)\n  }\n": types.AuthenticateDocument,
+    "\n  query authorsOnTrips($tripId: ID!) {\n    authorsOnTrips(tripId: $tripId) {\n      user {\n        id\n        email\n      }\n      trip {\n        id\n        name\n      }\n      role\n    }\n  }\n": types.AuthorsOnTripsDocument,
     "\n  query getLocationSuggestions($query: String!) {\n    getLocationSuggestions(query: $query) {\n      name\n      text\n      center {\n        lat\n        lng\n      }\n    }\n  }\n": types.GetLocationSuggestionsDocument,
     "\n  query places($tripId: ID!) {\n    places(tripId: $tripId) {\n      ...placesFull\n      transportation {\n        ...transportationFull\n      }\n    }\n  }\n": types.PlacesDocument,
     "\n  query routeSegments($segmentWaypoints: [[InputCoords!]!]!) {\n    routeSegments(segmentWaypoints: $segmentWaypoints)\n  }\n": types.RouteSegmentsDocument,
@@ -89,6 +90,10 @@ export function gql(source: "\n  mutation createUser($userInput: UserInput!) {\n
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(source: "\n  mutation authenticate($username: String!, $password: String!) {\n    authenticate(username: $username, password: $password)\n  }\n"): (typeof documents)["\n  mutation authenticate($username: String!, $password: String!) {\n    authenticate(username: $username, password: $password)\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  query authorsOnTrips($tripId: ID!) {\n    authorsOnTrips(tripId: $tripId) {\n      user {\n        id\n        email\n      }\n      trip {\n        id\n        name\n      }\n      role\n    }\n  }\n"): (typeof documents)["\n  query authorsOnTrips($tripId: ID!) {\n    authorsOnTrips(tripId: $tripId) {\n      user {\n        id\n        email\n      }\n      trip {\n        id\n        name\n      }\n      role\n    }\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
