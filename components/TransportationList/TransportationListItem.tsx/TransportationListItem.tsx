@@ -189,32 +189,30 @@ const TransportationListItem = ({
                 <i className="fa fa-calendar cursor" aria-hidden="true"></i>
               </button>
 
-              {showDepartureDatePicker && (
-                <Modal>
-                  {/* modal bg */}
-                  <div className="fixed bottom-0 left-0 right-0 top-0 flex justify-center bg-black bg-opacity-70">
-                    {/* content */}
-                    <div className="pt-24">
-                      <div className="flex justify-end rounded-t-xl bg-white">
-                        <button
-                          className="right-0 p-3"
-                          onClick={() => setShowDepartureDatePicker(false)}
-                        >
-                          close
-                        </button>
-                      </div>
-                      <div className="rounded-b-xl bg-white px-3 pb-3">
-                        <Datepicker
-                          onSelect={(date) => {
-                            updateTransportation({ departureTime: date });
-                            setShowDepartureDatePicker(false);
-                          }}
-                        />
-                      </div>
+              <Modal show={showDepartureDatePicker}>
+                {/* modal bg */}
+                <div className="fixed bottom-0 left-0 right-0 top-0 flex justify-center bg-black bg-opacity-70">
+                  {/* content */}
+                  <div className="pt-24">
+                    <div className="flex justify-end rounded-t-xl bg-white">
+                      <button
+                        className="right-0 p-3"
+                        onClick={() => setShowDepartureDatePicker(false)}
+                      >
+                        close
+                      </button>
+                    </div>
+                    <div className="rounded-b-xl bg-white px-3 pb-3">
+                      <Datepicker
+                        onSelect={(date) => {
+                          updateTransportation({ departureTime: date });
+                          setShowDepartureDatePicker(false);
+                        }}
+                      />
                     </div>
                   </div>
-                </Modal>
-              )}
+                </div>
+              </Modal>
             </div>
           </div>
 
@@ -240,32 +238,30 @@ const TransportationListItem = ({
                 <i className="fa fa-calendar cursor" aria-hidden="true"></i>
               </button>
 
-              {showArrivalDatepicker && (
-                <Modal>
-                  {/* modal bg */}
-                  <div className="fixed bottom-0 left-0 right-0 top-0 flex justify-center bg-black bg-opacity-70">
-                    {/* content */}
-                    <div className="pt-24">
-                      <div className="flex justify-end rounded-t-xl bg-white">
-                        <button
-                          className="right-0 p-3"
-                          onClick={() => setShowArrivalDatepicker(false)}
-                        >
-                          close
-                        </button>
-                      </div>
-                      <div className="rounded-b-xl bg-white px-3 pb-3">
-                        <Datepicker
-                          onSelect={(date) => {
-                            updateTransportation({ arrivalTime: date });
-                            setShowArrivalDatepicker(false);
-                          }}
-                        />
-                      </div>
+              <Modal show={showArrivalDatepicker}>
+                {/* modal bg */}
+                <div className="fixed bottom-0 left-0 right-0 top-0 flex justify-center bg-black bg-opacity-70">
+                  {/* content */}
+                  <div className="pt-24">
+                    <div className="flex justify-end rounded-t-xl bg-white">
+                      <button
+                        className="right-0 p-3"
+                        onClick={() => setShowArrivalDatepicker(false)}
+                      >
+                        close
+                      </button>
+                    </div>
+                    <div className="rounded-b-xl bg-white px-3 pb-3">
+                      <Datepicker
+                        onSelect={(date) => {
+                          updateTransportation({ arrivalTime: date });
+                          setShowArrivalDatepicker(false);
+                        }}
+                      />
                     </div>
                   </div>
-                </Modal>
-              )}
+                </div>
+              </Modal>
             </div>
           </div>
 
