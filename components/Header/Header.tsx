@@ -1,11 +1,13 @@
+import { useState } from 'react';
 import { useQuery, useSubscription } from '@apollo/client';
 import { cloneDeep } from '@apollo/client/utilities';
 import clsx from 'clsx';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useState } from 'react';
-// import Invite from '~/components/Invite';
-// import Modal from '../Modal/Modal';
+import Invite from '~/components/Invite';
+import Modal from '../Modal/Modal';
+
+//apollo
 import { GET_AUTHORS_PRESENT } from '~/graphql/queries/planner';
 import { GET_USER } from '~/graphql/queries/user';
 import { LISTEN_AUTHORS_PRESENT } from '~/graphql/subscriptions/planner';
@@ -16,7 +18,7 @@ type HeaderProps = {
 };
 
 export default function Header({ tripId, mode }: HeaderProps) {
-  // const [showInviteModal, setShowInviteModal] = useState(false);
+  const [showInviteModal, setShowInviteModal] = useState(false);
   const { data: userData } = useQuery(GET_USER);
 
   const { data, loading: getAuthorsPresentLoading } = useQuery(
@@ -29,7 +31,6 @@ export default function Header({ tripId, mode }: HeaderProps) {
     variables: { tripId },
     onData: ({ data, client }) => {
       const authorPresent = data.data?.listenAuthorPresent;
-      console.log(authorPresent)
       if (!authorPresent) return;
 
       const getAuthorsPresentQuery = client.readQuery({
@@ -94,70 +95,73 @@ export default function Header({ tripId, mode }: HeaderProps) {
   ];
 
   return (
-    <header className="flex h-20 flex-shrink-0 items-center justify-between border-b border-b-grayPrimary/20 bg-background px-8 shadow-lg">
-      <div className="flex items-center gap-6">
-        <Link href="/trips">
-          <i className="fa-solid fa-chevron-left text-lg text-primary" />
-        </Link>
-        <div className="relative w-96 rounded-xl bg-surface">
-          <input
-            type="text"
-            autoComplete="off"
-            className="w-full rounded-xl bg-transparent px-4 py-1 text-lg font-semibold transition-shadow duration-150 placeholder:font-normal focus:shadow-md focus:outline-none"
-            placeholder="Name your adventure"
-          />
-          <i className="fa-regular fa-pen absolute right-4 top-1/2 -translate-y-1/2 text-sm text-grayPrimary" />
+    <>
+      <header className="flex h-20 flex-shrink-0 items-center justify-between border-b border-b-grayPrimary/20 bg-background px-8 shadow-lg">
+        <div className="flex items-center gap-6">
+          <Link href="/trips">
+            <i className="fa-solid fa-chevron-left text-lg text-primary" />
+          </Link>
+          <div className="relative w-96 rounded-xl bg-surface">
+            <input
+              type="text"
+              autoComplete="off"
+              className="w-full rounded-xl bg-transparent px-4 py-1 text-lg font-semibold transition-shadow duration-150 placeholder:font-normal focus:shadow-md focus:outline-none"
+              placeholder="Name your adventure"
+            />
+            <i className="fa-regular fa-pen absolute right-4 top-1/2 -translate-y-1/2 text-sm text-grayPrimary" />
+          </div>
+
+          <div className="flex justify-center rounded-xl bg-surface text-sm">
+            {navs.map((nav) => (
+              <Link
+                key={nav.name}
+                href={`/trips/${tripId}/${nav.name}`}
+                className={clsx('flex items-center gap-2 px-6 py-2', {
+                  'rounded-xl bg-primary text-white': nav.name === mode,
+                  'px-1 text-grayPrimary': nav.name !== mode,
+                })}
+              >
+                {nav.icon}
+                {nav.name}
+              </Link>
+            ))}
+          </div>
         </div>
 
-        <div className="flex justify-center rounded-xl bg-surface text-sm">
-          {navs.map((nav) => (
-            <Link
-              key={nav.name}
-              href={`/trips/${tripId}/${nav.name}`}
-              className={clsx('flex items-center gap-2 px-6 py-2', {
-                'rounded-xl bg-primary text-white': nav.name === mode,
-                'px-1 text-grayPrimary': nav.name !== mode,
-              })}
-            >
-              {nav.icon}
-              {nav.name}
-            </Link>
-          ))}
-        </div>
-      </div>
-
-      <div className="flex items-center justify-end gap-5">
-        {/* <i className="fa-regular fa-solid fa-circle-user text-3xl text-primary" /> */}
-        <div className="flex">
-          {!getAuthorsPresentLoading
-            ? data?.authorsPresent.map((authorPresent, i) => (
-                <Image
-                  key={i}
-                  src={authorPresent.avatar}
-                  alt={authorPresent.username}
-                  width={32}
-                  height={32}
-                  className="rounded-full border border-grayPrimary"
-                />
-              ))
-            : 'loading'}
-        </div>
-        {/* <button
+        <div className="flex items-center justify-end relative">
+          <div className="flex">
+            {!getAuthorsPresentLoading
+              ? data?.authorsPresent.map((authorPresent, i) => (
+                  <Image
+                    key={i}
+                    src={authorPresent.avatar}
+                    alt={authorPresent.username}
+                    width={32}
+                    height={32}
+                    className="rounded-full"
+                  />
+                ))
+              : 'loading'}
+          </div>
+          <button
             title="invite friends"
             type="button"
-            onClick={() => {
-              setShowInviteModal(true);
-              setShowInviteModal(true);
-            }}
-            className="flex items-center gap-2 rounded-lg border-2 border-primary px-4 py-2 text-sm text-primary transition-colors duration-150 hover:bg-primary hover:text-white"
+            onClick={() => setShowInviteModal(true)}
+            className="relative -left-3 flex h-8 w-8 items-center justify-center rounded-full bg-primary text-white"
           >
-            <i className="fa-solid fa-user-plus" />
-            invite people
-          </button> */}
-        <button type="button">
-          <i className="fa-regular fa-gear text-xl text-black transition-colors duration-150 hover:text-primary" />
-        </button>
-      </div>
-    </header>
+            <i className="fa-solid fa-plus" />
+          </button>
+          <button type="button">
+            <i className="fa-regular fa-gear text-xl text-grayPrimary transition-colors duration-150 hover:text-primary" />
+          </button>
+        </div>
+      </header>
+      {/* invite other users */}
+      <Modal show={showInviteModal}>
+        <div className="fixed bottom-0 left-0 right-0 top-0 flex justify-center bg-black bg-opacity-70">
+          <Invite tripId={tripId} onClose={() => setShowInviteModal(false)} />
+        </div>
+      </Modal>
+    </>
   );
 }

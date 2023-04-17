@@ -1,21 +1,28 @@
-import { ReactNode, useEffect, useRef, useState } from 'react';
+import { useState, useEffect, ReactNode } from 'react';
 import { createPortal } from 'react-dom';
-
-const MODAL_SELECTOR = '#modal';
 
 interface ModalProps {
   children: ReactNode;
+  show: boolean;
 }
 
-const Modal = ({ children }: ModalProps) => {
-  const ref = useRef<Element | null>(null);
-  const [mounted, setMounted] = useState(false);
+export default function Modal({ children, show }: ModalProps) {
+  //it'll render in server first
+  const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
-    ref.current = document.querySelector(MODAL_SELECTOR);
-    setMounted(true);
+    setIsClient(true);
+    return () => setIsClient(false);
   }, []);
-  return mounted ? createPortal(children, ref.current as Element) : null;
-};
 
-export default Modal;
+  if (!show || !isClient) return null;
+
+  return createPortal(
+    <main className="fixed bottom-0 left-0 right-0 top-0 z-50 flex items-center justify-center bg-black/70 p-10">
+      <dialog className="contents">
+        <div className="relative">{children}</div>
+      </dialog>
+    </main>,
+    document.querySelector('#modal-root') as HTMLElement,
+  );
+}
