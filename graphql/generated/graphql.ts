@@ -2,9 +2,15 @@
 import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/core';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
-export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
-export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
-export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
+export type Exact<T extends { [key: string]: unknown }> = {
+  [K in keyof T]: T[K];
+};
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
+  [SubKey in K]?: Maybe<T[SubKey]>;
+};
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
+  [SubKey in K]: Maybe<T[SubKey]>;
+};
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -30,6 +36,17 @@ export type ActivityInput = {
   name: Scalars['String'];
   order: Scalars['Int'];
   start?: InputMaybe<Scalars['DateTime']>;
+};
+
+export type AuthorPresent = {
+  __typename?: 'AuthorPresent';
+  avatar: Scalars['String'];
+  connected: Scalars['Boolean'];
+  email: Scalars['String'];
+  firstname: Scalars['String'];
+  id: Scalars['ID'];
+  lastname: Scalars['String'];
+  username: Scalars['String'];
 };
 
 export type AuthorsOnTrips = {
@@ -114,95 +131,78 @@ export type Mutation = {
   updateTrip: Trip;
 };
 
-
 export type MutationAddTransportationArgs = {
   placeId: Scalars['ID'];
   transportation: TransportationInput;
 };
-
 
 export type MutationAuthenticateArgs = {
   password: Scalars['String'];
   username: Scalars['String'];
 };
 
-
 export type MutationCreateActivityArgs = {
   activity: ActivityInput;
   dayPlanId: Scalars['ID'];
 };
-
 
 export type MutationCreateDayPlanArgs = {
   dayPlan: CreateDayPlanInput;
   placeId: Scalars['ID'];
 };
 
-
 export type MutationCreatePlaceArgs = {
   place: PlaceInput;
   tripId: Scalars['ID'];
 };
 
-
 export type MutationCreateTripArgs = {
   trip: TripInput;
 };
-
 
 export type MutationCreateUserArgs = {
   userInput: UserInput;
 };
 
-
 export type MutationDeleteActivityArgs = {
   id: Scalars['ID'];
 };
-
 
 export type MutationDeleteDayPlanArgs = {
   id: Scalars['ID'];
 };
 
-
 export type MutationDeletePlaceArgs = {
   placeId: Scalars['ID'];
 };
-
 
 export type MutationDeleteTransportationArgs = {
   id: Scalars['ID'];
 };
 
-
 export type MutationDeleteTripArgs = {
   id: Scalars['ID'];
 };
-
 
 export type MutationUpdateActivityArgs = {
   id: Scalars['ID'];
   updateActivityInput: UpdateActivityInput;
 };
 
-
 export type MutationUpdateDayPlanArgs = {
   id: Scalars['ID'];
   updateDayPlan: UpdateDayPlanInput;
 };
-
 
 export type MutationUpdatePlaceArgs = {
   id: Scalars['ID'];
   place: UpdatePlaceInput;
 };
 
-
 export type MutationUpdateTransportationArgs = {
   id: Scalars['ID'];
   transportation: UpdateTransportationInput;
 };
-
 
 export type MutationUpdateTripArgs = {
   updateTripInput: UpdateTripInput;
@@ -250,6 +250,7 @@ export type Query = {
   __typename?: 'Query';
   _empty?: Maybe<Scalars['String']>;
   authorsOnTrips: Array<AuthorsOnTrips>;
+  authorsPresent: Array<AuthorPresent>;
   dayPlan: DayPlan;
   dayPlans: Array<DayPlan>;
   getLocationSuggestions: Array<LocationSuggestion>;
@@ -262,51 +263,45 @@ export type Query = {
   user: User;
 };
 
-
 export type QueryAuthorsOnTripsArgs = {
   tripId: Scalars['ID'];
 };
 
+export type QueryAuthorsPresentArgs = {
+  tripId: Scalars['ID'];
+};
 
 export type QueryDayPlanArgs = {
   id: Scalars['ID'];
 };
 
-
 export type QueryDayPlansArgs = {
   placeId: Scalars['ID'];
 };
-
 
 export type QueryGetLocationSuggestionsArgs = {
   query: Scalars['String'];
 };
 
-
 export type QueryPlaceArgs = {
   id: Scalars['ID'];
 };
-
 
 export type QueryPlacesArgs = {
   tripId: Scalars['ID'];
 };
 
-
 export type QueryRouteSegmentsArgs = {
   segmentWaypoints: Array<Array<InputCoords>>;
 };
-
 
 export type QueryTransportationArgs = {
   placeId: Scalars['ID'];
 };
 
-
 export type QueryTripArgs = {
   tripId: Scalars['ID'];
 };
-
 
 export type QueryTripsArgs = {
   after?: InputMaybe<Scalars['ID']>;
@@ -316,9 +311,13 @@ export type QueryTripsArgs = {
 export type Subscription = {
   __typename?: 'Subscription';
   _empty?: Maybe<Scalars['String']>;
+  listenAuthorPresent: AuthorPresent;
   transportation: TransportationNotification;
 };
 
+export type SubscriptionListenAuthorPresentArgs = {
+  tripId: Scalars['ID'];
+};
 
 export type SubscriptionTransportationArgs = {
   placeIds: Array<Scalars['ID']>;
@@ -359,7 +358,7 @@ export type TransportationNotification = {
 export enum TransportationType {
   Bus = 'BUS',
   Car = 'CAR',
-  Plane = 'PLANE'
+  Plane = 'PLANE',
 }
 
 export type Trip = {
@@ -397,7 +396,7 @@ export type TripInput = {
 export enum TripRole {
   Author = 'AUTHOR',
   Editor = 'EDITOR',
-  Viewer = 'VIEWER'
+  Viewer = 'VIEWER',
 }
 
 export type UpdateActivityInput = {
@@ -453,7 +452,6 @@ export type User = {
   verified: Scalars['Boolean'];
 };
 
-
 export type UserAuthorsOnTripsArgs = {
   after?: InputMaybe<Scalars['ID']>;
   limit: Scalars['Int'];
@@ -467,116 +465,1829 @@ export type UserInput = {
   username: Scalars['String'];
 };
 
-export type AuthorOnTripSnippetFragment = { __typename?: 'AuthorsOnTrips', role: TripRole, user: { __typename?: 'User', username: string, avatar?: string | null, id: string } };
+export type AuthorOnTripSnippetFragment = {
+  __typename?: 'AuthorsOnTrips';
+  role: TripRole;
+  user: {
+    __typename?: 'User';
+    username: string;
+    avatar?: string | null;
+    id: string;
+  };
+};
 
-export type PlacesFullFragment = { __typename?: 'Place', id: string, text: string, placeName: string, mapboxId: string, startDate?: any | null, endDate?: any | null, colour: string, center: Array<number> };
+export type PlacesFullFragment = {
+  __typename?: 'Place';
+  id: string;
+  text: string;
+  placeName: string;
+  mapboxId: string;
+  startDate?: any | null;
+  endDate?: any | null;
+  colour: string;
+  center: Array<number>;
+};
 
-export type TransportationFullFragment = { __typename?: 'Transportation', id: string, type: TransportationType, departureLocation: string, departureTime?: any | null, arrivalLocation: string, arrivalTime?: any | null, details: string, order: number, departureCoords?: { __typename?: 'Coords', lat: number, lng: number } | null, arrivalCoords?: { __typename?: 'Coords', lat: number, lng: number } | null };
+export type AuthorPresentFullFragment = {
+  __typename?: 'AuthorPresent';
+  id: string;
+  username: string;
+  firstname: string;
+  email: string;
+  lastname: string;
+  avatar: string;
+  connected: boolean;
+};
 
-export type TripFullFragment = { __typename?: 'Trip', id: string, name: string, isPublic: boolean, banner: string, startDate: any, endDate: any, authors: Array<{ __typename?: 'AuthorsOnTrips', role: TripRole, user: { __typename?: 'User', username: string, avatar?: string | null, id: string } }> };
+export type TransportationFullFragment = {
+  __typename?: 'Transportation';
+  id: string;
+  type: TransportationType;
+  departureLocation: string;
+  departureTime?: any | null;
+  arrivalLocation: string;
+  arrivalTime?: any | null;
+  details: string;
+  order: number;
+  departureCoords?: { __typename?: 'Coords'; lat: number; lng: number } | null;
+  arrivalCoords?: { __typename?: 'Coords'; lat: number; lng: number } | null;
+};
 
-export type UserSnippetFragment = { __typename?: 'User', username: string, avatar?: string | null, id: string };
+export type TripFullFragment = {
+  __typename?: 'Trip';
+  id: string;
+  name: string;
+  isPublic: boolean;
+  banner: string;
+  startDate: any;
+  endDate: any;
+  authors: Array<{
+    __typename?: 'AuthorsOnTrips';
+    role: TripRole;
+    user: {
+      __typename?: 'User';
+      username: string;
+      avatar?: string | null;
+      id: string;
+    };
+  }>;
+};
+
+export type UserSnippetFragment = {
+  __typename?: 'User';
+  username: string;
+  avatar?: string | null;
+  id: string;
+};
 
 export type AddTransportationMutationVariables = Exact<{
   placeId: Scalars['ID'];
   transportation: TransportationInput;
 }>;
 
-
-export type AddTransportationMutation = { __typename?: 'Mutation', addTransportation: { __typename?: 'Transportation', id: string, type: TransportationType, departureLocation: string, departureTime?: any | null, arrivalLocation: string, arrivalTime?: any | null, details: string, order: number, departureCoords?: { __typename?: 'Coords', lat: number, lng: number } | null, arrivalCoords?: { __typename?: 'Coords', lat: number, lng: number } | null } };
+export type AddTransportationMutation = {
+  __typename?: 'Mutation';
+  addTransportation: {
+    __typename?: 'Transportation';
+    id: string;
+    type: TransportationType;
+    departureLocation: string;
+    departureTime?: any | null;
+    arrivalLocation: string;
+    arrivalTime?: any | null;
+    details: string;
+    order: number;
+    departureCoords?: {
+      __typename?: 'Coords';
+      lat: number;
+      lng: number;
+    } | null;
+    arrivalCoords?: { __typename?: 'Coords'; lat: number; lng: number } | null;
+  };
+};
 
 export type UpdateTransportationMutationVariables = Exact<{
   id: Scalars['ID'];
   transportation: UpdateTransportationInput;
 }>;
 
-
-export type UpdateTransportationMutation = { __typename?: 'Mutation', updateTransportation: { __typename?: 'Transportation', id: string, type: TransportationType, departureLocation: string, departureTime?: any | null, arrivalLocation: string, arrivalTime?: any | null, details: string, order: number, departureCoords?: { __typename?: 'Coords', lat: number, lng: number } | null, arrivalCoords?: { __typename?: 'Coords', lat: number, lng: number } | null } };
+export type UpdateTransportationMutation = {
+  __typename?: 'Mutation';
+  updateTransportation: {
+    __typename?: 'Transportation';
+    id: string;
+    type: TransportationType;
+    departureLocation: string;
+    departureTime?: any | null;
+    arrivalLocation: string;
+    arrivalTime?: any | null;
+    details: string;
+    order: number;
+    departureCoords?: {
+      __typename?: 'Coords';
+      lat: number;
+      lng: number;
+    } | null;
+    arrivalCoords?: { __typename?: 'Coords'; lat: number; lng: number } | null;
+  };
+};
 
 export type DeleteTransportationMutationVariables = Exact<{
   id: Scalars['ID'];
 }>;
 
+export type DeleteTransportationMutation = {
+  __typename?: 'Mutation';
+  deleteTransportation: string;
+};
 
-export type DeleteTransportationMutation = { __typename?: 'Mutation', deleteTransportation: string };
+export type GetTokenMutationVariables = Exact<{ [key: string]: never }>;
 
-export type GetTokenMutationVariables = Exact<{ [key: string]: never; }>;
-
-
-export type GetTokenMutation = { __typename?: 'Mutation', token: boolean };
+export type GetTokenMutation = { __typename?: 'Mutation'; token: boolean };
 
 export type CreateUserMutationVariables = Exact<{
   userInput: UserInput;
 }>;
 
-
-export type CreateUserMutation = { __typename?: 'Mutation', createUser: { __typename?: 'User', id: string } };
+export type CreateUserMutation = {
+  __typename?: 'Mutation';
+  createUser: { __typename?: 'User'; id: string };
+};
 
 export type AuthenticateMutationVariables = Exact<{
   username: Scalars['String'];
   password: Scalars['String'];
 }>;
 
-
-export type AuthenticateMutation = { __typename?: 'Mutation', authenticate: boolean };
+export type AuthenticateMutation = {
+  __typename?: 'Mutation';
+  authenticate: boolean;
+};
 
 export type AuthorsOnTripsQueryVariables = Exact<{
   tripId: Scalars['ID'];
 }>;
 
-
-export type AuthorsOnTripsQuery = { __typename?: 'Query', authorsOnTrips: Array<{ __typename?: 'AuthorsOnTrips', role: TripRole, user: { __typename?: 'User', id: string, email: string }, trip: { __typename?: 'Trip', id: string, name: string } }> };
+export type AuthorsOnTripsQuery = {
+  __typename?: 'Query';
+  authorsOnTrips: Array<{
+    __typename?: 'AuthorsOnTrips';
+    role: TripRole;
+    user: { __typename?: 'User'; id: string; email: string };
+    trip: { __typename?: 'Trip'; id: string; name: string };
+  }>;
+};
 
 export type GetLocationSuggestionsQueryVariables = Exact<{
   query: Scalars['String'];
 }>;
 
-
-export type GetLocationSuggestionsQuery = { __typename?: 'Query', getLocationSuggestions: Array<{ __typename?: 'LocationSuggestion', name: string, text: string, center: { __typename?: 'Coords', lat: number, lng: number } }> };
+export type GetLocationSuggestionsQuery = {
+  __typename?: 'Query';
+  getLocationSuggestions: Array<{
+    __typename?: 'LocationSuggestion';
+    name: string;
+    text: string;
+    center: { __typename?: 'Coords'; lat: number; lng: number };
+  }>;
+};
 
 export type PlacesQueryVariables = Exact<{
   tripId: Scalars['ID'];
 }>;
 
+export type PlacesQuery = {
+  __typename?: 'Query';
+  places: Array<{
+    __typename?: 'Place';
+    id: string;
+    text: string;
+    placeName: string;
+    mapboxId: string;
+    startDate?: any | null;
+    endDate?: any | null;
+    colour: string;
+    center: Array<number>;
+    transportation: Array<{
+      __typename?: 'Transportation';
+      id: string;
+      type: TransportationType;
+      departureLocation: string;
+      departureTime?: any | null;
+      arrivalLocation: string;
+      arrivalTime?: any | null;
+      details: string;
+      order: number;
+      departureCoords?: {
+        __typename?: 'Coords';
+        lat: number;
+        lng: number;
+      } | null;
+      arrivalCoords?: {
+        __typename?: 'Coords';
+        lat: number;
+        lng: number;
+      } | null;
+    }>;
+  }>;
+};
 
-export type PlacesQuery = { __typename?: 'Query', places: Array<{ __typename?: 'Place', id: string, text: string, placeName: string, mapboxId: string, startDate?: any | null, endDate?: any | null, colour: string, center: Array<number>, transportation: Array<{ __typename?: 'Transportation', id: string, type: TransportationType, departureLocation: string, departureTime?: any | null, arrivalLocation: string, arrivalTime?: any | null, details: string, order: number, departureCoords?: { __typename?: 'Coords', lat: number, lng: number } | null, arrivalCoords?: { __typename?: 'Coords', lat: number, lng: number } | null }> }> };
-
-export type RouteSegmentsQueryVariables = Exact<{
-  segmentWaypoints: Array<Array<InputCoords> | InputCoords> | Array<InputCoords> | InputCoords;
+export type AuthorsPresentQueryVariables = Exact<{
+  tripId: Scalars['ID'];
 }>;
 
+export type AuthorsPresentQuery = {
+  __typename?: 'Query';
+  authorsPresent: Array<{
+    __typename?: 'AuthorPresent';
+    id: string;
+    username: string;
+    firstname: string;
+    email: string;
+    lastname: string;
+    avatar: string;
+    connected: boolean;
+  }>;
+};
 
-export type RouteSegmentsQuery = { __typename?: 'Query', routeSegments: Array<Array<Array<number>>> };
+export type RouteSegmentsQueryVariables = Exact<{
+  segmentWaypoints:
+    | Array<Array<InputCoords> | InputCoords>
+    | Array<InputCoords>
+    | InputCoords;
+}>;
+
+export type RouteSegmentsQuery = {
+  __typename?: 'Query';
+  routeSegments: Array<Array<Array<number>>>;
+};
 
 export type TripsQueryVariables = Exact<{
   limit: Scalars['Int'];
   after?: InputMaybe<Scalars['ID']>;
 }>;
 
+export type TripsQuery = {
+  __typename?: 'Query';
+  trips: {
+    __typename?: 'TripConnection';
+    totalCount: number;
+    edges: Array<{
+      __typename?: 'TripEdge';
+      node: {
+        __typename?: 'Trip';
+        id: string;
+        name: string;
+        isPublic: boolean;
+        banner: string;
+        startDate: any;
+        endDate: any;
+        authors: Array<{
+          __typename?: 'AuthorsOnTrips';
+          role: TripRole;
+          user: {
+            __typename?: 'User';
+            username: string;
+            avatar?: string | null;
+            id: string;
+          };
+        }>;
+      };
+    }>;
+    pageInfo: {
+      __typename?: 'PageInfo';
+      endCursor: string;
+      hasNextPage: boolean;
+    };
+  };
+};
 
-export type TripsQuery = { __typename?: 'Query', trips: { __typename?: 'TripConnection', totalCount: number, edges: Array<{ __typename?: 'TripEdge', node: { __typename?: 'Trip', id: string, name: string, isPublic: boolean, banner: string, startDate: any, endDate: any, authors: Array<{ __typename?: 'AuthorsOnTrips', role: TripRole, user: { __typename?: 'User', username: string, avatar?: string | null, id: string } }> } }>, pageInfo: { __typename?: 'PageInfo', endCursor: string, hasNextPage: boolean } } };
+export type UserQueryVariables = Exact<{ [key: string]: never }>;
+
+export type UserQuery = {
+  __typename?: 'Query';
+  user: {
+    __typename?: 'User';
+    username: string;
+    avatar?: string | null;
+    id: string;
+  };
+};
+
+export type ListenAuthorPresentSubscriptionVariables = Exact<{
+  tripId: Scalars['ID'];
+}>;
+
+export type ListenAuthorPresentSubscription = {
+  __typename?: 'Subscription';
+  listenAuthorPresent: {
+    __typename?: 'AuthorPresent';
+    id: string;
+    username: string;
+    firstname: string;
+    email: string;
+    lastname: string;
+    avatar: string;
+    connected: boolean;
+  };
+};
 
 export type SubscriptionSubscriptionVariables = Exact<{
   placeIds: Array<Scalars['ID']> | Scalars['ID'];
 }>;
 
+export type SubscriptionSubscription = {
+  __typename?: 'Subscription';
+  transportation: {
+    __typename?: 'TransportationNotification';
+    placeId?: string | null;
+    deleted: boolean;
+    transportation: {
+      __typename?: 'Transportation';
+      id: string;
+      type: TransportationType;
+      departureLocation: string;
+      departureTime?: any | null;
+      arrivalLocation: string;
+      arrivalTime?: any | null;
+      details: string;
+      order: number;
+      departureCoords?: {
+        __typename?: 'Coords';
+        lat: number;
+        lng: number;
+      } | null;
+      arrivalCoords?: {
+        __typename?: 'Coords';
+        lat: number;
+        lng: number;
+      } | null;
+    };
+  };
+};
 
-export type SubscriptionSubscription = { __typename?: 'Subscription', transportation: { __typename?: 'TransportationNotification', placeId?: string | null, deleted: boolean, transportation: { __typename?: 'Transportation', id: string, type: TransportationType, departureLocation: string, departureTime?: any | null, arrivalLocation: string, arrivalTime?: any | null, details: string, order: number, departureCoords?: { __typename?: 'Coords', lat: number, lng: number } | null, arrivalCoords?: { __typename?: 'Coords', lat: number, lng: number } | null } } };
-
-export const PlacesFullFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"placesFull"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Place"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"text"}},{"kind":"Field","name":{"kind":"Name","value":"placeName"}},{"kind":"Field","name":{"kind":"Name","value":"mapboxId"}},{"kind":"Field","name":{"kind":"Name","value":"startDate"}},{"kind":"Field","name":{"kind":"Name","value":"endDate"}},{"kind":"Field","name":{"kind":"Name","value":"colour"}},{"kind":"Field","name":{"kind":"Name","value":"center"}}]}}]} as unknown as DocumentNode<PlacesFullFragment, unknown>;
-export const TransportationFullFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"transportationFull"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Transportation"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"departureLocation"}},{"kind":"Field","name":{"kind":"Name","value":"departureTime"}},{"kind":"Field","name":{"kind":"Name","value":"arrivalLocation"}},{"kind":"Field","name":{"kind":"Name","value":"arrivalTime"}},{"kind":"Field","name":{"kind":"Name","value":"details"}},{"kind":"Field","name":{"kind":"Name","value":"departureCoords"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"lat"}},{"kind":"Field","name":{"kind":"Name","value":"lng"}}]}},{"kind":"Field","name":{"kind":"Name","value":"arrivalCoords"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"lat"}},{"kind":"Field","name":{"kind":"Name","value":"lng"}}]}},{"kind":"Field","name":{"kind":"Name","value":"order"}}]}}]} as unknown as DocumentNode<TransportationFullFragment, unknown>;
-export const UserSnippetFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"userSnippet"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"User"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"avatar"}},{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]} as unknown as DocumentNode<UserSnippetFragment, unknown>;
-export const AuthorOnTripSnippetFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"authorOnTripSnippet"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"AuthorsOnTrips"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"userSnippet"}}]}},{"kind":"Field","name":{"kind":"Name","value":"role"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"userSnippet"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"User"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"avatar"}},{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]} as unknown as DocumentNode<AuthorOnTripSnippetFragment, unknown>;
-export const TripFullFragmentDoc = {"kind":"Document","definitions":[{"kind":"FragmentDefinition","name":{"kind":"Name","value":"tripFull"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Trip"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"isPublic"}},{"kind":"Field","name":{"kind":"Name","value":"authors"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"authorOnTripSnippet"}}]}},{"kind":"Field","name":{"kind":"Name","value":"banner"}},{"kind":"Field","name":{"kind":"Name","value":"startDate"}},{"kind":"Field","name":{"kind":"Name","value":"endDate"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"userSnippet"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"User"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"avatar"}},{"kind":"Field","name":{"kind":"Name","value":"id"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"authorOnTripSnippet"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"AuthorsOnTrips"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"userSnippet"}}]}},{"kind":"Field","name":{"kind":"Name","value":"role"}}]}}]} as unknown as DocumentNode<TripFullFragment, unknown>;
-export const AddTransportationDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"addTransportation"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"placeId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"transportation"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"TransportationInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"addTransportation"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"placeId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"placeId"}}},{"kind":"Argument","name":{"kind":"Name","value":"transportation"},"value":{"kind":"Variable","name":{"kind":"Name","value":"transportation"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"transportationFull"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"transportationFull"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Transportation"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"departureLocation"}},{"kind":"Field","name":{"kind":"Name","value":"departureTime"}},{"kind":"Field","name":{"kind":"Name","value":"arrivalLocation"}},{"kind":"Field","name":{"kind":"Name","value":"arrivalTime"}},{"kind":"Field","name":{"kind":"Name","value":"details"}},{"kind":"Field","name":{"kind":"Name","value":"departureCoords"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"lat"}},{"kind":"Field","name":{"kind":"Name","value":"lng"}}]}},{"kind":"Field","name":{"kind":"Name","value":"arrivalCoords"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"lat"}},{"kind":"Field","name":{"kind":"Name","value":"lng"}}]}},{"kind":"Field","name":{"kind":"Name","value":"order"}}]}}]} as unknown as DocumentNode<AddTransportationMutation, AddTransportationMutationVariables>;
-export const UpdateTransportationDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"updateTransportation"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"transportation"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UpdateTransportationInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"updateTransportation"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}},{"kind":"Argument","name":{"kind":"Name","value":"transportation"},"value":{"kind":"Variable","name":{"kind":"Name","value":"transportation"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"transportationFull"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"transportationFull"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Transportation"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"departureLocation"}},{"kind":"Field","name":{"kind":"Name","value":"departureTime"}},{"kind":"Field","name":{"kind":"Name","value":"arrivalLocation"}},{"kind":"Field","name":{"kind":"Name","value":"arrivalTime"}},{"kind":"Field","name":{"kind":"Name","value":"details"}},{"kind":"Field","name":{"kind":"Name","value":"departureCoords"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"lat"}},{"kind":"Field","name":{"kind":"Name","value":"lng"}}]}},{"kind":"Field","name":{"kind":"Name","value":"arrivalCoords"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"lat"}},{"kind":"Field","name":{"kind":"Name","value":"lng"}}]}},{"kind":"Field","name":{"kind":"Name","value":"order"}}]}}]} as unknown as DocumentNode<UpdateTransportationMutation, UpdateTransportationMutationVariables>;
-export const DeleteTransportationDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"deleteTransportation"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"id"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"deleteTransportation"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"id"},"value":{"kind":"Variable","name":{"kind":"Name","value":"id"}}}]}]}}]} as unknown as DocumentNode<DeleteTransportationMutation, DeleteTransportationMutationVariables>;
-export const GetTokenDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"getToken"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"token"}}]}}]} as unknown as DocumentNode<GetTokenMutation, GetTokenMutationVariables>;
-export const CreateUserDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"createUser"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"userInput"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"UserInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"createUser"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"userInput"},"value":{"kind":"Variable","name":{"kind":"Name","value":"userInput"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}}]}}]}}]} as unknown as DocumentNode<CreateUserMutation, CreateUserMutationVariables>;
-export const AuthenticateDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"authenticate"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"username"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"password"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"authenticate"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"username"},"value":{"kind":"Variable","name":{"kind":"Name","value":"username"}}},{"kind":"Argument","name":{"kind":"Name","value":"password"},"value":{"kind":"Variable","name":{"kind":"Name","value":"password"}}}]}]}}]} as unknown as DocumentNode<AuthenticateMutation, AuthenticateMutationVariables>;
-export const AuthorsOnTripsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"authorsOnTrips"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"tripId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"authorsOnTrips"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"tripId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"tripId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"email"}}]}},{"kind":"Field","name":{"kind":"Name","value":"trip"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}}]}},{"kind":"Field","name":{"kind":"Name","value":"role"}}]}}]}}]} as unknown as DocumentNode<AuthorsOnTripsQuery, AuthorsOnTripsQueryVariables>;
-export const GetLocationSuggestionsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"getLocationSuggestions"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"query"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"getLocationSuggestions"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"query"},"value":{"kind":"Variable","name":{"kind":"Name","value":"query"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"text"}},{"kind":"Field","name":{"kind":"Name","value":"center"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"lat"}},{"kind":"Field","name":{"kind":"Name","value":"lng"}}]}}]}}]}}]} as unknown as DocumentNode<GetLocationSuggestionsQuery, GetLocationSuggestionsQueryVariables>;
-export const PlacesDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"places"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"tripId"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"places"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"tripId"},"value":{"kind":"Variable","name":{"kind":"Name","value":"tripId"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"placesFull"}},{"kind":"Field","name":{"kind":"Name","value":"transportation"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"transportationFull"}}]}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"placesFull"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Place"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"text"}},{"kind":"Field","name":{"kind":"Name","value":"placeName"}},{"kind":"Field","name":{"kind":"Name","value":"mapboxId"}},{"kind":"Field","name":{"kind":"Name","value":"startDate"}},{"kind":"Field","name":{"kind":"Name","value":"endDate"}},{"kind":"Field","name":{"kind":"Name","value":"colour"}},{"kind":"Field","name":{"kind":"Name","value":"center"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"transportationFull"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Transportation"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"departureLocation"}},{"kind":"Field","name":{"kind":"Name","value":"departureTime"}},{"kind":"Field","name":{"kind":"Name","value":"arrivalLocation"}},{"kind":"Field","name":{"kind":"Name","value":"arrivalTime"}},{"kind":"Field","name":{"kind":"Name","value":"details"}},{"kind":"Field","name":{"kind":"Name","value":"departureCoords"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"lat"}},{"kind":"Field","name":{"kind":"Name","value":"lng"}}]}},{"kind":"Field","name":{"kind":"Name","value":"arrivalCoords"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"lat"}},{"kind":"Field","name":{"kind":"Name","value":"lng"}}]}},{"kind":"Field","name":{"kind":"Name","value":"order"}}]}}]} as unknown as DocumentNode<PlacesQuery, PlacesQueryVariables>;
-export const RouteSegmentsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"routeSegments"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"segmentWaypoints"}},"type":{"kind":"NonNullType","type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"InputCoords"}}}}}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"routeSegments"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"segmentWaypoints"},"value":{"kind":"Variable","name":{"kind":"Name","value":"segmentWaypoints"}}}]}]}}]} as unknown as DocumentNode<RouteSegmentsQuery, RouteSegmentsQueryVariables>;
-export const TripsDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"Trips"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"limit"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"Int"}}}},{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"after"}},"type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"trips"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"limit"},"value":{"kind":"Variable","name":{"kind":"Name","value":"limit"}}},{"kind":"Argument","name":{"kind":"Name","value":"after"},"value":{"kind":"Variable","name":{"kind":"Name","value":"after"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"edges"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"node"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"tripFull"}}]}}]}},{"kind":"Field","name":{"kind":"Name","value":"pageInfo"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"endCursor"}},{"kind":"Field","name":{"kind":"Name","value":"hasNextPage"}}]}},{"kind":"Field","name":{"kind":"Name","value":"totalCount"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"userSnippet"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"User"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"username"}},{"kind":"Field","name":{"kind":"Name","value":"avatar"}},{"kind":"Field","name":{"kind":"Name","value":"id"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"authorOnTripSnippet"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"AuthorsOnTrips"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"user"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"userSnippet"}}]}},{"kind":"Field","name":{"kind":"Name","value":"role"}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"tripFull"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Trip"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"name"}},{"kind":"Field","name":{"kind":"Name","value":"isPublic"}},{"kind":"Field","name":{"kind":"Name","value":"authors"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"authorOnTripSnippet"}}]}},{"kind":"Field","name":{"kind":"Name","value":"banner"}},{"kind":"Field","name":{"kind":"Name","value":"startDate"}},{"kind":"Field","name":{"kind":"Name","value":"endDate"}}]}}]} as unknown as DocumentNode<TripsQuery, TripsQueryVariables>;
-export const SubscriptionDocument = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"subscription","name":{"kind":"Name","value":"Subscription"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"placeIds"}},"type":{"kind":"NonNullType","type":{"kind":"ListType","type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"ID"}}}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"transportation"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"placeIds"},"value":{"kind":"Variable","name":{"kind":"Name","value":"placeIds"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"transportation"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"FragmentSpread","name":{"kind":"Name","value":"transportationFull"}}]}},{"kind":"Field","name":{"kind":"Name","value":"placeId"}},{"kind":"Field","name":{"kind":"Name","value":"deleted"}}]}}]}},{"kind":"FragmentDefinition","name":{"kind":"Name","value":"transportationFull"},"typeCondition":{"kind":"NamedType","name":{"kind":"Name","value":"Transportation"}},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"type"}},{"kind":"Field","name":{"kind":"Name","value":"departureLocation"}},{"kind":"Field","name":{"kind":"Name","value":"departureTime"}},{"kind":"Field","name":{"kind":"Name","value":"arrivalLocation"}},{"kind":"Field","name":{"kind":"Name","value":"arrivalTime"}},{"kind":"Field","name":{"kind":"Name","value":"details"}},{"kind":"Field","name":{"kind":"Name","value":"departureCoords"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"lat"}},{"kind":"Field","name":{"kind":"Name","value":"lng"}}]}},{"kind":"Field","name":{"kind":"Name","value":"arrivalCoords"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"lat"}},{"kind":"Field","name":{"kind":"Name","value":"lng"}}]}},{"kind":"Field","name":{"kind":"Name","value":"order"}}]}}]} as unknown as DocumentNode<SubscriptionSubscription, SubscriptionSubscriptionVariables>;
+export const PlacesFullFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'placesFull' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'Place' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'text' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'placeName' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'mapboxId' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'startDate' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'endDate' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'colour' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'center' } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<PlacesFullFragment, unknown>;
+export const AuthorPresentFullFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'authorPresentFull' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'AuthorPresent' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'username' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'firstname' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'email' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'lastname' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'avatar' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'connected' } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<AuthorPresentFullFragment, unknown>;
+export const TransportationFullFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'transportationFull' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'Transportation' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'departureLocation' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'departureTime' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'arrivalLocation' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'arrivalTime' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'details' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'departureCoords' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'lat' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'lng' } },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'arrivalCoords' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'lat' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'lng' } },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'order' } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<TransportationFullFragment, unknown>;
+export const UserSnippetFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'userSnippet' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'User' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'username' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'avatar' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<UserSnippetFragment, unknown>;
+export const AuthorOnTripSnippetFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'authorOnTripSnippet' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'AuthorsOnTrips' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'user' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'userSnippet' },
+                },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'role' } },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'userSnippet' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'User' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'username' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'avatar' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<AuthorOnTripSnippetFragment, unknown>;
+export const TripFullFragmentDoc = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'tripFull' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'Trip' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'isPublic' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'authors' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'authorOnTripSnippet' },
+                },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'banner' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'startDate' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'endDate' } },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'userSnippet' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'User' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'username' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'avatar' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'authorOnTripSnippet' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'AuthorsOnTrips' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'user' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'userSnippet' },
+                },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'role' } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<TripFullFragment, unknown>;
+export const AddTransportationDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'addTransportation' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'placeId' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'transportation' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'TransportationInput' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'addTransportation' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'placeId' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'placeId' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'transportation' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'transportation' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'transportationFull' },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'transportationFull' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'Transportation' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'departureLocation' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'departureTime' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'arrivalLocation' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'arrivalTime' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'details' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'departureCoords' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'lat' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'lng' } },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'arrivalCoords' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'lat' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'lng' } },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'order' } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  AddTransportationMutation,
+  AddTransportationMutationVariables
+>;
+export const UpdateTransportationDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'updateTransportation' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'transportation' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'UpdateTransportationInput' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'updateTransportation' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'id' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'id' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'transportation' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'transportation' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'transportationFull' },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'transportationFull' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'Transportation' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'departureLocation' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'departureTime' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'arrivalLocation' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'arrivalTime' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'details' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'departureCoords' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'lat' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'lng' } },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'arrivalCoords' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'lat' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'lng' } },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'order' } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  UpdateTransportationMutation,
+  UpdateTransportationMutationVariables
+>;
+export const DeleteTransportationDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'deleteTransportation' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'deleteTransportation' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'id' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'id' },
+                },
+              },
+            ],
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  DeleteTransportationMutation,
+  DeleteTransportationMutationVariables
+>;
+export const GetTokenDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'getToken' },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [{ kind: 'Field', name: { kind: 'Name', value: 'token' } }],
+      },
+    },
+  ],
+} as unknown as DocumentNode<GetTokenMutation, GetTokenMutationVariables>;
+export const CreateUserDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'createUser' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'userInput' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'UserInput' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'createUser' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'userInput' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'userInput' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<CreateUserMutation, CreateUserMutationVariables>;
+export const AuthenticateDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'authenticate' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'username' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'password' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'authenticate' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'username' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'username' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'password' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'password' },
+                },
+              },
+            ],
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  AuthenticateMutation,
+  AuthenticateMutationVariables
+>;
+export const AuthorsOnTripsDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'authorsOnTrips' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'tripId' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'authorsOnTrips' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'tripId' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'tripId' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'user' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'email' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'trip' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                    ],
+                  },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'role' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<AuthorsOnTripsQuery, AuthorsOnTripsQueryVariables>;
+export const GetLocationSuggestionsDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'getLocationSuggestions' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'query' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'getLocationSuggestions' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'query' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'query' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'text' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'center' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'lat' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'lng' } },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  GetLocationSuggestionsQuery,
+  GetLocationSuggestionsQueryVariables
+>;
+export const PlacesDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'places' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'tripId' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'places' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'tripId' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'tripId' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'placesFull' },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'transportation' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'transportationFull' },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'placesFull' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'Place' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'text' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'placeName' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'mapboxId' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'startDate' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'endDate' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'colour' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'center' } },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'transportationFull' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'Transportation' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'departureLocation' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'departureTime' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'arrivalLocation' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'arrivalTime' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'details' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'departureCoords' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'lat' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'lng' } },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'arrivalCoords' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'lat' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'lng' } },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'order' } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<PlacesQuery, PlacesQueryVariables>;
+export const AuthorsPresentDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'authorsPresent' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'tripId' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'authorsPresent' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'tripId' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'tripId' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'authorPresentFull' },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'authorPresentFull' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'AuthorPresent' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'username' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'firstname' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'email' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'lastname' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'avatar' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'connected' } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<AuthorsPresentQuery, AuthorsPresentQueryVariables>;
+export const RouteSegmentsDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'routeSegments' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'segmentWaypoints' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'ListType',
+              type: {
+                kind: 'NonNullType',
+                type: {
+                  kind: 'ListType',
+                  type: {
+                    kind: 'NonNullType',
+                    type: {
+                      kind: 'NamedType',
+                      name: { kind: 'Name', value: 'InputCoords' },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'routeSegments' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'segmentWaypoints' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'segmentWaypoints' },
+                },
+              },
+            ],
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<RouteSegmentsQuery, RouteSegmentsQueryVariables>;
+export const TripsDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'Trips' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'limit' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'after' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'trips' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'limit' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'after' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'after' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'edges' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'node' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'FragmentSpread',
+                              name: { kind: 'Name', value: 'tripFull' },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'pageInfo' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'endCursor' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'hasNextPage' },
+                      },
+                    ],
+                  },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'totalCount' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'userSnippet' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'User' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'username' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'avatar' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'authorOnTripSnippet' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'AuthorsOnTrips' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'user' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'userSnippet' },
+                },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'role' } },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'tripFull' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'Trip' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'isPublic' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'authors' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'authorOnTripSnippet' },
+                },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'banner' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'startDate' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'endDate' } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<TripsQuery, TripsQueryVariables>;
+export const UserDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'user' },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'user' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'userSnippet' },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'userSnippet' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'User' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'username' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'avatar' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<UserQuery, UserQueryVariables>;
+export const ListenAuthorPresentDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'subscription',
+      name: { kind: 'Name', value: 'listenAuthorPresent' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'tripId' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'listenAuthorPresent' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'tripId' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'tripId' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'authorPresentFull' },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'authorPresentFull' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'AuthorPresent' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'username' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'firstname' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'email' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'lastname' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'avatar' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'connected' } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  ListenAuthorPresentSubscription,
+  ListenAuthorPresentSubscriptionVariables
+>;
+export const SubscriptionDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'subscription',
+      name: { kind: 'Name', value: 'Subscription' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'placeIds' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'ListType',
+              type: {
+                kind: 'NonNullType',
+                type: {
+                  kind: 'NamedType',
+                  name: { kind: 'Name', value: 'ID' },
+                },
+              },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'transportation' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'placeIds' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'placeIds' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'transportation' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'transportationFull' },
+                      },
+                    ],
+                  },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'placeId' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'deleted' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'transportationFull' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'Transportation' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'departureLocation' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'departureTime' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'arrivalLocation' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'arrivalTime' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'details' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'departureCoords' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'lat' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'lng' } },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'arrivalCoords' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'lat' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'lng' } },
+              ],
+            },
+          },
+          { kind: 'Field', name: { kind: 'Name', value: 'order' } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<
+  SubscriptionSubscription,
+  SubscriptionSubscriptionVariables
+>;
