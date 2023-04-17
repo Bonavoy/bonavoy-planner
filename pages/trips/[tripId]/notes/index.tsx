@@ -10,7 +10,7 @@ const NotesPage = ({ tripId }: NotesPageProps) => {
     <main className="h-screen">
       <Planner mode="notes" tripId={tripId} placeId={null}>
         <div>
-          <textarea>what should go here???</textarea>
+          <textarea>under construction 🚧</textarea>
         </div>
       </Planner>
     </main>
