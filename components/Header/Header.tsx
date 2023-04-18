@@ -128,7 +128,7 @@ export default function Header({ tripId, mode }: HeaderProps) {
           </div>
         </div>
 
-        <div className="flex items-center justify-end relative">
+        <div className="relative flex items-center justify-end">
           <div className="flex">
             {!getAuthorsPresentLoading
               ? data?.authorsPresent.map((authorPresent, i) => (

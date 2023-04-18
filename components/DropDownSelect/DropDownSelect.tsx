@@ -28,11 +28,11 @@ const DropDownSelect = ({
   return (
     <div
       id="dropDownSelect"
-      className="group relative flex h-8 w-8 cursor-pointer select-none items-center justify-center rounded-full bg-surface duration-100 hover:border-surface  hover:bg-primary hover:shadow-md"
+      className="group relative flex h-8 w-8 cursor-pointer select-none items-center justify-center rounded-md duration-100  hover:bg-surface hover:shadow-md"
     >
       <div
         onClick={toggleDropdown}
-        className="relative flex items-center py-1 text-grayPrimary duration-100 group-hover:text-white"
+        className="relative flex items-center py-1 text-sm duration-100"
       >
         {value ? value.view : placeholder}
       </div>
