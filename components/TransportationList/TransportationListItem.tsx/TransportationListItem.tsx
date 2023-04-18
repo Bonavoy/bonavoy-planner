@@ -166,7 +166,7 @@ const TransportationListItem = ({
             }
           ></DropDownSelect>
 
-          <div className="flex flex-1 items-center gap-2 rounded-lg px-2 hover:bg-surface">
+          <div className="flex flex-1 items-center gap-2 rounded-md px-2 hover:bg-surface">
             <i className="fa-regular fa-location-dot text-sm" />
             <LocationSearch
               placeholder="Departure Location"
@@ -190,7 +190,7 @@ const TransportationListItem = ({
             <i className="fa fa-calendar cursor" aria-hidden="true"></i>
           </button>
 
-          <div className="col-start-2 flex flex-1 items-center gap-2 rounded-lg px-2 hover:bg-surface">
+          <div className="col-start-2 flex flex-1 items-center gap-2 rounded-md px-2 hover:bg-surface">
             <i className="fa-solid fa-location-dot text-sm"></i>
             <LocationSearch
               placeholder="Arrival Location"
@@ -216,7 +216,7 @@ const TransportationListItem = ({
 
           {showDetails ? (
             <textarea
-              className="col-span-2 col-start-2 w-full rounded-lg p-1 px-2 text-sm text-grayPrimary outline-none duration-150 placeholder:text-gray-100 hover:bg-surface"
+              className="col-span-2 col-start-2 w-full rounded-md p-1 px-2 text-sm text-grayPrimary outline-none duration-150 placeholder:text-gray-100 hover:bg-surface"
               placeholder="anything more specific you wanna jot down..."
               onChange={(e) => setDetails(e.target.value)}
               value={details}

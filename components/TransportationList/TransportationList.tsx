@@ -93,7 +93,7 @@ const TransportationList = ({
         )}
       </ul>
       <button
-        className="w-full rounded-lg bg-primary py-1 text-sm text-white opacity-0 duration-100 hover:opacity-100"
+        className="w-full rounded-md bg-primary py-1 text-sm text-white opacity-0 duration-100 hover:opacity-100"
         onClick={addTransportation}
       >
         Add transportation
