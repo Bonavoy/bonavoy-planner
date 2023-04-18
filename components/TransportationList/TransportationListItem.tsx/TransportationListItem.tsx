@@ -166,7 +166,7 @@ const TransportationListItem = ({
             }
           ></DropDownSelect>
 
-          <div className="flex flex-1 items-center gap-2 rounded-lg px-2 py-1 hover:bg-surface">
+          <div className="flex flex-1 items-center gap-2 rounded-lg px-2 hover:bg-surface">
             <i className="fa-regular fa-location-dot text-sm" />
             <LocationSearch
               placeholder="Departure Location"
@@ -181,7 +181,7 @@ const TransportationListItem = ({
           </div>
 
           <button
-            className="flex items-center justify-end gap-2 place-self-stretch rounded-md p-2 py-1 text-sm duration-150 hover:bg-surface"
+            className="flex items-center justify-end gap-2 place-self-stretch rounded-md px-2 text-sm duration-150 hover:bg-surface"
             onClick={() => {
               setShowDepartureDatePicker(true);
             }}
@@ -190,7 +190,7 @@ const TransportationListItem = ({
             <i className="fa fa-calendar cursor" aria-hidden="true"></i>
           </button>
 
-          <div className="col-start-2 flex flex-1 items-center gap-2 rounded-lg px-2 py-1 hover:bg-surface">
+          <div className="col-start-2 flex flex-1 items-center gap-2 rounded-lg px-2 hover:bg-surface">
             <i className="fa-solid fa-location-dot text-sm"></i>
             <LocationSearch
               placeholder="Arrival Location"
@@ -205,7 +205,7 @@ const TransportationListItem = ({
           </div>
 
           <button
-            className="flex items-center justify-end gap-2 place-self-stretch rounded-md p-2 py-1 text-sm duration-150 hover:bg-surface"
+            className="flex items-center justify-end gap-2 place-self-stretch rounded-md px-2 text-sm duration-150 hover:bg-surface"
             onClick={() => {
               setShowArrivalDatepicker(true);
             }}
@@ -223,10 +223,10 @@ const TransportationListItem = ({
               rows={2}
             />
           ) : null}
-          <div className="text-md col-span-2 col-start-2 flex w-full items-center justify-between gap-4 bg-transparent ">
+          <div className="text-md col-span-2 col-start-2 flex w-full items-center justify-between gap-4 bg-transparent">
             <div className="flex gap-2">
               <button
-                className="rounded-md px-1 text-xs text-grayPrimary duration-100 hover:bg-surface"
+                className="rounded-md px-2 text-xs text-grayPrimary duration-100 hover:bg-surface"
                 onClick={() => setShowDetails(!showDetails)}
               >
                 {showDetails ? 'Hide details' : 'Show details'}
@@ -237,7 +237,7 @@ const TransportationListItem = ({
             </div>
             <div className="relative">
               <button
-                className="h-6 w-6 rounded-md text-grayPrimary duration-100 hover:bg-surface "
+                className="flex h-6 w-6 items-center justify-center rounded-md text-grayPrimary duration-100 hover:bg-surface"
                 onClick={() => setShowOptionsMenu(!showOptionsMenu)}
               >
                 <i className="fa-solid fa-ellipsis relative" />

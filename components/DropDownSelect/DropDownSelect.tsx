@@ -29,7 +29,7 @@ const DropDownSelect = ({
     <button
       id="dropDownSelect"
       onClick={toggleDropdown}
-      className="group relative flex h-8 w-8 cursor-pointer select-none items-center justify-center rounded-md duration-100  hover:bg-surface hover:shadow-md"
+      className="group relative flex h-6 w-6 cursor-pointer select-none items-center justify-center rounded-md duration-100  hover:bg-surface"
     >
       <div className="relative flex items-center py-1 text-sm duration-100">
         {value ? value.view : placeholder}
@@ -39,7 +39,7 @@ const DropDownSelect = ({
           <ul className="rounded-md bg-white shadow-centered">
             {options.map((option, i) => (
               <li
-                className="px-2 py-1 hover:bg-surface"
+                className="px-1 py-1 hover:bg-surface"
                 key={i}
                 onClick={() => {
                   onSelect(option);
