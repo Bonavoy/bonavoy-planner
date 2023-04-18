@@ -77,7 +77,7 @@ const TransportationList = ({
       <ul>
         {transportation.length ? (
           transportation.map((transport, i) => (
-            <li className="pb-1" key={i}>
+            <li className="pb-1.5" key={i}>
               <TransportationListItem
                 tripId={tripId}
                 transportationId={transport.id}

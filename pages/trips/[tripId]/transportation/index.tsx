@@ -98,13 +98,16 @@ export default function TransportationPage({
   return (
     <main className="h-screen">
       <Planner mode="transportation" tripId={tripId} placeId={placeId}>
-        <section className="grid flex-grow grid-cols-2 overflow-hidden bg-white">
+        <section className="grid flex-grow grid-cols-[3fr_5fr] overflow-hidden bg-white">
           <div className="flex justify-center overflow-auto px-12 py-8">
-            <div className="max-w-[600px] grow">
+            <div>
+              <h1 className="pb-8 font-heading text-4xl font-bold">
+                Transportation
+              </h1>
               {getPlacesQuery?.places.map((place, i) => {
                 if (i < getPlacesQuery?.places.length - 1) {
                   return (
-                    <div className="pb-8" key={i}>
+                    <div className="pb-1" key={i}>
                       <div className="flex items-center justify-center gap-2 pb-2">
                         {/* departure place */}
                         <div className="flex flex-1 justify-center">
@@ -151,6 +154,7 @@ export default function TransportationPage({
               })}
             </div>
           </div>
+
           <TransportationMap places={getPlacesQuery?.places ?? []} />
         </section>
       </Planner>

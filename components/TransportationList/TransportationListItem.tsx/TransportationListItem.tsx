@@ -151,112 +151,110 @@ const TransportationListItem = ({
 
   return (
     <>
-      <div className="pb-2">
-        <div className="grid cursor-pointer grid-cols-[auto_3fr_auto] gap-1 rounded-md p-3 shadow-centered duration-200">
-          <DropDownSelect
-            placeholder="travel options"
-            onSelect={(selection: DropDownItem) => {
-              updateTransportation({ type: selection.val });
-            }}
-            options={transportationOptions}
-            value={
-              transportationOptions.find(
-                (transportation) => transportation.val === transport.type,
-              )!
+      <div className="grid cursor-pointer grid-cols-[auto_3fr_auto] gap-1 rounded-md p-3 shadow-centered duration-200">
+        <DropDownSelect
+          placeholder="travel options"
+          onSelect={(selection: DropDownItem) => {
+            updateTransportation({ type: selection.val });
+          }}
+          options={transportationOptions}
+          value={
+            transportationOptions.find(
+              (transportation) => transportation.val === transport.type,
+            )!
+          }
+        ></DropDownSelect>
+
+        <div className="flex flex-1 items-center gap-2 rounded-md px-2 hover:bg-surface">
+          <i className="fa-regular fa-location-dot text-sm" />
+          <LocationSearch
+            placeholder="Departure Location"
+            value={departureLocation}
+            updateLocation={(location, coords) =>
+              updateTransportation({
+                departureLocation: location,
+                departureCoords: coords,
+              })
             }
-          ></DropDownSelect>
+          />
+        </div>
 
-          <div className="flex flex-1 items-center gap-2 rounded-md px-2 hover:bg-surface">
-            <i className="fa-regular fa-location-dot text-sm" />
-            <LocationSearch
-              placeholder="Departure Location"
-              value={departureLocation}
-              updateLocation={(location, coords) =>
-                updateTransportation({
-                  departureLocation: location,
-                  departureCoords: coords,
-                })
-              }
-            />
+        <button
+          className="flex items-center justify-end gap-2 place-self-stretch rounded-md px-2 text-sm duration-150 hover:bg-surface"
+          onClick={() => {
+            setShowDepartureDatePicker(true);
+          }}
+        >
+          <span>{formatDatetime(transport.departureTime)}</span>
+          <i className="fa fa-calendar cursor" aria-hidden="true"></i>
+        </button>
+
+        <div className="col-start-2 flex flex-1 items-center gap-2 rounded-md px-2 hover:bg-surface">
+          <i className="fa-solid fa-location-dot text-sm"></i>
+          <LocationSearch
+            placeholder="Arrival Location"
+            value={arrivalLocation}
+            updateLocation={(location, coords) =>
+              updateTransportation({
+                arrivalLocation: location,
+                arrivalCoords: coords,
+              })
+            }
+          />
+        </div>
+
+        <button
+          className="flex items-center justify-end gap-2 place-self-stretch rounded-md px-2 text-sm duration-150 hover:bg-surface"
+          onClick={() => {
+            setShowArrivalDatepicker(true);
+          }}
+        >
+          <span>{formatDatetime(transport.arrivalTime)}</span>
+          <i className="fa fa-calendar cursor" aria-hidden="true"></i>
+        </button>
+
+        {showDetails ? (
+          <textarea
+            className="col-span-2 col-start-2 w-full rounded-md p-1 px-2 text-sm text-grayPrimary outline-none duration-150 placeholder:text-gray-100 hover:bg-surface"
+            placeholder="anything more specific you wanna jot down..."
+            onChange={(e) => setDetails(e.target.value)}
+            value={details}
+            rows={2}
+          />
+        ) : null}
+        <div className="text-md col-span-2 col-start-2 flex w-full items-center justify-between gap-4 bg-transparent">
+          <div className="flex gap-2">
+            <button
+              className="rounded-md px-2 text-xs text-grayPrimary duration-100 hover:bg-surface"
+              onClick={() => setShowDetails(!showDetails)}
+            >
+              {showDetails ? 'Hide details' : 'Show details'}
+            </button>
+            <button className="rounded-md px-1 text-grayPrimary duration-100 hover:bg-surface">
+              <i className="fa-solid fa-paperclip "></i>
+            </button>
           </div>
-
-          <button
-            className="flex items-center justify-end gap-2 place-self-stretch rounded-md px-2 text-sm duration-150 hover:bg-surface"
-            onClick={() => {
-              setShowDepartureDatePicker(true);
-            }}
-          >
-            <span>{formatDatetime(transport.departureTime)}</span>
-            <i className="fa fa-calendar cursor" aria-hidden="true"></i>
-          </button>
-
-          <div className="col-start-2 flex flex-1 items-center gap-2 rounded-md px-2 hover:bg-surface">
-            <i className="fa-solid fa-location-dot text-sm"></i>
-            <LocationSearch
-              placeholder="Arrival Location"
-              value={arrivalLocation}
-              updateLocation={(location, coords) =>
-                updateTransportation({
-                  arrivalLocation: location,
-                  arrivalCoords: coords,
-                })
-              }
-            />
-          </div>
-
-          <button
-            className="flex items-center justify-end gap-2 place-self-stretch rounded-md px-2 text-sm duration-150 hover:bg-surface"
-            onClick={() => {
-              setShowArrivalDatepicker(true);
-            }}
-          >
-            <span>{formatDatetime(transport.arrivalTime)}</span>
-            <i className="fa fa-calendar cursor" aria-hidden="true"></i>
-          </button>
-
-          {showDetails ? (
-            <textarea
-              className="col-span-2 col-start-2 w-full rounded-md p-1 px-2 text-sm text-grayPrimary outline-none duration-150 placeholder:text-gray-100 hover:bg-surface"
-              placeholder="anything more specific you wanna jot down..."
-              onChange={(e) => setDetails(e.target.value)}
-              value={details}
-              rows={2}
-            />
-          ) : null}
-          <div className="text-md col-span-2 col-start-2 flex w-full items-center justify-between gap-4 bg-transparent">
-            <div className="flex gap-2">
-              <button
-                className="rounded-md px-2 text-xs text-grayPrimary duration-100 hover:bg-surface"
-                onClick={() => setShowDetails(!showDetails)}
-              >
-                {showDetails ? 'Hide details' : 'Show details'}
-              </button>
-              <button className="rounded-md px-1 text-grayPrimary duration-100 hover:bg-surface">
-                <i className="fa-solid fa-paperclip "></i>
-              </button>
-            </div>
-            <div className="relative">
-              <button
-                className="flex h-6 w-6 items-center justify-center rounded-md text-grayPrimary duration-100 hover:bg-surface"
-                onClick={() => setShowOptionsMenu(!showOptionsMenu)}
-              >
-                <i className="fa-solid fa-ellipsis relative" />
-              </button>
-              {showOptionsMenu && (
-                <ul className="absolute top-full rounded-sm border border-surface bg-white text-xs shadow-md">
-                  <li
-                    className="rounded-inherit px-2 py-1 text-red hover:bg-surface"
-                    onClick={() => {
-                      deleteTransportationMutation({
-                        variables: { id: transportationId },
-                      });
-                    }}
-                  >
-                    Delete
-                  </li>
-                </ul>
-              )}
-            </div>
+          <div className="relative">
+            <button
+              className="flex h-6 w-6 items-center justify-center rounded-md text-grayPrimary duration-100 hover:bg-surface"
+              onClick={() => setShowOptionsMenu(!showOptionsMenu)}
+            >
+              <i className="fa-solid fa-ellipsis relative" />
+            </button>
+            {showOptionsMenu && (
+              <ul className="absolute top-full rounded-sm border border-surface bg-white text-xs shadow-md">
+                <li
+                  className="rounded-inherit px-2 py-1 text-red hover:bg-surface"
+                  onClick={() => {
+                    deleteTransportationMutation({
+                      variables: { id: transportationId },
+                    });
+                  }}
+                >
+                  Delete
+                </li>
+              </ul>
+            )}
           </div>
         </div>
       </div>
