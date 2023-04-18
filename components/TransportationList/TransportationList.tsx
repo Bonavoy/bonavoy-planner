@@ -92,12 +92,12 @@ const TransportationList = ({
           </div>
         )}
       </ul>
-      {/* <button
-        className="w-full rounded-lg bg-primary py-1 text-sm text-white"
+      <button
+        className="w-full rounded-lg bg-primary py-1 text-sm text-white opacity-0 duration-100 hover:opacity-100"
         onClick={addTransportation}
       >
         Add transportation
-      </button> */}
+      </button>
     </>
   );
 };

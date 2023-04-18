@@ -22,7 +22,7 @@ const transportationOptions: DropDownItem[] = [
   {
     val: TransportationType.Plane,
     view: (
-      <div className="flex items-center justify-between gap-2">
+      <div className="flex items-center justify-between text-sm">
         <i className="fa-solid fa-plane"></i>
       </div>
     ),
@@ -30,7 +30,7 @@ const transportationOptions: DropDownItem[] = [
   {
     val: TransportationType.Car,
     view: (
-      <div className="flex items-center justify-between gap-2">
+      <div className="flex items-center justify-between text-sm">
         <i className="fa-solid fa-car"></i>
       </div>
     ),
@@ -164,7 +164,7 @@ const TransportationListItem = ({
                 (transportation) => transportation.val === transport.type,
               )!
             }
-          />
+          ></DropDownSelect>
 
           <div className="flex flex-1 items-center gap-2 rounded-lg px-2 py-1 hover:bg-surface">
             <i className="fa-regular fa-location-dot text-sm" />
@@ -237,7 +237,7 @@ const TransportationListItem = ({
             </div>
             <div className="relative">
               <button
-                className="h-6 w-6 rounded-md text-grayPrimary duration-100 hover:bg-surface hover:text-white"
+                className="h-6 w-6 rounded-md text-grayPrimary duration-100 hover:bg-surface "
                 onClick={() => setShowOptionsMenu(!showOptionsMenu)}
               >
                 <i className="fa-solid fa-ellipsis relative" />
