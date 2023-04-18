@@ -60,8 +60,11 @@ export default function Trips() {
                   </div>
                 </Link>
               ))
-            : skeletonArr.map((_) => (
-                <div className="relative aspect-[4/3] animate-pulse rounded-md border border-gray-100 bg-gray-100">
+            : skeletonArr.map((_, i) => (
+                <div
+                  className="relative aspect-[4/3] animate-pulse rounded-md border border-gray-100 bg-gray-100"
+                  key={i}
+                >
                   <div className="absolute bottom-0 z-10 w-full animate-pulse bg-white p-2">
                     <div className="pb-1">
                       <div className="h-3 w-1/2 animate-pulse rounded-full bg-gray-200" />
