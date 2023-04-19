@@ -73,7 +73,7 @@ export default function Plan({ tripId, placeId }: PlanProps) {
               </div>
               <div className="mb-10 flex items-center justify-between rounded-xl font-sans text-white">
                 <div className="grid grid-cols-2 gap-3">
-                  <button className="flex items-center justify-center gap-2 rounded-xl bg-primary px-4 py-2">
+                  <button className="flex items-center justify-center gap-2 rounded-xl bg-primary px-4 py-2 font-sans">
                     <i className="fa-solid fa-calendar" />
                     Feb 2 - 15 (13 days)
                   </button>

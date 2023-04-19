@@ -12,14 +12,14 @@ const Invite = ({ tripId, onClose }: InviteProps) => {
   const { data } = useQuery(GET_AUTHORS_ON_TRIP, { variables: { tripId } });
 
   return (
-    <div className="h-fit w-4/12 rounded-md bg-white  p-2">
-      <div className="flex items-center justify-between">
-        <h1 className="font-heading text-lg font-semibold">Invite</h1>
+    <div className="h-fit w-4/12 rounded-md bg-white px-4 py-3 text-black">
+      <div className="flex items-start justify-between">
+        <h1 className="font-heading text-3xl font-semibold">Invite</h1>
         <button className="text-sm text-grayPrimary" onClick={onClose}>
           <i className="fa-solid fa-x" />
         </button>
       </div>
-      <form className="flex gap-3" onSubmit={(e) => e.preventDefault()}>
+      <form className="flex gap-3 pt-4" onSubmit={(e) => e.preventDefault()}>
         <input
           placeholder="enter in an email"
           className="flex-1 rounded-lg border border-grayPrimary px-4 py-2 text-sm"
@@ -35,7 +35,7 @@ const Invite = ({ tripId, onClose }: InviteProps) => {
         </button>
       </form>
       {data?.authorsOnTrips.length && data.authorsOnTrips.length > 0 ? (
-        <ul className="pt-4 text-grayPrimary">
+        <ul className="pt-4">
           {data.authorsOnTrips.map((author, i) => (
             <div className="flex justify-between text-sm" key={i}>
               <div>{author.user.email}</div>

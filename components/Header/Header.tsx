@@ -128,7 +128,7 @@ export default function Header({ tripId, mode }: HeaderProps) {
           </div>
         </div>
 
-        <div className="flex items-center justify-end relative">
+        <div className="relative flex items-center justify-end">
           <div className="flex">
             {!getAuthorsPresentLoading
               ? data?.authorsPresent.map((authorPresent, i) => (
@@ -158,7 +158,7 @@ export default function Header({ tripId, mode }: HeaderProps) {
       </header>
       {/* invite other users */}
       <Modal show={showInviteModal}>
-        <div className="fixed bottom-0 left-0 right-0 top-0 flex justify-center bg-black bg-opacity-70">
+        <div className="fixed bottom-0 left-0 right-0 top-0 flex justify-center bg-gray-800/70 pt-12">
           <Invite tripId={tripId} onClose={() => setShowInviteModal(false)} />
         </div>
       </Modal>

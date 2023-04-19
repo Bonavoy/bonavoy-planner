@@ -26,22 +26,20 @@ const DropDownSelect = ({
   const toggleDropdown = () => setShowDropDown(!showDropDown);
 
   return (
-    <div
+    <button
       id="dropDownSelect"
-      className="group relative flex h-8 w-8 cursor-pointer select-none items-center justify-center rounded-full bg-surface duration-100 hover:border-surface  hover:bg-primary hover:shadow-md"
+      onClick={toggleDropdown}
+      className="group relative flex h-6 w-6 cursor-pointer select-none items-center justify-center rounded-md duration-100  hover:bg-surface"
     >
-      <div
-        onClick={toggleDropdown}
-        className="relative flex items-center py-1 text-grayPrimary duration-100 group-hover:text-white"
-      >
+      <div className="relative flex items-center py-1 text-sm duration-100">
         {value ? value.view : placeholder}
       </div>
       {showDropDown ? (
-        <div className="absolute z-10 w-fit pt-1">
-          <ul className="rounded-lg border border-grayPrimary bg-white shadow-md">
+        <div className="absolute top-full w-fit pt-1">
+          <ul className="rounded-md bg-white shadow-centered">
             {options.map((option, i) => (
               <li
-                className="px-2 py-1 text-grayPrimary hover:bg-grayPrimary/10"
+                className="px-1 py-1 hover:bg-surface"
                 key={i}
                 onClick={() => {
                   onSelect(option);
@@ -54,7 +52,7 @@ const DropDownSelect = ({
           </ul>
         </div>
       ) : null}
-    </div>
+    </button>
   );
 };
 

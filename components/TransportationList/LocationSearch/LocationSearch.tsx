@@ -36,10 +36,10 @@ const LocationSearch = ({
   }, [location, focused, getLocationSuggestionsQuery]);
 
   return (
-    <div className="relative grow">
+    <div className="relative grow bg-transparent">
       <input
         placeholder={placeholder}
-        className="relative w-full rounded-md bg-surface text-left text-sm outline-none"
+        className="relative w-full text-ellipsis rounded-md bg-transparent text-left text-sm outline-none duration-150"
         onChange={(e) => setLocation(e.target.value)}
         onFocus={() => {
           setFocused(true);

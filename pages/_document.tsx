@@ -13,7 +13,7 @@ export default function Document() {
           href="https://site-assets.fontawesome.com/releases/v6.4.0/css/all.css"
         />
       </Head>
-      <body>
+      <body className="text-black">
         <Main />
         <div id="modal-root" />
         <NextScript />

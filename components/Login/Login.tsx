@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { AUTHENTICATE } from '~/graphql/mutations/user';
+import Spinner from '../Spinner/Spinner';
 
 export default function Login() {
   const router = useRouter();
@@ -24,7 +25,7 @@ export default function Login() {
 
   return (
     <form
-      className="border-gray-500 w-full rounded-lg border border-grayPrimary p-5 shadow-lg sm:w-96"
+      className="w-full rounded-lg border border-gray-500 p-5 shadow-lg sm:w-96"
       onSubmit={(e) => {
         e.preventDefault();
         login();
@@ -37,7 +38,7 @@ export default function Login() {
           <input
             placeholder="username"
             onChange={(e) => setUsername(e.target.value)}
-            className="border-gray-200 w-full rounded-lg border border-grayPrimary px-4 py-2 text-sm outline-none"
+            className="w-full rounded-lg border border-gray-200 px-4 py-2 text-sm outline-none"
           />
         </div>
         <div className="w-full pt-2">
@@ -45,7 +46,7 @@ export default function Login() {
             placeholder="password"
             type="password"
             onChange={(e) => setPassword(e.target.value)}
-            className="border-gray-200 w-full rounded-lg border border-grayPrimary px-4 py-2 text-sm outline-none"
+            className="w-full rounded-lg border border-gray-200 px-4 py-2 text-sm outline-none"
           />
         </div>
         <div className="w-full pt-4">
@@ -54,7 +55,7 @@ export default function Login() {
             disabled={loading}
             className="w-full rounded-lg bg-primary p-1.5 text-sm text-white duration-100 hover:shadow-lg"
           >
-            {loading ? 'loading...' : 'Login'}
+            {loading ? <Spinner /> : 'Login'}
           </button>
         </div>
         <div className="flex w-full justify-between pt-4 text-sm">
