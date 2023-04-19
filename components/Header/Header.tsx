@@ -21,24 +21,35 @@ export default function Header({ tripId, mode }: HeaderProps) {
   const [showInviteModal, setShowInviteModal] = useState(false);
   const { data: userData } = useQuery(GET_USER);
 
-  const { data, loading: getAuthorsPresentLoading } = useQuery(
-    GET_AUTHORS_PRESENT,
-    { variables: { tripId }, skip: !userData?.user },
-  );
+  // const { data, loading: getAuthorsPresentLoading } = useQuery(
+  //   GET_AUTHORS_PRESENT,
+  //   { variables: { tripId }, skip: !userData?.user },
+  // );
+
+  const getAuthorsPresentQuery = useQuery(GET_AUTHORS_PRESENT, {
+    variables: { tripId },
+    skip: !userData?.user,
+  });
 
   useSubscription(LISTEN_AUTHORS_PRESENT, {
-    skip: !userData?.user,
+    skip: !userData?.user || !getAuthorsPresentQuery?.data,
     variables: { tripId },
     onData: ({ data, client }) => {
+      console.log(
+        'received: ',
+        data,
+        'with current: ',
+        getAuthorsPresentQuery?.data,
+      );
       const authorPresent = data.data?.listenAuthorPresent;
       if (!authorPresent) return;
 
-      const getAuthorsPresentQuery = client.readQuery({
+      const oldGetAuthorsPresentQuery = client.readQuery({
         query: GET_AUTHORS_PRESENT,
         variables: { tripId: tripId },
       });
 
-      const newAuthorsPresent = cloneDeep(getAuthorsPresentQuery);
+      const newAuthorsPresent = cloneDeep(oldGetAuthorsPresentQuery);
 
       if (!newAuthorsPresent?.authorsPresent) return;
 
@@ -79,6 +90,8 @@ export default function Header({ tripId, mode }: HeaderProps) {
     },
   });
 
+  console.log('rendered: ', getAuthorsPresentQuery.data);
+
   const navs = [
     {
       name: 'planner',
@@ -92,6 +105,12 @@ export default function Header({ tripId, mode }: HeaderProps) {
       name: 'notes',
       icon: <i className="fa-solid fa-note" />,
     },
+  ];
+
+  const mockUsers = [
+    'https://api.dicebear.com/6.x/initials/svg?seed=john',
+    'https://api.dicebear.com/6.x/initials/svg?seed=meow',
+    'https://api.dicebear.com/6.x/initials/svg?seed=AHHHHH',
   ];
 
   return (
@@ -128,29 +147,55 @@ export default function Header({ tripId, mode }: HeaderProps) {
           </div>
         </div>
 
-        <div className="relative flex items-center justify-end">
-          <div className="flex">
-            {!getAuthorsPresentLoading
-              ? data?.authorsPresent.map((authorPresent, i) => (
-                  <Image
+        <div className="relative flex items-center justify-end gap-2">
+          <div className="">
+            <div className="relative flex">
+              {getAuthorsPresentQuery.data?.authorsPresent
+                .slice(0, 3)
+                .map((authorPresent, i) => (
+                  <div
                     key={i}
-                    src={authorPresent.avatar}
-                    alt={authorPresent.username}
+                    className={clsx(
+                      'absolute right-4 h-8 w-8 rounded-full border-2 border-white',
+                      { 'right-8': i === 1, 'right-12': i === 2 },
+                    )}
+                  >
+                    <Image
+                      src={authorPresent.avatar}
+                      alt={authorPresent.username}
+                      fill
+                      className="rounded-full"
+                    />
+                  </div>
+                ))}
+              {/* {mockUsers.map((mockUser, i) => (
+                <div
+                  className={clsx(
+                    'absolute right-4 h-8 w-8 rounded-full border-2 border-white',
+                    { 'right-8': i === 1, 'right-12': i === 2 },
+                  )}
+                >
+                  <Image
+                    src={mockUser}
                     width={32}
                     height={32}
+                    alt={mockUser}
+                    key={i}
                     className="rounded-full"
                   />
-                ))
-              : 'loading'}
+                </div>
+              ))} */}
+            </div>
+            <button
+              title="invite friends"
+              type="button"
+              onClick={() => setShowInviteModal(true)}
+              className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-white bg-primary text-white duration-150 hover:bg-primary/80"
+            >
+              <i className="fa-solid fa-plus" />
+            </button>
           </div>
-          <button
-            title="invite friends"
-            type="button"
-            onClick={() => setShowInviteModal(true)}
-            className="relative -left-3 flex h-8 w-8 items-center justify-center rounded-full bg-primary text-white"
-          >
-            <i className="fa-solid fa-plus" />
-          </button>
+
           <button type="button">
             <i className="fa-regular fa-gear text-xl text-grayPrimary transition-colors duration-150 hover:text-primary" />
           </button>

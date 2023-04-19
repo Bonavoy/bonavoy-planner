@@ -98,9 +98,9 @@ export default function TransportationPage({
   return (
     <main className="h-screen">
       <Planner mode="transportation" tripId={tripId} placeId={placeId}>
-        <section className="grid flex-grow grid-cols-[3fr_5fr] overflow-hidden bg-white">
-          <div className="flex justify-center overflow-auto px-12 py-8">
-            <div>
+        <section className="grid flex-grow grid-cols-2 overflow-hidden bg-white">
+          <div className="flex justify-center overflow-auto px-36 py-8">
+            <div className="w-full">
               <h1 className="pb-8 font-heading text-4xl font-bold">
                 Transportation
               </h1>
