@@ -152,18 +152,22 @@ const TransportationListItem = ({
   return (
     <>
       <div className="grid cursor-pointer grid-cols-[auto_3fr_auto] gap-1 rounded-md p-3 shadow-centered duration-200">
-        <DropDownSelect
-          placeholder="travel options"
-          onSelect={(selection: DropDownItem) => {
-            updateTransportation({ type: selection.val });
-          }}
-          options={transportationOptions}
-          value={
-            transportationOptions.find(
-              (transportation) => transportation.val === transport.type,
-            )!
-          }
-        ></DropDownSelect>
+        <div className="h-6 w-6">
+          <DropDownSelect
+            placeholder="travel options"
+            onSelect={(selection: DropDownItem) => {
+              updateTransportation({
+                type: selection.val as TransportationType,
+              });
+            }}
+            options={transportationOptions}
+            value={
+              transportationOptions.find(
+                (transportation) => transportation.val === transport.type,
+              )!
+            }
+          />
+        </div>
 
         <div className="flex flex-1 items-center gap-2 rounded-md px-2 hover:bg-surface">
           <i className="fa-regular fa-location-dot text-sm" />

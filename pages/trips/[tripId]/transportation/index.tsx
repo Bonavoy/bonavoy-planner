@@ -99,7 +99,7 @@ export default function TransportationPage({
     <main className="h-screen">
       <Planner mode="transportation" tripId={tripId} placeId={placeId}>
         <section className="grid flex-grow grid-cols-2 overflow-hidden bg-white">
-          <div className="flex justify-center overflow-auto px-36 py-8">
+          <div className="flex justify-center overflow-auto px-4 py-8 sm:px-12 lg:px-28">
             <div className="w-full">
               <h1 className="pb-8 font-heading text-4xl font-bold">
                 Transportation

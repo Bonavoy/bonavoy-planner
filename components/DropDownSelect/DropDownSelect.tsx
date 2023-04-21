@@ -1,14 +1,13 @@
-import { useState, ReactNode, useEffect } from 'react';
-import { TransportationType } from '~/graphql/generated/graphql';
+import { useState, ReactNode } from 'react';
 
 export interface DropDownItem {
-  val: TransportationType;
+  val: any;
   view: ReactNode;
 }
 
 interface DropDownSelectInterface {
   onSelect: (selection: DropDownItem) => void;
-  placeholder: string;
+  placeholder?: string;
   options: DropDownItem[];
   value: DropDownItem;
 }
@@ -16,20 +15,19 @@ interface DropDownSelectInterface {
 const DropDownSelect = ({
   onSelect,
   options,
-  placeholder,
+  placeholder = '',
   value,
 }: DropDownSelectInterface) => {
   const [showDropDown, setShowDropDown] = useState(false);
-
-  useEffect(() => {}, []);
 
   const toggleDropdown = () => setShowDropDown(!showDropDown);
 
   return (
     <button
+      type="button"
       id="dropDownSelect"
       onClick={toggleDropdown}
-      className="group relative flex h-6 w-6 cursor-pointer select-none items-center justify-center rounded-md duration-100  hover:bg-surface"
+      className="group relative flex w-full w-full cursor-pointer select-none items-center justify-center rounded-md duration-100  hover:bg-surface"
     >
       <div className="relative flex items-center py-1 text-sm duration-100">
         {value ? value.view : placeholder}

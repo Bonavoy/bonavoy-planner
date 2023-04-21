@@ -21,11 +21,6 @@ export default function Header({ tripId, mode }: HeaderProps) {
   const [showInviteModal, setShowInviteModal] = useState(false);
   const { data: userData } = useQuery(GET_USER);
 
-  // const { data, loading: getAuthorsPresentLoading } = useQuery(
-  //   GET_AUTHORS_PRESENT,
-  //   { variables: { tripId }, skip: !userData?.user },
-  // );
-
   const getAuthorsPresentQuery = useQuery(GET_AUTHORS_PRESENT, {
     variables: { tripId },
     skip: !userData?.user,
@@ -35,12 +30,6 @@ export default function Header({ tripId, mode }: HeaderProps) {
     skip: !userData?.user || !getAuthorsPresentQuery?.data,
     variables: { tripId },
     onData: ({ data, client }) => {
-      console.log(
-        'received: ',
-        data,
-        'with current: ',
-        getAuthorsPresentQuery?.data,
-      );
       const authorPresent = data.data?.listenAuthorPresent;
       if (!authorPresent) return;
 
@@ -72,14 +61,6 @@ export default function Header({ tripId, mode }: HeaderProps) {
           );
       }
 
-      // don't show the current logged in user in this list
-      // if (userData?.user) {
-      //   newAuthorsPresent.authorsPresent =
-      //     newAuthorsPresent.authorsPresent.filter(
-      //       (curAuthorPresent) => curAuthorPresent.id !== userData.user.id,
-      //     );
-      // }
-
       client.writeQuery({
         query: GET_AUTHORS_PRESENT,
         variables: {
@@ -89,8 +70,6 @@ export default function Header({ tripId, mode }: HeaderProps) {
       });
     },
   });
-
-  console.log('rendered: ', getAuthorsPresentQuery.data);
 
   const navs = [
     {
@@ -105,12 +84,6 @@ export default function Header({ tripId, mode }: HeaderProps) {
       name: 'notes',
       icon: <i className="fa-solid fa-note" />,
     },
-  ];
-
-  const mockUsers = [
-    'https://api.dicebear.com/6.x/initials/svg?seed=john',
-    'https://api.dicebear.com/6.x/initials/svg?seed=meow',
-    'https://api.dicebear.com/6.x/initials/svg?seed=AHHHHH',
   ];
 
   return (
@@ -167,24 +140,7 @@ export default function Header({ tripId, mode }: HeaderProps) {
                       className="rounded-full"
                     />
                   </div>
-                ))}
-              {/* {mockUsers.map((mockUser, i) => (
-                <div
-                  className={clsx(
-                    'absolute right-4 h-8 w-8 rounded-full border-2 border-white',
-                    { 'right-8': i === 1, 'right-12': i === 2 },
-                  )}
-                >
-                  <Image
-                    src={mockUser}
-                    width={32}
-                    height={32}
-                    alt={mockUser}
-                    key={i}
-                    className="rounded-full"
-                  />
-                </div>
-              ))} */}
+                ))}{' '}
             </div>
             <button
               title="invite friends"
@@ -201,9 +157,10 @@ export default function Header({ tripId, mode }: HeaderProps) {
           </button>
         </div>
       </header>
-      {/* invite other users */}
+
+      {/* invite modal */}
       <Modal show={showInviteModal}>
-        <div className="fixed bottom-0 left-0 right-0 top-0 flex justify-center bg-gray-800/70 pt-12">
+        <div className="fixed bottom-0 left-0 right-0 top-0 flex justify-center bg-black/5 pt-12">
           <Invite tripId={tripId} onClose={() => setShowInviteModal(false)} />
         </div>
       </Modal>
