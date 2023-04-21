@@ -7,6 +7,7 @@ import { GET_AUTHORS_ON_TRIP } from '~/graphql/queries/authorsOnTrips';
 
 import Spinner from '../Spinner/';
 import DropDownSelect, { DropDownItem } from '../DropDownSelect/DropDownSelect';
+import { GET_INVITES } from '~/graphql/queries/invite';
 
 const roles: DropDownItem[] = [
   {
@@ -47,8 +48,8 @@ const Invite = ({ tripId, onClose }: InviteProps) => {
   const getAuthorsOnTripQuery = useQuery(GET_AUTHORS_ON_TRIP, {
     variables: { tripId },
   });
-  // const getInvitesQuery = useQuery()
-  const [sendInvite, sendInviteResult] = useMutation(SEND_INVITE);
+  const getInvitesQuery = useQuery(GET_INVITES, { variables: { tripId } });
+  const [sendInvite, sendInviteResult] = useMutation(SEND_INVITE); // TODO: optimistic ui update
 
   return (
     <div className="h-fit w-4/12 rounded-md bg-white px-4 py-3 text-black">
@@ -113,7 +114,16 @@ const Invite = ({ tripId, onClose }: InviteProps) => {
       <div className="pt-4">
         <h2 className="font-heading font-semibold">Pending Invites</h2>
         <ul className="text-sm">
-          <li className="py-1">test@test.com</li>
+          {!getInvitesQuery.loading ? (
+            getInvitesQuery.data?.invites.map((invite, i) => (
+              <li className="flex justify-between py-1 text-sm" key={i}>
+                <div>{invite.email}</div>
+                <div className="text-gray-500">{invite.role}</div>
+              </li>
+            ))
+          ) : (
+            <Spinner />
+          )}
         </ul>
       </div>
     </div>
