@@ -99,6 +99,11 @@ const Invite = ({ tripId, onClose }: InviteProps) => {
           {sendInviteResult.loading ? <Spinner /> : 'Invite'}
         </button>
       </form>
+
+      <div className="text-xs text-error">
+        {sendInviteResult.error?.message}
+      </div>
+
       <div>
         {getAuthorsOnTripQuery.data?.authorsOnTrips.length &&
         getAuthorsOnTripQuery.data.authorsOnTrips.length > 0 ? (

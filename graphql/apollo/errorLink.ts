@@ -4,6 +4,7 @@ import { fromPromise } from '@apollo/client';
 import { onError } from '@apollo/client/link/error';
 
 import { REFRESH_TOKEN } from '~/graphql/mutations/user';
+import Router from 'next/router';
 
 let isRefreshing = false;
 let pendingRequests: Function[] = [];
@@ -36,6 +37,7 @@ const errorLink = onError(({ graphQLErrors, operation, forward }) => {
               getNewToken().catch(() => {
                 resolvePendingRequests();
                 setIsRefreshing(false);
+                Router.push('/login'); // TODO: should this even go here? idk...
 
                 return forward(operation);
               }),
@@ -50,6 +52,9 @@ const errorLink = onError(({ graphQLErrors, operation, forward }) => {
               new Promise((resolve) => addPendingRequest(() => resolve(true))),
             ).flatMap(() => forward(operation));
           }
+        case 'UNAUTHENTICATED':
+          Router.push('/login');
+          break;
       }
     }
   }
