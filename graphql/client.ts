@@ -33,7 +33,11 @@ const splitLink =
 
 const client = new ApolloClient({
   link: from([errorLink, splitLink]),
-  cache: new InMemoryCache(),
+  cache: new InMemoryCache({
+    possibleTypes: {
+      Invite: ['AuthorsOnTrips', 'PendingInvite'],
+    },
+  }),
   defaultOptions: {
     query: { errorPolicy: 'all' },
     mutate: { errorPolicy: 'all' },

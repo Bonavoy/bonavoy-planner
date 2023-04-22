@@ -21,24 +21,24 @@ export default function Header({ tripId, mode }: HeaderProps) {
   const [showInviteModal, setShowInviteModal] = useState(false);
   const { data: userData } = useQuery(GET_USER);
 
-  const { data, loading: getAuthorsPresentLoading } = useQuery(
-    GET_AUTHORS_PRESENT,
-    { variables: { tripId }, skip: !userData?.user },
-  );
+  const getAuthorsPresentQuery = useQuery(GET_AUTHORS_PRESENT, {
+    variables: { tripId },
+    skip: !userData?.user,
+  });
 
   useSubscription(LISTEN_AUTHORS_PRESENT, {
-    skip: !userData?.user,
+    skip: !userData?.user || !getAuthorsPresentQuery?.data,
     variables: { tripId },
     onData: ({ data, client }) => {
       const authorPresent = data.data?.listenAuthorPresent;
       if (!authorPresent) return;
 
-      const getAuthorsPresentQuery = client.readQuery({
+      const oldGetAuthorsPresentQuery = client.readQuery({
         query: GET_AUTHORS_PRESENT,
         variables: { tripId: tripId },
       });
 
-      const newAuthorsPresent = cloneDeep(getAuthorsPresentQuery);
+      const newAuthorsPresent = cloneDeep(oldGetAuthorsPresentQuery);
 
       if (!newAuthorsPresent?.authorsPresent) return;
 
@@ -60,14 +60,6 @@ export default function Header({ tripId, mode }: HeaderProps) {
             (curAuthorPresent) => authorPresent.id !== curAuthorPresent.id,
           );
       }
-
-      // don't show the current logged in user in this list
-      // if (userData?.user) {
-      //   newAuthorsPresent.authorsPresent =
-      //     newAuthorsPresent.authorsPresent.filter(
-      //       (curAuthorPresent) => curAuthorPresent.id !== userData.user.id,
-      //     );
-      // }
 
       client.writeQuery({
         query: GET_AUTHORS_PRESENT,
@@ -128,37 +120,47 @@ export default function Header({ tripId, mode }: HeaderProps) {
           </div>
         </div>
 
-        <div className="relative flex items-center justify-end">
-          <div className="flex">
-            {!getAuthorsPresentLoading
-              ? data?.authorsPresent.map((authorPresent, i) => (
-                  <Image
+        <div className="relative flex items-center justify-end gap-2">
+          <div className="">
+            <div className="relative flex">
+              {getAuthorsPresentQuery.data?.authorsPresent
+                .slice(0, 3)
+                .map((authorPresent, i) => (
+                  <div
                     key={i}
-                    src={authorPresent.avatar}
-                    alt={authorPresent.username}
-                    width={32}
-                    height={32}
-                    className="rounded-full"
-                  />
-                ))
-              : 'loading'}
+                    className={clsx(
+                      'absolute right-4 h-8 w-8 rounded-full border-2 border-white',
+                      { 'right-8': i === 1, 'right-12': i === 2 },
+                    )}
+                  >
+                    <Image
+                      src={authorPresent.avatar}
+                      alt={authorPresent.username}
+                      fill
+                      className="rounded-full"
+                    />
+                  </div>
+                ))}{' '}
+            </div>
+            <button
+              title="invite friends"
+              type="button"
+              onClick={() => setShowInviteModal(true)}
+              className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-white bg-primary text-white duration-150 hover:bg-primary/80"
+            >
+              <i className="fa-solid fa-plus" />
+            </button>
           </div>
-          <button
-            title="invite friends"
-            type="button"
-            onClick={() => setShowInviteModal(true)}
-            className="relative -left-3 flex h-8 w-8 items-center justify-center rounded-full bg-primary text-white"
-          >
-            <i className="fa-solid fa-plus" />
-          </button>
+
           <button type="button">
             <i className="fa-regular fa-gear text-xl text-grayPrimary transition-colors duration-150 hover:text-primary" />
           </button>
         </div>
       </header>
-      {/* invite other users */}
+
+      {/* invite modal */}
       <Modal show={showInviteModal}>
-        <div className="fixed bottom-0 left-0 right-0 top-0 flex justify-center bg-gray-800/70 pt-12">
+        <div className="fixed bottom-0 left-0 right-0 top-0 flex justify-center bg-black/5 pt-12">
           <Invite tripId={tripId} onClose={() => setShowInviteModal(false)} />
         </div>
       </Modal>
