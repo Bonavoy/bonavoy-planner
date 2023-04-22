@@ -65,7 +65,12 @@ const Invite = ({ tripId, onClose }: InviteProps) => {
           e.preventDefault();
           sendInvite({
             variables: { tripId, invitee: { email, role } },
+            refetchQueries: [
+              { query: GET_INVITES, variables: { tripId } },
+              { query: GET_AUTHORS_ON_TRIP, variables: { tripId } },
+            ],
           });
+          setEmail('');
         }}
       >
         <div className="flex flex-1 items-center rounded-md border border-grayPrimary">
@@ -124,6 +129,10 @@ const Invite = ({ tripId, onClose }: InviteProps) => {
           ) : (
             <Spinner />
           )}
+          {!getInvitesQuery.loading &&
+          getInvitesQuery.data?.invites.length === 0 ? (
+            <div className="text-gray-400">no pending invites</div>
+          ) : null}
         </ul>
       </div>
     </div>

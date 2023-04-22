@@ -1,7 +1,7 @@
 import { gql } from '../generated';
 
 export const INVITE_FULL = gql(`
-  fragment inviteFull on Invite {
+  fragment pendingInviteFull on PendingInvite {
     email
     role
   }
