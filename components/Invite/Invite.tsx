@@ -108,8 +108,11 @@ const Invite = ({ tripId, onClose }: InviteProps) => {
         {getAuthorsOnTripQuery.data?.authorsOnTrips.length &&
         getAuthorsOnTripQuery.data.authorsOnTrips.length > 0 ? (
           <ul className="pt-4">
-            {getAuthorsOnTripQuery.data.authorsOnTrips.map((author, i) => (
-              <div className="flex justify-between py-1 text-sm" key={i}>
+            {getAuthorsOnTripQuery.data.authorsOnTrips.map((author) => (
+              <div
+                className="flex justify-between py-1 text-sm"
+                key={author.user.id}
+              >
                 <div>{author.user.email}</div>
                 <div className="text-gray-500">{author.role}</div>
               </div>
@@ -125,8 +128,11 @@ const Invite = ({ tripId, onClose }: InviteProps) => {
         <h2 className="font-heading font-semibold">Pending Invites</h2>
         <ul className="text-sm">
           {!getInvitesQuery.loading ? (
-            getInvitesQuery.data?.invites.map((invite, i) => (
-              <li className="flex justify-between py-1 text-sm" key={i}>
+            getInvitesQuery.data?.invites.map((invite) => (
+              <li
+                className="flex justify-between py-1 text-sm"
+                key={invite.email}
+              >
                 <div>{invite.email}</div>
                 <div className="text-gray-500">{invite.role}</div>
               </li>
