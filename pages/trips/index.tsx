@@ -29,10 +29,10 @@ export default function Trips() {
 
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
           {!loading
-            ? data?.trips.edges.map((trip, i) => (
+            ? data?.trips.edges.map((trip) => (
                 <Link
                   href={`/trips/${trip.node.id}/planner`}
-                  key={i}
+                  key={trip.node.id}
                   className="aspect relative flex aspect-[4/3] items-center justify-center rounded-md border border-surface"
                 >
                   <Image

@@ -110,6 +110,7 @@ const TransportationListItem = ({
 
       let deleted = false; // TODO: early stop optimization
       for (let place of newPlaces.places) {
+        if (deleted) break;
         place.transportation = place.transportation.filter((transportation) => {
           if (transportation.id !== transportationId) {
             return true;
@@ -151,7 +152,7 @@ const TransportationListItem = ({
 
   return (
     <>
-      <div className="grid cursor-pointer grid-cols-[auto_3fr_auto] gap-1 rounded-md p-3 shadow-centered duration-200">
+      <div className="grid cursor-pointer grid-cols-[auto_3fr_auto] gap-1 rounded-md p-3 shadow-centered duration-150">
         <div className="h-6 w-6">
           <DropDownSelect
             placeholder="travel options"
@@ -169,7 +170,7 @@ const TransportationListItem = ({
           />
         </div>
 
-        <div className="flex flex-1 items-center gap-2 rounded-md px-2 hover:bg-surface">
+        <div className="flex flex-1 items-center gap-2 rounded-md px-2 duration-150 hover:bg-surface">
           <i className="fa-regular fa-location-dot text-sm" />
           <LocationSearch
             placeholder="Departure Location"
@@ -219,28 +220,28 @@ const TransportationListItem = ({
 
         {showDetails ? (
           <textarea
-            className="col-span-2 col-start-2 w-full rounded-md p-1 px-2 text-sm text-grayPrimary outline-none duration-150 placeholder:text-gray-100 hover:bg-surface"
+            className="col-span-2 col-start-2 w-full rounded-md p-1 px-2 text-sm text-grayPrimary outline-none duration-150 placeholder:text-gray-100 hover:bg-surface hover:placeholder:text-gray-200"
             placeholder="anything more specific you wanna jot down..."
             onChange={(e) => setDetails(e.target.value)}
             value={details}
-            rows={2}
+            rows={1}
           />
         ) : null}
         <div className="text-md col-span-2 col-start-2 flex w-full items-center justify-between gap-4 bg-transparent">
           <div className="flex gap-2">
             <button
-              className="rounded-md px-2 text-xs text-grayPrimary duration-100 hover:bg-surface"
+              className="rounded-md px-2 text-xs text-grayPrimary duration-150 hover:bg-surface"
               onClick={() => setShowDetails(!showDetails)}
             >
               {showDetails ? 'Hide details' : 'Show details'}
             </button>
-            <button className="rounded-md px-1 text-grayPrimary duration-100 hover:bg-surface">
+            <button className="rounded-md px-1 text-grayPrimary duration-150 hover:bg-surface">
               <i className="fa-solid fa-paperclip "></i>
             </button>
           </div>
           <div className="relative">
             <button
-              className="flex h-6 w-6 items-center justify-center rounded-md text-grayPrimary duration-100 hover:bg-surface"
+              className="flex h-6 w-6 items-center justify-center rounded-md text-grayPrimary duration-150 hover:bg-surface"
               onClick={() => setShowOptionsMenu(!showOptionsMenu)}
             >
               <i className="fa-solid fa-ellipsis relative" />

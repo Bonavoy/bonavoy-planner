@@ -26,10 +26,12 @@ const TransportationList = ({
   const [addTransportationMutation] = useMutation(ADD_TRANSPORTATION);
 
   const addTransportation = () => {
+    const id = uuidv4();
     addTransportationMutation({
       variables: {
         placeId,
         transportation: {
+          id,
           arrivalLocation: '',
           departureLocation: '',
           details: '',
@@ -57,7 +59,7 @@ const TransportationList = ({
       optimisticResponse: {
         addTransportation: {
           __typename: 'Transportation',
-          id: uuidv4(),
+          id,
           arrivalLocation: '',
           departureLocation: '',
           details: '',
@@ -76,8 +78,8 @@ const TransportationList = ({
     <>
       <ul>
         {transportation.length ? (
-          transportation.map((transport, i) => (
-            <li className="pb-1.5" key={i}>
+          transportation.map((transport) => (
+            <li className="pb-1.5" key={transport.id}>
               <TransportationListItem
                 tripId={tripId}
                 transportationId={transport.id}
