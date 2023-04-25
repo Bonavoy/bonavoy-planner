@@ -120,7 +120,6 @@ const TransportationListItem = ({
         });
       }
 
-      console.log(newPlaces);
       cache.writeQuery({ query: GET_PLACES, id: tripId, data: newPlaces });
     },
     optimisticResponse: {
