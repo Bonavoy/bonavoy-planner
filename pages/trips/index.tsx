@@ -6,7 +6,7 @@ import { GET_TRIPS } from '~/graphql/queries/trip';
 const skeletonArr = [null, null, null, null];
 
 export default function Trips() {
-  const { data, loading } = useQuery(GET_TRIPS, {
+  const getTripsQuery = useQuery(GET_TRIPS, {
     variables: { limit: 16 },
   });
 
@@ -28,8 +28,8 @@ export default function Trips() {
         </div>
 
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-          {!loading
-            ? data?.trips.edges.map((trip) => (
+          {!getTripsQuery.loading
+            ? getTripsQuery.data?.trips.edges.map((trip) => (
                 <Link
                   href={`/trips/${trip.node.id}/planner`}
                   key={trip.node.id}
@@ -78,6 +78,14 @@ export default function Trips() {
                   </div>
                 </div>
               ))}
+        </div>
+        <div>
+          {!getTripsQuery.loading &&
+          getTripsQuery.data?.trips.edges.length === 0 ? (
+            <div className="w-full pt-4 text-center text-gray-500">
+              no trips? <span className="italic">*megamind meme*</span>
+            </div>
+          ) : null}
         </div>
       </div>
     </>

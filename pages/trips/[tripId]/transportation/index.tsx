@@ -19,14 +19,14 @@ export default function TransportationPage({
   tripId,
   placeId,
 }: TransportationProps) {
-  const { data: getPlacesQuery } = useQuery(GET_PLACES, {
+  const getPlacesQuery = useQuery(GET_PLACES, {
     variables: { tripId },
   });
 
   useSubscription(TRANSPORTATION_UPDATED, {
-    skip: !getPlacesQuery?.places,
+    skip: !getPlacesQuery.data?.places,
     variables: {
-      placeIds: getPlacesQuery?.places.map((place) => place.id) ?? [],
+      placeIds: getPlacesQuery.data?.places.map((place) => place.id) ?? [],
     },
     onData: ({ data, client }) => {
       const transportationNotification = data.data?.transportation;
@@ -104,8 +104,16 @@ export default function TransportationPage({
               <h1 className="pb-8 font-heading text-4xl font-bold">
                 Transportation
               </h1>
-              {getPlacesQuery?.places.map((place, i) => {
-                if (i < getPlacesQuery?.places.length - 1) {
+              {getPlacesQuery.error ? (
+                <div className="text-center text-error">
+                  {getPlacesQuery.error.message}
+                </div>
+              ) : null}
+              {getPlacesQuery.data?.places.map((place, i) => {
+                if (
+                  getPlacesQuery.data?.places &&
+                  i < getPlacesQuery.data.places.length - 1
+                ) {
                   return (
                     <div className="pb-12" key={place.id}>
                       <div className="flex items-center justify-center gap-2 pb-2">
@@ -135,7 +143,7 @@ export default function TransportationPage({
                               Arriving at:
                             </div>
                             <div className="line-clamp-1 cursor-pointer font-heading text-2xl font-bold duration-100 hover:underline ">
-                              {getPlacesQuery.places[i + 1].placeName}
+                              {getPlacesQuery.data?.places[i + 1].placeName}
                             </div>
                             <div className="font-heading text-sm font-medium text-grayPrimary duration-100">
                               Feb 1
@@ -155,7 +163,7 @@ export default function TransportationPage({
             </div>
           </div>
 
-          <TransportationMap places={getPlacesQuery?.places ?? []} />
+          <TransportationMap places={getPlacesQuery.data?.places ?? []} />
         </section>
       </Planner>
     </main>
