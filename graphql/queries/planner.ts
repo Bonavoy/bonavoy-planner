@@ -7,3 +7,11 @@ export const GET_AUTHORS_PRESENT = gql(`
     }
   }
 `);
+
+export const GET_ACTIVE_ELEMENTS = gql(`
+  query activeElements($tripId: ID!) {
+    activeElements(tripId: $tripId) {
+      ...activeElementFull
+    }
+  }
+`);

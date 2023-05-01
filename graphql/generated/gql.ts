@@ -17,10 +17,12 @@ const documents = {
     "\n  fragment pendingInviteFull on PendingInvite {\n    email\n    role\n  }\n": types.PendingInviteFullFragmentDoc,
     "\n  fragment placesFull on Place {\n    id\n    text\n    placeName\n    mapboxId\n    startDate\n    endDate\n    colour\n    center\n  }\n": types.PlacesFullFragmentDoc,
     "\n  fragment authorPresentFull on AuthorPresent {\n      id\n      username\n      firstname\n      email\n      lastname\n      avatar\n      connected\n  }\n": types.AuthorPresentFullFragmentDoc,
+    "\n  fragment activeElementFull on ActiveElement {\n    elementId\n    active\n    tripId\n    author {\n      ...authorPresentFull\n    }\n  }\n": types.ActiveElementFullFragmentDoc,
     "\n  fragment transportationFull on Transportation {\n    id\n    type\n    departureLocation\n    departureTime\n    arrivalLocation\n    arrivalTime\n    details\n    departureCoords {\n      lat\n      lng\n    }\n    arrivalCoords {\n      lat\n      lng\n    }\n    order\n  }\n": types.TransportationFullFragmentDoc,
     "\n  fragment tripFull on Trip {\n    id\n    name\n    isPublic\n    authors { \n      ...authorOnTripSnippet\n     }\n    banner\n    startDate\n    endDate\n  }\n": types.TripFullFragmentDoc,
     "\n  fragment userSnippet on User {\n    username\n    avatar\n    id\n  }\n": types.UserSnippetFragmentDoc,
     "\n  mutation sendInvite($tripId: ID!, $invitee: InviteInput!) {\n    sendInvite(tripId: $tripId, invitee: $invitee) {\n      ... on PendingInvite {\n        ...pendingInviteFull\n      }\n      ... on AuthorsOnTrips {\n        role\n        user {\n          email\n        }\n      }\n    }\n  }\n": types.SendInviteDocument,
+    "\n  mutation updateActiveElement($tripId: ID!, $activeElement: UpdateActiveElement!) {\n    updateActiveElement(tripId: $tripId, activeElement: $activeElement)\n  }\n": types.UpdateActiveElementDocument,
     "\n  mutation addTransportation($placeId: ID!, $transportation: TransportationInput!) {\n    addTransportation(placeId: $placeId, transportation: $transportation) {\n      ...transportationFull\n    }\n  }\n": types.AddTransportationDocument,
     "\n  mutation updateTransportation($id: ID!, $transportation: UpdateTransportationInput!) {\n    updateTransportation(id: $id, transportation: $transportation) {\n      ...transportationFull \n    }\n  }\n": types.UpdateTransportationDocument,
     "\n  mutation deleteTransportation($id: ID!) {\n    deleteTransportation(id: $id)\n  }\n": types.DeleteTransportationDocument,
@@ -32,10 +34,12 @@ const documents = {
     "\n  query getLocationSuggestions($query: String!) {\n    getLocationSuggestions(query: $query) {\n      name\n      text\n      center {\n        lat\n        lng\n      }\n    }\n  }\n": types.GetLocationSuggestionsDocument,
     "\n  query places($tripId: ID!) {\n    places(tripId: $tripId) {\n      ...placesFull\n      transportation {\n        ...transportationFull\n      }\n    }\n  }\n": types.PlacesDocument,
     "\n  query authorsPresent($tripId: ID!) {\n    authorsPresent(tripId: $tripId) {\n      ...authorPresentFull\n    }\n  }\n": types.AuthorsPresentDocument,
+    "\n  query activeElements($tripId: ID!) {\n    activeElements(tripId: $tripId) {\n      ...activeElementFull\n    }\n  }\n": types.ActiveElementsDocument,
     "\n  query routeSegments($segmentWaypoints: [[InputCoords!]!]!) {\n    routeSegments(segmentWaypoints: $segmentWaypoints)\n  }\n": types.RouteSegmentsDocument,
     "\n  query Trips($limit: Int!, $after: ID) {\n    trips(limit: $limit, after: $after) {\n      edges {\n        node {\n          ...tripFull    \n        }\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n      totalCount\n    }\n  }\n": types.TripsDocument,
     "\n  query user {\n    user {\n      ...userSnippet\n    }\n  }\n": types.UserDocument,
     "\n  subscription listenAuthorPresent($tripId: ID!) {\n    listenAuthorPresent(tripId: $tripId) {\n      ...authorPresentFull\n    }\n  }\n": types.ListenAuthorPresentDocument,
+    "\n  subscription listenActiveElement($tripId: ID!) {\n    listenActiveElement(tripId: $tripId) {\n      ...activeElementFull\n    }\n  }\n": types.ListenActiveElementDocument,
     "\n  subscription Subscription($placeIds: [ID!]!) {\n    transportation(placeIds: $placeIds) {\n      transportation {\n        ...transportationFull\n      }\n      placeId\n      deleted\n    }\n  }\n": types.SubscriptionDocument,
 };
 
@@ -72,6 +76,10 @@ export function gql(source: "\n  fragment authorPresentFull on AuthorPresent {\n
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
+export function gql(source: "\n  fragment activeElementFull on ActiveElement {\n    elementId\n    active\n    tripId\n    author {\n      ...authorPresentFull\n    }\n  }\n"): (typeof documents)["\n  fragment activeElementFull on ActiveElement {\n    elementId\n    active\n    tripId\n    author {\n      ...authorPresentFull\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
 export function gql(source: "\n  fragment transportationFull on Transportation {\n    id\n    type\n    departureLocation\n    departureTime\n    arrivalLocation\n    arrivalTime\n    details\n    departureCoords {\n      lat\n      lng\n    }\n    arrivalCoords {\n      lat\n      lng\n    }\n    order\n  }\n"): (typeof documents)["\n  fragment transportationFull on Transportation {\n    id\n    type\n    departureLocation\n    departureTime\n    arrivalLocation\n    arrivalTime\n    details\n    departureCoords {\n      lat\n      lng\n    }\n    arrivalCoords {\n      lat\n      lng\n    }\n    order\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
@@ -85,6 +93,10 @@ export function gql(source: "\n  fragment userSnippet on User {\n    username\n 
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(source: "\n  mutation sendInvite($tripId: ID!, $invitee: InviteInput!) {\n    sendInvite(tripId: $tripId, invitee: $invitee) {\n      ... on PendingInvite {\n        ...pendingInviteFull\n      }\n      ... on AuthorsOnTrips {\n        role\n        user {\n          email\n        }\n      }\n    }\n  }\n"): (typeof documents)["\n  mutation sendInvite($tripId: ID!, $invitee: InviteInput!) {\n    sendInvite(tripId: $tripId, invitee: $invitee) {\n      ... on PendingInvite {\n        ...pendingInviteFull\n      }\n      ... on AuthorsOnTrips {\n        role\n        user {\n          email\n        }\n      }\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  mutation updateActiveElement($tripId: ID!, $activeElement: UpdateActiveElement!) {\n    updateActiveElement(tripId: $tripId, activeElement: $activeElement)\n  }\n"): (typeof documents)["\n  mutation updateActiveElement($tripId: ID!, $activeElement: UpdateActiveElement!) {\n    updateActiveElement(tripId: $tripId, activeElement: $activeElement)\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -132,6 +144,10 @@ export function gql(source: "\n  query authorsPresent($tripId: ID!) {\n    autho
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
+export function gql(source: "\n  query activeElements($tripId: ID!) {\n    activeElements(tripId: $tripId) {\n      ...activeElementFull\n    }\n  }\n"): (typeof documents)["\n  query activeElements($tripId: ID!) {\n    activeElements(tripId: $tripId) {\n      ...activeElementFull\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
 export function gql(source: "\n  query routeSegments($segmentWaypoints: [[InputCoords!]!]!) {\n    routeSegments(segmentWaypoints: $segmentWaypoints)\n  }\n"): (typeof documents)["\n  query routeSegments($segmentWaypoints: [[InputCoords!]!]!) {\n    routeSegments(segmentWaypoints: $segmentWaypoints)\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
@@ -145,6 +161,10 @@ export function gql(source: "\n  query user {\n    user {\n      ...userSnippet\
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(source: "\n  subscription listenAuthorPresent($tripId: ID!) {\n    listenAuthorPresent(tripId: $tripId) {\n      ...authorPresentFull\n    }\n  }\n"): (typeof documents)["\n  subscription listenAuthorPresent($tripId: ID!) {\n    listenAuthorPresent(tripId: $tripId) {\n      ...authorPresentFull\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  subscription listenActiveElement($tripId: ID!) {\n    listenActiveElement(tripId: $tripId) {\n      ...activeElementFull\n    }\n  }\n"): (typeof documents)["\n  subscription listenActiveElement($tripId: ID!) {\n    listenActiveElement(tripId: $tripId) {\n      ...activeElementFull\n    }\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

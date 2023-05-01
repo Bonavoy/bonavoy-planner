@@ -170,19 +170,19 @@ const TransportationListItem = ({
           />
         </div>
 
-        <div className="flex flex-1 items-center gap-2 rounded-md px-2 duration-150 hover:bg-surface">
-          <i className="fa-regular fa-location-dot text-sm" />
-          <LocationSearch
-            placeholder="Departure Location"
-            value={departureLocation}
-            updateLocation={(location, coords) =>
-              updateTransportation({
-                departureLocation: location,
-                departureCoords: coords,
-              })
-            }
-          />
-        </div>
+        <LocationSearch
+          type="departureLocation"
+          tripId={tripId}
+          transportationId={transportationId}
+          placeholder="Departure Location"
+          value={departureLocation}
+          updateLocation={(location, coords) =>
+            updateTransportation({
+              departureLocation: location,
+              departureCoords: coords,
+            })
+          }
+        />
 
         <button
           className="flex items-center justify-end gap-2 place-self-stretch rounded-md px-2 text-sm duration-150 hover:bg-surface"
@@ -194,19 +194,19 @@ const TransportationListItem = ({
           <i className="fa fa-calendar cursor" aria-hidden="true"></i>
         </button>
 
-        <div className="col-start-2 flex flex-1 items-center gap-2 rounded-md px-2 hover:bg-surface">
-          <i className="fa-solid fa-location-dot text-sm"></i>
-          <LocationSearch
-            placeholder="Arrival Location"
-            value={arrivalLocation}
-            updateLocation={(location, coords) =>
-              updateTransportation({
-                arrivalLocation: location,
-                arrivalCoords: coords,
-              })
-            }
-          />
-        </div>
+        <LocationSearch
+          type="arrivalLocation"
+          tripId={tripId}
+          transportationId={transportationId}
+          placeholder="Arrival Location"
+          value={arrivalLocation}
+          updateLocation={(location, coords) =>
+            updateTransportation({
+              arrivalLocation: location,
+              arrivalCoords: coords,
+            })
+          }
+        />
 
         <button
           className="flex items-center justify-end gap-2 place-self-stretch rounded-md px-2 text-sm duration-150 hover:bg-surface"
