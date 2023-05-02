@@ -77,6 +77,7 @@ const LocationSearch = ({
     >
       {activeElements.has(elementId) ? (
         <Image
+          loader={({ src }) => src}
           src={activeElements.get(elementId)!.author.avatar}
           alt={activeElements.get(elementId)!.author.username}
           height={16}

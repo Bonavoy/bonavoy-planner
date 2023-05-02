@@ -3,7 +3,7 @@ const nextConfig = {
   reactStrictMode: true,
   images: {
     dangerouslyAllowSVG: true,
-    domains: ['api.dicebear.com', 'banffnationalpark.com', 'i.ytimg.com'], // banff and yt one is temporary
+    domains: ['api.dicebear.com', 'banffnationalpark.com'], // banff and yt one is temporary
   },
 };
 
