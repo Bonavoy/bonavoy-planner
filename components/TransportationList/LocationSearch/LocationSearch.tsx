@@ -70,7 +70,7 @@ const LocationSearch = ({
   return (
     <div
       className={clsx(
-        'relative col-start-2 box-content flex flex-1 items-center gap-2 rounded-md border-2 px-2 duration-150 hover:bg-surface',
+        'relative col-start-2 box-content flex flex-1 items-center gap-2 rounded-md border px-2 duration-150 hover:bg-surface',
         { 'border-primary': activeElements.has(elementId) },
         { 'border-transparent': !activeElements.has(elementId) },
       )}
