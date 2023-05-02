@@ -1,7 +1,6 @@
 import { useLazyQuery, useMutation, useQuery } from '@apollo/client';
-import { useCallback, useContext, useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { GET_LOCATION_SUGGESTIONS } from '~/graphql/queries/locations';
-import { debounce } from 'lodash';
 import { ActiveElementsContext } from '~/components/ActiveElementsProvider';
 import { UPDATE_ACTIVE_ELEMENT } from '~/graphql/mutations/planner';
 import { GET_USER } from '~/graphql/queries/user';
@@ -76,6 +75,15 @@ const LocationSearch = ({
         { 'border-transparent': !activeElements.has(elementId) },
       )}
     >
+      {activeElements.has(elementId) ? (
+        <Image
+          src={activeElements.get(elementId)!.author.avatar}
+          alt={activeElements.get(elementId)!.author.username}
+          height={16}
+          width={16}
+          className="absolute -right-[8px] -top-[8px] aspect-square rounded-full border border-primary bg-white object-contain"
+        />
+      ) : null}
       <i
         className={clsx('fa-location-dot text-sm', {
           'fa-regular': type === 'departureLocation',
