@@ -1,11 +1,17 @@
+import { useState } from 'react';
 import Image from 'next/image';
+import { useQuery } from '@apollo/client';
 
 //components
 import Planner from '~/layouts/Planner';
 import Mapbox from '~/components/Map/Map';
 import PlaceList from '~/components/PlaceList';
 
+//queries
+import { GET_PLACES } from '~/graphql/queries/place';
+
 import type { GetServerSidePropsContext } from 'next';
+import type { Place } from '~/graphql/generated/graphql';
 
 interface PlanProps {
   tripId: string;
@@ -13,43 +19,13 @@ interface PlanProps {
 }
 
 export default function Plan({ tripId, placeId }: PlanProps) {
-  const places = [
-    {
-      placeName: 'edmonton',
-      id: 'lololo',
-      startDate: 'Feb 1',
-      endDate: 'Feb 3',
-      colour: '#ab9df9',
+  const [places, setPlaces] = useState<[] | Place[]>([]);
+  const getPlacesQuery = useQuery(GET_PLACES, {
+    variables: { tripId },
+    onCompleted(data) {
+      setPlaces(data.places as Place[]);
     },
-    {
-      placeName: 'calgary',
-      id: 'lolwtf',
-      startDate: 'Feb 3',
-      endDate: ' Feb 5',
-      colour: '#AF2B1E',
-    },
-    {
-      placeName: 'toronto',
-      id: 'lolwtsf',
-      startDate: 'Feb 5',
-      endDate: ' Feb 7',
-      colour: '#F39F18',
-    },
-    {
-      placeName: 'brampton',
-      id: 'lolwtssf',
-      startDate: 'Feb 7',
-      endDate: ' Feb 12',
-      colour: '#8F8F8F',
-    },
-    {
-      placeName: 'vancouver',
-      id: 'lolwtsssf',
-      startDate: 'Feb 12',
-      endDate: 'Feb 16',
-      colour: '#2D572C',
-    },
-  ];
+  });
 
   return (
     <main className="h-screen">
@@ -90,7 +66,11 @@ export default function Plan({ tripId, placeId }: PlanProps) {
                   </button>
                 </div>
               </div>
-              <PlaceList tripId={tripId} />
+              <PlaceList
+                tripId={tripId}
+                places={places}
+                setPlaces={(places) => setPlaces(places)}
+              />
             </div>
           </section>
           <Mapbox />
