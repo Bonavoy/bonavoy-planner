@@ -8,8 +8,9 @@ import Mapbox from '~/components/Map/Map';
 import PlaceList from '~/components/PlaceList';
 
 //queries
-import { GET_PLACES } from '~/graphql/queries/place';
+import { GET_PLANNER_DETAILS } from '~/graphql/queries/planner';
 
+//types
 import type { GetServerSidePropsContext } from 'next';
 import type { Place } from '~/graphql/generated/graphql';
 
@@ -20,16 +21,21 @@ interface PlanProps {
 
 export default function Plan({ tripId, placeId }: PlanProps) {
   const [places, setPlaces] = useState<[] | Place[]>([]);
-  const getPlacesQuery = useQuery(GET_PLACES, {
+  const plannerDetailsQuery = useQuery(GET_PLANNER_DETAILS, {
     variables: { tripId },
     onCompleted(data) {
-      setPlaces(data.places as Place[]);
+      setPlaces(data.plannerDetails.places as Place[]);
     },
   });
 
   return (
     <main className="h-screen">
-      <Planner mode="planner" tripId={tripId} placeId={placeId}>
+      <Planner
+        mode="planner"
+        tripId={tripId}
+        placeId={placeId}
+        details={plannerDetailsQuery.data?.plannerDetails!}
+      >
         <div className="grid flex-grow grid-cols-2 bg-background">
           <section className="overflow-y-auto">
             <div className="h-full overflow-y-auto px-16 py-8">

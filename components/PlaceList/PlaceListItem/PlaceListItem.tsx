@@ -5,13 +5,14 @@ import clsx from 'clsx';
 
 //types
 import { Place } from '~/graphql/generated/graphql';
+import { formatDate } from '~/utils/date';
 
-type PlaceNavItemProps = {
+type PlaceListItemProps = {
   place: Place & { index: number };
   tripId: string;
 };
 
-export default function PlaceNavItem({ place, tripId }: PlaceNavItemProps) {
+export default function PlaceListItem({ place, tripId }: PlaceListItemProps) {
   const {
     index,
     attributes,
@@ -51,7 +52,16 @@ export default function PlaceNavItem({ place, tripId }: PlaceNavItemProps) {
             <div>
               <h1 className="text-4xl">{place.placeName}</h1>
               <p className="text-base font-medium">
-                {place.startDate} - {place.endDate}
+                {formatDate(new Date(place.startDate), {
+                  month: 'short',
+                  day: '2-digit',
+                })}
+                -
+                {formatDate(new Date(place.endDate), {
+                  month: 'short',
+                  day: '2-digit',
+                  year: 'numeric',
+                })}
               </p>
             </div>
           </div>

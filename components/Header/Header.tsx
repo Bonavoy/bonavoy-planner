@@ -4,20 +4,26 @@ import { cloneDeep } from '@apollo/client/utilities';
 import clsx from 'clsx';
 import Image from 'next/image';
 import Link from 'next/link';
+
+//components
 import Invite from '~/components/Invite';
 import Modal from '../Modal/Modal';
 
-//apollo
+//queries
 import { GET_AUTHORS_PRESENT } from '~/graphql/queries/planner';
 import { GET_USER } from '~/graphql/queries/user';
 import { LISTEN_AUTHORS_PRESENT } from '~/graphql/subscriptions/planner';
 
+//types
+import { PlannerDetailsQuery } from '~/graphql/generated/graphql';
+
 type HeaderProps = {
   tripId: string;
   mode: 'planner' | 'transportation' | 'notes';
+  details:  PlannerDetailsQuery['plannerDetails'];
 };
 
-export default function Header({ tripId, mode }: HeaderProps) {
+export default function Header({ tripId, mode, details }: HeaderProps) {
   const [showInviteModal, setShowInviteModal] = useState(false);
   const { data: userData } = useQuery(GET_USER);
 
@@ -97,6 +103,7 @@ export default function Header({ tripId, mode }: HeaderProps) {
             <input
               type="text"
               autoComplete="off"
+              defaultValue={details.name}
               className="w-full rounded-xl bg-transparent px-4 py-1 text-lg font-semibold transition-shadow duration-150 placeholder:font-normal focus:shadow-md focus:outline-none"
               placeholder="Name your adventure"
             />

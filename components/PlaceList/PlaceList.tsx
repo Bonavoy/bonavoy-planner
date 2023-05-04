@@ -1,4 +1,4 @@
-import { useState, useId } from 'react';
+import { useId } from 'react';
 import {
   DndContext,
   closestCorners,
@@ -19,7 +19,9 @@ import {
 } from '@dnd-kit/modifiers';
 
 //components
-import PlaceNavItem from './PlaceListItem/PlaceListItem';
+import PlaceListItem from './PlaceListItem/PlaceListItem';
+
+//types
 import { Place } from '~/graphql/generated/graphql';
 
 export default function PlaceNav({
@@ -57,7 +59,7 @@ export default function PlaceNav({
         <div className="flex items-center justify-between gap-2">
           <section className="flex w-full flex-col gap-3">
             {places.map((place, index) => (
-              <PlaceNavItem
+              <PlaceListItem
                 key={place.id}
                 tripId={tripId}
                 place={
