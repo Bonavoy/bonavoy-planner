@@ -42,7 +42,7 @@ const LocationSearch = ({
 
   const [updateActiveElementMutation] = useMutation(UPDATE_ACTIVE_ELEMENT);
 
-  const activeElements = useContext(ActiveElementsContext);
+  const activeElementsCtx = useContext(ActiveElementsContext);
 
   useEffect(() => {
     // react to new subscription data
@@ -64,6 +64,27 @@ const LocationSearch = ({
           userId: getUserQuery.data?.user.id ?? '',
         },
       },
+      update: (_cache, { data }) => {
+        const activeElement = data?.updateActiveElement;
+        if (!activeElement) return;
+        activeElementsCtx.updateActiveElement(activeElement);
+      },
+      optimisticResponse: {
+        __typename: 'Mutation',
+        updateActiveElement: {
+          __typename: 'ActiveElement',
+          tripId,
+          elementId,
+          active,
+          author: {
+            __typename: 'AuthorPresent',
+            id: getUserQuery.data?.user.id ?? '',
+            username: getUserQuery.data?.user.username ?? '',
+            avatar: getUserQuery.data?.user.avatar ?? '',
+            connected: false,
+          },
+        },
+      },
     });
   };
 
@@ -71,15 +92,18 @@ const LocationSearch = ({
     <div
       className={clsx(
         'relative col-start-2 box-content flex flex-1 items-center gap-2 rounded-md border px-2 duration-150 hover:bg-surface',
-        { 'border-primary': activeElements.has(elementId) },
-        { 'border-transparent': !activeElements.has(elementId) },
+        {
+          'border-primary': activeElementsCtx.activeElements.has(elementId),
+          'border-transparent':
+            !activeElementsCtx.activeElements.has(elementId),
+        },
       )}
     >
-      {activeElements.has(elementId) ? (
+      {activeElementsCtx.activeElements.has(elementId) ? (
         <Image
           loader={({ src }) => src}
-          src={activeElements.get(elementId)!.author.avatar}
-          alt={activeElements.get(elementId)!.author.username}
+          src={activeElementsCtx.activeElements.get(elementId)!.author.avatar}
+          alt={activeElementsCtx.activeElements.get(elementId)!.author.username}
           height={16}
           width={16}
           className="absolute -right-[8px] -top-[8px] aspect-square rounded-full border border-primary bg-white object-contain"
@@ -91,7 +115,7 @@ const LocationSearch = ({
           'fa-solid': type === 'arrivalLocation',
         })}
       />
-      <div className="flex flex-1 items-center gap-2 rounded-md px-2">
+      <div className="flex flex-1 items-center gap-2 rounded-md">
         <div className="relative grow bg-transparent">
           <input
             placeholder={placeholder}
