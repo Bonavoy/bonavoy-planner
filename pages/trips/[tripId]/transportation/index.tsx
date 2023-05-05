@@ -9,8 +9,6 @@ import { TRANSPORTATION_UPDATED } from '~/graphql/subscriptions/transportation';
 import { TRANSPORTATION_FULL } from '~/graphql/fragments/transportation';
 import { cloneDeep } from '@apollo/client/utilities';
 import { Transportation } from '~/graphql/generated/graphql';
-import { LISTEN_ACTIVE_ELEMENTS } from '~/graphql/subscriptions/planner';
-import { GET_ACTIVE_ELEMENTS } from '~/graphql/queries/planner';
 import ActiveElementsProvider from '~/components/ActiveElementsProvider';
 
 interface TransportationProps {
@@ -49,9 +47,11 @@ export default function TransportationPage({
       // deletion
       if (deleted) {
         for (let place of newPlaces.places) {
-          place.transportation = place.transportation.filter(
-            (transp) => transportation.id !== transp.id,
-          );
+          place.transportation[
+            transportationNotification.transportation.order
+          ] = place.transportation[
+            transportationNotification.transportation.order
+          ].filter((transp) => transportation.id !== transp.id);
         }
         client.writeQuery({ query: GET_PLACES, id: tripId, data: newPlaces });
         return;
@@ -69,13 +69,15 @@ export default function TransportationPage({
         arrivalCoords: transportation.arrivalCoords ?? null,
         departureCoords: transportation.departureCoords ?? null,
         order: transportation.order,
+        connectingId: transportation.connectingId,
+        connectingOrder: transportation.connectingOrder,
       };
       if (placeId) {
         for (let place of newPlaces.places) {
           if (place.id === placeId) {
-            const transportationToUpdate = place.transportation.find(
-              (transp) => transp.id === transportation.id,
-            );
+            const transportationToUpdate = place.transportation[
+              transportationNotification.transportation.order
+            ].find((transp) => transp.id === transportation.id);
             // update
             if (transportationToUpdate) {
               client.writeFragment({
@@ -85,7 +87,9 @@ export default function TransportationPage({
               });
               // create
             } else {
-              place.transportation.push(newTransportation);
+              place.transportation[
+                transportationNotification.transportation.order
+              ].push(newTransportation);
               client.writeQuery({
                 query: GET_PLACES,
                 id: tripId,

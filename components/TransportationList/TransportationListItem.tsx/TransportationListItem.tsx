@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useMutation } from '@apollo/client';
 import { format } from 'date-fns';
-import { cloneDeep } from '@apollo/client/utilities';
+import { v4 as uuidv4 } from 'uuid';
 
 import {
   TransportationFullFragment,
@@ -16,7 +16,6 @@ import {
 import LocationSearch from '../LocationSearch';
 import Datepicker from '~/components/Datepicker/Datepicker';
 import Modal from '~/components/Modal/Modal';
-import { GET_PLACES } from '~/graphql/queries/place';
 
 const transportationOptions: DropDownItem[] = [
   {
@@ -90,42 +89,39 @@ const TransportationListItem = ({
         arrivalLocation: arrivalLocation,
         details: details,
         order: transport.order,
+        connectingId: transport.connectingId,
+        connectingOrder: transport.connectingOrder,
       },
     },
   });
 
   const [deleteTransportationMutation] = useMutation(DELETE_TRANSPORTATION, {
-    update: (cache, { data }) => {
-      const transportationId = data?.deleteTransportation;
-      if (!transportationId) return;
-
-      const placesQuery = cache.readQuery({
-        query: GET_PLACES,
-        variables: { tripId },
-      });
-
-      const newPlaces = cloneDeep(placesQuery);
-
-      if (newPlaces === null) return;
-
-      let deleted = false; // TODO: early stop optimization
-      for (let place of newPlaces.places) {
-        if (deleted) break;
-        place.transportation = place.transportation.filter((transportation) => {
-          if (transportation.id !== transportationId) {
-            return true;
-          }
-          deleted = true;
-          return false;
-        });
-      }
-
-      cache.writeQuery({ query: GET_PLACES, id: tripId, data: newPlaces });
-    },
-    optimisticResponse: {
-      __typename: 'Mutation',
-      deleteTransportation: transportationId,
-    },
+    // update: (cache, { data }) => {
+    //   const transportationId = data?.deleteTransportation;
+    //   if (!transportationId) return;
+    //   const placesQuery = cache.readQuery({
+    //     query: GET_PLACES,
+    //     variables: { tripId },
+    //   });
+    //   const newPlaces = cloneDeep(placesQuery);
+    //   if (newPlaces === null) return;
+    //   let deleted = false; // TODO: early stop optimization
+    //   for (let place of newPlaces.places) {
+    //     if (deleted) break;
+    //     place.transportation[] = place.transportation.filter((transportation) => {
+    //       if (transportation.id !== transportationId) {
+    //         return true;
+    //       }
+    //       deleted = true;
+    //       return false;
+    //     });
+    //   }
+    //   cache.writeQuery({ query: GET_PLACES, id: tripId, data: newPlaces });
+    // },
+    // optimisticResponse: {
+    //   __typename: 'Mutation',
+    //   deleteTransportation: transportationId,
+    // },
   });
 
   const updateTransportation = (transportation: UpdateTransportationInput) => {
@@ -152,7 +148,7 @@ const TransportationListItem = ({
 
   return (
     <>
-      <div className="grid cursor-pointer grid-cols-[auto_3fr_auto] gap-1 rounded-md p-3 shadow-centered duration-150">
+      <div className="grid cursor-pointer grid-cols-[auto_3fr_auto] gap-1 p-3 duration-150">
         <div className="h-6 w-6">
           <DropDownSelect
             placeholder="travel options"
