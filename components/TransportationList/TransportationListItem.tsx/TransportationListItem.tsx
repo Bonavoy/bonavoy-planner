@@ -16,6 +16,8 @@ import {
 import LocationSearch from '../LocationSearch';
 import Datepicker from '~/components/Datepicker/Datepicker';
 import Modal from '~/components/Modal/Modal';
+import { GET_PLACES } from '~/graphql/queries/place';
+import cloneDeep from 'lodash.clonedeep';
 
 const transportationOptions: DropDownItem[] = [
   {
@@ -96,32 +98,47 @@ const TransportationListItem = ({
   });
 
   const [deleteTransportationMutation] = useMutation(DELETE_TRANSPORTATION, {
-    // update: (cache, { data }) => {
-    //   const transportationId = data?.deleteTransportation;
-    //   if (!transportationId) return;
-    //   const placesQuery = cache.readQuery({
-    //     query: GET_PLACES,
-    //     variables: { tripId },
-    //   });
-    //   const newPlaces = cloneDeep(placesQuery);
-    //   if (newPlaces === null) return;
-    //   let deleted = false; // TODO: early stop optimization
-    //   for (let place of newPlaces.places) {
-    //     if (deleted) break;
-    //     place.transportation[] = place.transportation.filter((transportation) => {
-    //       if (transportation.id !== transportationId) {
-    //         return true;
-    //       }
-    //       deleted = true;
-    //       return false;
-    //     });
-    //   }
-    //   cache.writeQuery({ query: GET_PLACES, id: tripId, data: newPlaces });
-    // },
-    // optimisticResponse: {
-    //   __typename: 'Mutation',
-    //   deleteTransportation: transportationId,
-    // },
+    update: (cache, { data }) => {
+      const transportationId = data?.deleteTransportation;
+      if (!transportationId) return;
+      const placesQuery = cache.readQuery({
+        query: GET_PLACES,
+        variables: { tripId },
+      });
+
+      const newPlaces = cloneDeep(placesQuery);
+
+      if (newPlaces === null) return;
+
+      let deleted = false; // TODO: early stop optimization
+
+      for (const place of newPlaces.places) {
+        if (deleted) break;
+        for (const idx in place.transportation) {
+          place.transportation[idx] = place.transportation[idx].filter(
+            (transportation) => {
+              if (transportation.id !== transportationId) {
+                return true;
+              }
+              deleted = true;
+              return false;
+            },
+          );
+        }
+        // remove empty connecting transportation arrays
+        for (const place of newPlaces.places) {
+          place.transportation = place.transportation.filter(
+            (transportation) => transportation.length,
+          );
+        }
+      }
+
+      cache.writeQuery({ query: GET_PLACES, id: tripId, data: newPlaces });
+    },
+    optimisticResponse: {
+      __typename: 'Mutation',
+      deleteTransportation: transportationId,
+    },
   });
 
   const updateTransportation = (transportation: UpdateTransportationInput) => {
@@ -186,7 +203,9 @@ const TransportationListItem = ({
             setShowDepartureDatePicker(true);
           }}
         >
-          <span>{formatDatetime(transport.departureTime)}</span>
+          {transport.departureTime ? (
+            <span>{formatDatetime(transport.departureTime)}</span>
+          ) : null}
           <i className="fa fa-calendar cursor" aria-hidden="true"></i>
         </button>
 
@@ -210,7 +229,9 @@ const TransportationListItem = ({
             setShowArrivalDatepicker(true);
           }}
         >
-          <span>{formatDatetime(transport.arrivalTime)}</span>
+          {transport.arrivalTime ? (
+            <span>{formatDatetime(transport.arrivalTime)}</span>
+          ) : null}
           <i className="fa fa-calendar cursor" aria-hidden="true"></i>
         </button>
 

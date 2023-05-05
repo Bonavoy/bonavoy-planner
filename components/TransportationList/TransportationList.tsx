@@ -28,51 +28,56 @@ const TransportationList = ({
 
   const addTransportation = () => {
     const id = uuidv4();
-    // addTransportationMutation({
-    //   variables: {
-    //     placeId,
-    //     transportation: {
-    //       id,
-    //       arrivalLocation: '',
-    //       departureLocation: '',
-    //       details: '',
-    //       type: TransportationType.Plane,
-    //     },
-    //   },
-    //   update: (cache, { data }) => {
-    //     if (!data) return;
+    const connectingId = uuidv4();
+    addTransportationMutation({
+      variables: {
+        placeId,
+        transportation: {
+          id,
+          arrivalLocation: '',
+          departureLocation: '',
+          details: '',
+          type: TransportationType.Plane,
+          connectingId,
+          order: transportation.length,
+        },
+      },
+      update: (cache, { data }) => {
+        if (!data) return;
 
-    //     const placesQuery = cache.readQuery({
-    //       query: GET_PLACES,
-    //       variables: { tripId: tripId },
-    //     });
+        const placesQuery = cache.readQuery({
+          query: GET_PLACES,
+          variables: { tripId: tripId },
+        });
 
-    //     const newPlaces = cloneDeep(placesQuery);
+        const newPlaces = cloneDeep(placesQuery);
 
-    //     const place = newPlaces?.places.find((place) => place.id === placeId);
-    //     place!.transportation = [
-    //       ...place!.transportation,
-    //       data.addTransportation,
-    //     ];
+        const place = newPlaces?.places.find((place) => place.id === placeId);
+        place!.transportation = [
+          ...place!.transportation,
+          [data.addTransportation],
+        ];
 
-    //     cache.writeQuery({ query: GET_PLACES, id: tripId, data: newPlaces });
-    //   },
-    //   optimisticResponse: {
-    //     addTransportation: {
-    //       __typename: 'Transportation',
-    //       id,
-    //       arrivalLocation: '',
-    //       departureLocation: '',
-    //       details: '',
-    //       type: TransportationType.Plane,
-    //       departureTime: null,
-    //       arrivalTime: null,
-    //       departureCoords: null,
-    //       arrivalCoords: null,
-    //       order: transportation.length,
-    //     },
-    //   },
-    // });
+        cache.writeQuery({ query: GET_PLACES, id: tripId, data: newPlaces });
+      },
+      optimisticResponse: {
+        addTransportation: {
+          __typename: 'Transportation',
+          id,
+          arrivalLocation: '',
+          departureLocation: '',
+          details: '',
+          type: TransportationType.Plane,
+          departureTime: null,
+          arrivalTime: null,
+          departureCoords: null,
+          arrivalCoords: null,
+          order: transportation.length,
+          connectingId,
+          connectingOrder: 0,
+        },
+      },
+    });
   };
 
   return (

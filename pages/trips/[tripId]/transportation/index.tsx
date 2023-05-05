@@ -42,18 +42,30 @@ export default function TransportationPage({
 
       if (!placesQuery?.places) return;
 
-      const newPlaces = cloneDeep(placesQuery);
+      const newPlacesQuery = cloneDeep(placesQuery);
 
       // deletion
       if (deleted) {
-        for (let place of newPlaces.places) {
-          place.transportation[
-            transportationNotification.transportation.order
-          ] = place.transportation[
-            transportationNotification.transportation.order
-          ].filter((transp) => transportation.id !== transp.id);
+        for (const place of newPlacesQuery.places) {
+          for (const idx in place.transportation) {
+            place.transportation[idx] = place.transportation[idx].filter(
+              (transp) => transportation.id !== transp.id,
+            );
+          }
         }
-        client.writeQuery({ query: GET_PLACES, id: tripId, data: newPlaces });
+
+        // remove empty connecting transportation arrays
+        for (const place of newPlacesQuery.places) {
+          place.transportation = place.transportation.filter(
+            (transportation) => transportation.length,
+          );
+        }
+
+        client.writeQuery({
+          query: GET_PLACES,
+          id: tripId,
+          data: newPlacesQuery,
+        });
         return;
       }
 
@@ -73,7 +85,7 @@ export default function TransportationPage({
         connectingOrder: transportation.connectingOrder,
       };
       if (placeId) {
-        for (let place of newPlaces.places) {
+        for (let place of newPlacesQuery.places) {
           if (place.id === placeId) {
             const transportationToUpdate = place.transportation[
               transportationNotification.transportation.order
@@ -93,7 +105,7 @@ export default function TransportationPage({
               client.writeQuery({
                 query: GET_PLACES,
                 id: tripId,
-                data: newPlaces,
+                data: newPlacesQuery,
               });
             }
           }
