@@ -36,7 +36,8 @@ export default function Trips() {
                   className="aspect relative flex aspect-[4/3] items-center justify-center rounded-md border border-surface"
                 >
                   <Image
-                    src="https://banffnationalpark.com/wp-content/uploads/2022/04/banff-guide-1536x1024.jpg"
+                    src={trip.node.name}
+                    loader={() => trip.node.banner}
                     alt={trip.node.name}
                     fill
                     className="rounded-md"

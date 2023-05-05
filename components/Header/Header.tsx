@@ -25,19 +25,20 @@ type HeaderProps = {
 
 export default function Header({ tripId, mode, details }: HeaderProps) {
   const [showInviteModal, setShowInviteModal] = useState(false);
-  const { data: userData } = useQuery(GET_USER);
+  const getUserQuery = useQuery(GET_USER);
 
   const getAuthorsPresentQuery = useQuery(GET_AUTHORS_PRESENT, {
     variables: { tripId },
-    skip: !userData?.user,
+    skip: !getUserQuery.data?.user,
   });
 
   useSubscription(LISTEN_AUTHORS_PRESENT, {
-    skip: !userData?.user || !getAuthorsPresentQuery?.data,
+    skip: !getUserQuery.data?.user || !getAuthorsPresentQuery?.data,
     variables: { tripId },
     onData: ({ data, client }) => {
       const authorPresent = data.data?.listenAuthorPresent;
-      if (!authorPresent) return;
+      if (!authorPresent || authorPresent.id === getUserQuery.data?.user.id)
+        return;
 
       const oldGetAuthorsPresentQuery = client.readQuery({
         query: GET_AUTHORS_PRESENT,
@@ -103,7 +104,7 @@ export default function Header({ tripId, mode, details }: HeaderProps) {
             <input
               type="text"
               autoComplete="off"
-              defaultValue={details.name}
+              defaultValue={details?.name}
               className="w-full rounded-xl bg-transparent px-4 py-1 text-lg font-semibold transition-shadow duration-150 placeholder:font-normal focus:shadow-md focus:outline-none"
               placeholder="Name your adventure"
             />
@@ -129,38 +130,57 @@ export default function Header({ tripId, mode, details }: HeaderProps) {
 
         <div className="relative flex items-center justify-end gap-2">
           <div className="">
-            <div className="relative flex">
+            <div className="relative flex items-center">
+              {/* current user */}
+              {getUserQuery.data?.user ? (
+                <div className="relative h-8 w-8 rounded-full border-2 border-white">
+                  <Image
+                    src={getUserQuery.data?.user.avatar ?? ''}
+                    alt={getUserQuery.data?.user.username ?? ''}
+                    fill
+                    className="rounded-full text-xs"
+                  />
+                </div>
+              ) : null}
+              {/* other authors */}
               {getAuthorsPresentQuery.data?.authorsPresent
-                .slice(0, 3)
-                .map((authorPresent, i) => (
-                  <div
-                    key={i}
-                    className={clsx(
-                      'absolute right-4 h-8 w-8 rounded-full border-2 border-white',
-                      { 'right-8': i === 1, 'right-12': i === 2 },
-                    )}
-                  >
-                    <Image
-                      src={authorPresent.avatar}
-                      alt={authorPresent.username}
-                      fill
-                      className="rounded-full"
-                    />
-                  </div>
-                ))}{' '}
+                .slice(0, 2)
+                .map((authorPresent, i) => {
+                  if (authorPresent.id === getUserQuery.data?.user.id)
+                    return null;
+                  return (
+                    <div
+                      key={i}
+                      className={clsx(
+                        'relative h-8 w-8 rounded-full border-2 border-white',
+                      )}
+                    >
+                      <Image
+                        src={authorPresent.avatar}
+                        alt={authorPresent.username}
+                        fill
+                        className="rounded-full"
+                      />
+                    </div>
+                  );
+                })}
             </div>
-            <button
-              title="invite friends"
-              type="button"
-              onClick={() => setShowInviteModal(true)}
-              className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-white bg-primary text-white duration-150 hover:bg-primary/80"
-            >
-              <i className="fa-solid fa-plus" />
-            </button>
           </div>
 
-          <button type="button">
-            <i className="fa-regular fa-gear text-xl text-grayPrimary transition-colors duration-150 hover:text-primary" />
+          <button
+            title="invite friends"
+            type="button"
+            onClick={() => setShowInviteModal(true)}
+            className="flex items-center justify-center rounded-md border-2 border-white bg-primary px-1 py-1 text-xs text-white duration-150 hover:bg-primary/80"
+          >
+            <span className="line-clamp-1">
+              Invite
+              <i className="fa-solid fa-plus pl-1" />
+            </span>
+          </button>
+
+          <button type="button" className="flex items-center">
+            <i className="fa-regular fa-gear text-lg text-grayPrimary transition-colors duration-150 hover:text-primary" />
           </button>
         </div>
       </header>

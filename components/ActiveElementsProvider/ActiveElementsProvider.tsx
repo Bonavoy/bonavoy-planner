@@ -1,17 +1,19 @@
 import { useQuery, useSubscription } from '@apollo/client';
 import { ReactNode, createContext, useState } from 'react';
-import { ActiveElement } from '~/graphql/generated/graphql';
+import { ActiveElementFullFragment } from '~/graphql/generated/graphql';
 import { GET_ACTIVE_ELEMENTS } from '~/graphql/queries/planner';
 import { LISTEN_ACTIVE_ELEMENTS } from '~/graphql/subscriptions/planner';
 import { copyMap } from '~/utils/copyMap';
 
-interface ActiveElements {
-  activeElements: Map<string, ActiveElement>;
+interface ActiveElementsContextType {
+  activeElements: Map<string, ActiveElementFullFragment>;
+  updateActiveElement: (activeElement: ActiveElementFullFragment) => void;
 }
 
-export const ActiveElementsContext = createContext(
-  new Map<string, ActiveElement>(),
-);
+export const ActiveElementsContext = createContext<ActiveElementsContextType>({
+  activeElements: new Map<string, ActiveElementFullFragment>(),
+  updateActiveElement: (activeElement: ActiveElementFullFragment) => {},
+});
 
 interface ActiveElementsProviderProps {
   children: ReactNode;
@@ -23,13 +25,25 @@ const ActiveElementsProvider = ({
   tripId,
 }: ActiveElementsProviderProps) => {
   const [activeElementsMap, setActiveElementsMap] = useState(
-    new Map<string, ActiveElement>(),
+    new Map<string, ActiveElementFullFragment>(),
   );
+
+  const updateActiveElement = (activeElement: ActiveElementFullFragment) => {
+    const newActiveElementsMap = copyMap(activeElementsMap);
+
+    if (activeElement.active) {
+      newActiveElementsMap.set(activeElement.elementId, activeElement);
+    } else {
+      newActiveElementsMap.delete(activeElement.elementId);
+    }
+
+    setActiveElementsMap(newActiveElementsMap);
+  };
 
   const getActiveElements = useQuery(GET_ACTIVE_ELEMENTS, {
     variables: { tripId },
     onCompleted: (data) => {
-      const newActiveElementsMap = new Map<string, ActiveElement>();
+      const newActiveElementsMap = new Map<string, ActiveElementFullFragment>();
       for (const activeElement of data.activeElements) {
         newActiveElementsMap.set(activeElement.elementId, {
           elementId: activeElement.elementId,
@@ -38,9 +52,6 @@ const ActiveElementsProvider = ({
           author: {
             id: activeElement.author.id,
             username: activeElement.author.username,
-            firstname: activeElement.author.firstname,
-            email: activeElement.author.email,
-            lastname: activeElement.author.lastname,
             avatar: activeElement.author.avatar,
             connected: activeElement.author.connected,
           },
@@ -57,20 +68,14 @@ const ActiveElementsProvider = ({
       const activeElement = data.data?.listenActiveElement;
       if (!activeElement) return;
 
-      const newActiveElementsMap = copyMap(activeElementsMap);
-
-      if (activeElement.active) {
-        newActiveElementsMap.set(activeElement.elementId, activeElement);
-      } else {
-        newActiveElementsMap.delete(activeElement.elementId);
-      }
-
-      setActiveElementsMap(newActiveElementsMap);
+      updateActiveElement(activeElement);
     },
   });
 
   return (
-    <ActiveElementsContext.Provider value={activeElementsMap}>
+    <ActiveElementsContext.Provider
+      value={{ activeElements: activeElementsMap, updateActiveElement }}
+    >
       {children}
     </ActiveElementsContext.Provider>
   );
