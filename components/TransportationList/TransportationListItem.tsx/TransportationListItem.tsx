@@ -22,14 +22,12 @@ interface TransportationListItemProps {
   transportationId: string;
   transportation: TransportationFullFragment;
   tripId: string;
-  addConnectingTransportation: () => void;
 }
 
 const TransportationListItem = ({
   transportationId,
   transportation,
   tripId,
-  addConnectingTransportation,
 }: TransportationListItemProps) => {
   const [showDepartureDatePicker, setShowDepartureDatePicker] = useState(false);
   const [showArrivalDatepicker, setShowArrivalDatepicker] = useState(false);
@@ -286,15 +284,6 @@ const TransportationListItem = ({
               </ul>
             )}
           </div>
-        </div>
-
-        <div className="absolute -bottom-2 hidden w-full justify-center group-hover:flex">
-          <button
-            className="rounded-sm border-gray-100 bg-white px-1 text-xs text-gray-500 shadow-centered duration-100 hover:bg-surface"
-            onClick={addConnectingTransportation}
-          >
-            Add connecting flight +
-          </button>
         </div>
       </div>
 
