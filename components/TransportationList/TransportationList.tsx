@@ -11,13 +11,32 @@ import {
   TransportationFullFragment,
   TransportationType,
 } from '~/graphql/generated/graphql';
-import TransportationListItem from './TransportationListItem.tsx';
 import ConnectingTransportation from './ConnectingTransportation';
+import DropDownSelect, { DropDownItem } from '../DropDownSelect';
 interface TransportationListProps {
   transportation: TransportationFullFragment[][];
   tripId: string;
   placeId: string;
 }
+
+const transportationOptions: DropDownItem[] = [
+  {
+    val: TransportationType.Plane,
+    view: (
+      <div className="flex items-center justify-between text-sm">
+        <i className="fa-solid fa-plane"></i>
+      </div>
+    ),
+  },
+  {
+    val: TransportationType.Car,
+    view: (
+      <div className="flex items-center justify-between text-sm">
+        <i className="fa-solid fa-car"></i>
+      </div>
+    ),
+  },
+];
 
 const TransportationList = ({
   transportation,
@@ -30,6 +49,7 @@ const TransportationList = ({
     connectingId: string,
     order: number,
     connectingOrder: number,
+    type: TransportationType,
   ) => {
     const id = uuidv4();
     addTransportationMutation({
@@ -40,7 +60,7 @@ const TransportationList = ({
           arrivalLocation: '',
           departureLocation: '',
           details: '',
-          type: TransportationType.Plane,
+          type,
           connectingId,
           order,
         },
@@ -78,7 +98,7 @@ const TransportationList = ({
           arrivalLocation: '',
           departureLocation: '',
           details: '',
-          type: TransportationType.Plane,
+          type,
           departureTime: null,
           arrivalTime: null,
           departureCoords: null,
@@ -112,12 +132,14 @@ const TransportationList = ({
           </div>
         )}
       </ul>
-      <button
-        className="w-full rounded-md bg-primary py-1 text-sm text-white opacity-0 duration-100 hover:opacity-100"
-        onClick={() => addTransportation(uuidv4(), transportation.length, 0)}
+      <DropDownSelect
+        onSelect={(selection: DropDownItem) => {
+          addTransportation(uuidv4(), transportation.length, 0, selection.val);
+        }}
+        options={transportationOptions}
       >
         Add transportation
-      </button>
+      </DropDownSelect>
     </>
   );
 };

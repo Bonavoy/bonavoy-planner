@@ -1,4 +1,7 @@
-import { TransportationFullFragment } from '~/graphql/generated/graphql';
+import {
+  TransportationFullFragment,
+  TransportationType,
+} from '~/graphql/generated/graphql';
 import TransportationListItem from '../TransportationListItem.tsx/TransportationListItem';
 
 interface ConnectingTransportationProps {
@@ -7,6 +10,7 @@ interface ConnectingTransportationProps {
     uuid: string,
     order: number,
     connectingOrder: number,
+    type: TransportationType,
   ) => void;
   tripId: string;
   order: number;
@@ -29,13 +33,13 @@ const ConnectingTransportation = ({
           <TransportationListItem
             tripId={tripId}
             transportationId={transportation.id}
-            transport={transportation}
-            connectingOrder={connectingTransportation.length}
+            transportation={transportation}
             addConnectingTransportation={() =>
               addConnectingTransportation(
                 transportation.connectingId,
                 order,
                 connectingTransportation.length,
+                transportation.type,
               )
             }
           />
