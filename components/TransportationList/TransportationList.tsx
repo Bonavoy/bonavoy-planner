@@ -26,9 +26,12 @@ const TransportationList = ({
 }: TransportationListProps) => {
   const [addTransportationMutation] = useMutation(ADD_TRANSPORTATION);
 
-  const addTransportation = () => {
+  const addTransportation = (
+    connectingId: string,
+    order: number,
+    connectingOrder: number,
+  ) => {
     const id = uuidv4();
-    const connectingId = uuidv4();
     addTransportationMutation({
       variables: {
         placeId,
@@ -39,7 +42,7 @@ const TransportationList = ({
           details: '',
           type: TransportationType.Plane,
           connectingId,
-          order: transportation.length,
+          order,
         },
       },
       update: (cache, { data }) => {
@@ -51,12 +54,20 @@ const TransportationList = ({
         });
 
         const newPlaces = cloneDeep(placesQuery);
+        if (!newPlaces) return;
 
-        const place = newPlaces?.places.find((place) => place.id === placeId);
-        place!.transportation = [
-          ...place!.transportation,
-          [data.addTransportation],
-        ];
+        const place = newPlaces.places.find((place) => place.id === placeId);
+        if (!place) return;
+
+        const connections = place.transportation.find(
+          (connections) =>
+            connections[0].connectingId === data.addTransportation.connectingId,
+        );
+        if (!connections) {
+          place.transportation.push([data.addTransportation]);
+        } else {
+          connections.push(data.addTransportation);
+        }
 
         cache.writeQuery({ query: GET_PLACES, id: tripId, data: newPlaces });
       },
@@ -72,9 +83,9 @@ const TransportationList = ({
           arrivalTime: null,
           departureCoords: null,
           arrivalCoords: null,
-          order: transportation.length,
+          connectingOrder,
           connectingId,
-          connectingOrder: 0,
+          order,
         },
       },
     });
@@ -84,24 +95,26 @@ const TransportationList = ({
     <>
       <ul>
         {transportation.length ? (
-          transportation.map((connectingTransportation) => (
-            <li className="pb-1.5" key={connectingTransportation[0].id}>
+          transportation.map((connectingTransportation, order) => (
+            <li className="pb-3 last:pb-5" key={connectingTransportation[0].id}>
               <ConnectingTransportation
                 connectingTransportation={connectingTransportation}
                 tripId={tripId}
+                order={order}
+                addConnectingTransportation={addTransportation}
               />
             </li>
           ))
         ) : (
-          <div className="w-full py-4 text-center text-grayPrimary">
-            I hope you&apos;re not walking (add how you&apos;re gonna get to the
-            next location here)
+          <div className="w-full py-4 text-center text-xs text-gray-300">
+            I hope you&apos;re not walking (add how you&apos;re gonna get
+            between these 2 locations above)
           </div>
         )}
       </ul>
       <button
         className="w-full rounded-md bg-primary py-1 text-sm text-white opacity-0 duration-100 hover:opacity-100"
-        onClick={addTransportation}
+        onClick={() => addTransportation(uuidv4(), transportation.length, 0)}
       >
         Add transportation
       </button>

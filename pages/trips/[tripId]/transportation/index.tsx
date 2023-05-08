@@ -42,11 +42,11 @@ export default function TransportationPage({
 
       if (!placesQuery?.places) return;
 
-      const newPlacesQuery = cloneDeep(placesQuery);
+      const placesQueryClone = cloneDeep(placesQuery);
 
       // deletion
       if (deleted) {
-        for (const place of newPlacesQuery.places) {
+        for (const place of placesQueryClone.places) {
           for (const idx in place.transportation) {
             place.transportation[idx] = place.transportation[idx].filter(
               (transp) => transportation.id !== transp.id,
@@ -55,7 +55,7 @@ export default function TransportationPage({
         }
 
         // remove empty connecting transportation arrays
-        for (const place of newPlacesQuery.places) {
+        for (const place of placesQueryClone.places) {
           place.transportation = place.transportation.filter(
             (transportation) => transportation.length,
           );
@@ -64,7 +64,7 @@ export default function TransportationPage({
         client.writeQuery({
           query: GET_PLACES,
           id: tripId,
-          data: newPlacesQuery,
+          data: placesQueryClone,
         });
         return;
       }
@@ -85,31 +85,45 @@ export default function TransportationPage({
         connectingOrder: transportation.connectingOrder,
       };
       if (placeId) {
-        for (let place of newPlacesQuery.places) {
-          if (place.id === placeId) {
-            const transportationToUpdate = place.transportation[
-              transportationNotification.transportation.order
-            ].find((transp) => transp.id === transportation.id);
-            // update
-            if (transportationToUpdate) {
-              client.writeFragment({
-                id: `Transportation:${transportation.id}`,
-                fragment: TRANSPORTATION_FULL,
-                data: newTransportation,
-              });
-              // create
-            } else {
-              place.transportation[
-                transportationNotification.transportation.order
-              ].push(newTransportation);
-              client.writeQuery({
-                query: GET_PLACES,
-                id: tripId,
-                data: newPlacesQuery,
-              });
-            }
-          }
+        const place = placesQueryClone.places.find(
+          (place) => place.id === placeId,
+        );
+        if (!place) return;
+
+        const connections = place.transportation.find(
+          (connections) =>
+            connections[0].connectingId === transportation.connectingId,
+        );
+
+        if (!connections) {
+          place.transportation.push([transportation]);
+          client.writeQuery({
+            query: GET_PLACES,
+            id: tripId,
+            data: placesQueryClone,
+          });
+          return;
         }
+
+        const existingTransportation = connections.find(
+          (transp) => transp.id === transportation.id,
+        );
+
+        if (!existingTransportation) {
+          connections.push(transportation);
+          client.writeQuery({
+            query: GET_PLACES,
+            id: tripId,
+            data: placesQueryClone,
+          });
+          return;
+        }
+
+        client.writeFragment({
+          id: `Transportation:${transportation.id}`,
+          fragment: TRANSPORTATION_FULL,
+          data: newTransportation,
+        });
       }
     },
   });

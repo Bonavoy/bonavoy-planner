@@ -59,12 +59,16 @@ interface TransportationListItemProps {
   transportationId: string;
   transport: TransportationFullFragment;
   tripId: string;
+  addConnectingTransportation: () => void;
+  connectingOrder: number;
 }
 
 const TransportationListItem = ({
   transportationId,
   transport,
   tripId,
+  addConnectingTransportation,
+  connectingOrder,
 }: TransportationListItemProps) => {
   const [showDepartureDatePicker, setShowDepartureDatePicker] = useState(false);
   const [showArrivalDatepicker, setShowArrivalDatepicker] = useState(false);
@@ -165,7 +169,7 @@ const TransportationListItem = ({
 
   return (
     <>
-      <div className="grid cursor-pointer grid-cols-[auto_3fr_auto] gap-1 p-3 duration-150">
+      <div className="group relative grid cursor-pointer grid-cols-[auto_3fr_auto] gap-1 p-3 duration-150">
         <div className="h-6 w-6">
           <DropDownSelect
             placeholder="travel options"
@@ -278,6 +282,15 @@ const TransportationListItem = ({
               </ul>
             )}
           </div>
+        </div>
+
+        <div className="absolute bottom-0 hidden w-full justify-center group-hover:flex">
+          <button
+            className="rounded-sm border-gray-100 bg-white px-1 text-xs text-gray-500 shadow-centered duration-100 hover:bg-surface"
+            onClick={addConnectingTransportation}
+          >
+            Add connecting flight +
+          </button>
         </div>
       </div>
 
