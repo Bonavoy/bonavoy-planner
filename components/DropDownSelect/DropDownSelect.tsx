@@ -7,16 +7,14 @@ export interface DropDownItem {
 
 interface DropDownSelectInterface {
   onSelect: (selection: DropDownItem) => void;
-  placeholder?: string;
   options: DropDownItem[];
-  value: DropDownItem;
+  children: ReactNode;
 }
 
 const DropDownSelect = ({
   onSelect,
   options,
-  placeholder = '',
-  value,
+  children,
 }: DropDownSelectInterface) => {
   const [showDropDown, setShowDropDown] = useState(false);
 
@@ -27,13 +25,13 @@ const DropDownSelect = ({
       type="button"
       id="dropDownSelect"
       onClick={toggleDropdown}
-      className="group relative flex w-full w-full cursor-pointer select-none items-center justify-center rounded-md duration-100  hover:bg-surface"
+      className="relative flex w-full cursor-pointer select-none items-center justify-center rounded-md bg-primary text-white duration-100"
     >
-      <div className="relative flex items-center py-1 text-sm duration-100">
-        {value ? value.view : placeholder}
+      <div className="relative flex items-center py-1 text-xs duration-100">
+        {children}
       </div>
       {showDropDown ? (
-        <div className="absolute top-full w-fit pt-1">
+        <div className="absolute top-full w-fit pt-1 text-black">
           <ul className="rounded-md bg-white shadow-centered">
             {options.map((option, i) => (
               <li

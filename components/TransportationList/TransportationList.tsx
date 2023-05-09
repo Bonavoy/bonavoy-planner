@@ -11,12 +11,32 @@ import {
   TransportationFullFragment,
   TransportationType,
 } from '~/graphql/generated/graphql';
-import TransportationListItem from './TransportationListItem.tsx';
+import ConnectingTransportation from './ConnectingTransportation';
+import DropDownSelect, { DropDownItem } from '../DropDownSelect';
 interface TransportationListProps {
-  transportation: TransportationFullFragment[];
+  transportation: TransportationFullFragment[][];
   tripId: string;
   placeId: string;
 }
+
+const transportationOptions: DropDownItem[] = [
+  {
+    val: TransportationType.Plane,
+    view: (
+      <div className="flex items-center justify-between text-sm">
+        <i className="fa-solid fa-plane"></i>
+      </div>
+    ),
+  },
+  {
+    val: TransportationType.Car,
+    view: (
+      <div className="flex items-center justify-between text-sm">
+        <i className="fa-solid fa-car"></i>
+      </div>
+    ),
+  },
+];
 
 const TransportationList = ({
   transportation,
@@ -25,7 +45,12 @@ const TransportationList = ({
 }: TransportationListProps) => {
   const [addTransportationMutation] = useMutation(ADD_TRANSPORTATION);
 
-  const addTransportation = () => {
+  const addTransportation = (
+    connectingId: string,
+    order: number,
+    connectingOrder: number,
+    type: TransportationType,
+  ) => {
     const id = uuidv4();
     addTransportationMutation({
       variables: {
@@ -35,7 +60,9 @@ const TransportationList = ({
           arrivalLocation: '',
           departureLocation: '',
           details: '',
-          type: TransportationType.Plane,
+          type,
+          connectingId,
+          order,
         },
       },
       update: (cache, { data }) => {
@@ -47,12 +74,20 @@ const TransportationList = ({
         });
 
         const newPlaces = cloneDeep(placesQuery);
+        if (!newPlaces) return;
 
-        const place = newPlaces?.places.find((place) => place.id === placeId);
-        place!.transportation = [
-          ...place!.transportation,
-          data.addTransportation,
-        ];
+        const place = newPlaces.places.find((place) => place.id === placeId);
+        if (!place) return;
+
+        const connections = place.transportation.find(
+          (connections) =>
+            connections[0].connectingId === data.addTransportation.connectingId,
+        );
+        if (!connections) {
+          place.transportation.push([data.addTransportation]);
+        } else {
+          connections.push(data.addTransportation);
+        }
 
         cache.writeQuery({ query: GET_PLACES, id: tripId, data: newPlaces });
       },
@@ -63,12 +98,14 @@ const TransportationList = ({
           arrivalLocation: '',
           departureLocation: '',
           details: '',
-          type: TransportationType.Plane,
+          type,
           departureTime: null,
           arrivalTime: null,
           departureCoords: null,
           arrivalCoords: null,
-          order: transportation.length,
+          connectingOrder,
+          connectingId,
+          order,
         },
       },
     });
@@ -78,28 +115,31 @@ const TransportationList = ({
     <>
       <ul>
         {transportation.length ? (
-          transportation.map((transport) => (
-            <li className="pb-1.5" key={transport.id}>
-              <TransportationListItem
+          transportation.map((connectingTransportation, order) => (
+            <li className="pb-3 last:pb-5" key={connectingTransportation[0].id}>
+              <ConnectingTransportation
+                connectingTransportation={connectingTransportation}
                 tripId={tripId}
-                transportationId={transport.id}
-                transport={transport}
+                order={order}
+                addConnectingTransportation={addTransportation}
               />
             </li>
           ))
         ) : (
-          <div className="w-full py-4 text-center text-grayPrimary">
-            I hope you&apos;re not walking (add how you&apos;re gonna get to the
-            next location here)
+          <div className="w-full py-4 text-center text-xs text-gray-300">
+            I hope you&apos;re not walking (add how you&apos;re gonna get
+            between these 2 locations above)
           </div>
         )}
       </ul>
-      <button
-        className="w-full rounded-md bg-primary py-1 text-sm text-white opacity-0 duration-100 hover:opacity-100"
-        onClick={addTransportation}
+      <DropDownSelect
+        onSelect={(selection: DropDownItem) => {
+          addTransportation(uuidv4(), transportation.length, 0, selection.val);
+        }}
+        options={transportationOptions}
       >
         Add transportation
-      </button>
+      </DropDownSelect>
     </>
   );
 };

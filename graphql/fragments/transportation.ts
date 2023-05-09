@@ -18,5 +18,7 @@ export const TRANSPORTATION_FULL = gql(`
       lng
     }
     order
+    connectingId
+    connectingOrder
   }
 `);

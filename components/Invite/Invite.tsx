@@ -87,8 +87,9 @@ const Invite = ({ tripId, onClose }: InviteProps) => {
                 setRole(selection.val);
               }}
               options={roles}
-              value={roles.find((roleItem) => roleItem.val === role)!}
-            />
+            >
+              {roles.find((roleItem) => roleItem.val === role)!.view}
+            </DropDownSelect>
           </div>
         </div>
         <button

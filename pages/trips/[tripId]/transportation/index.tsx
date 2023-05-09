@@ -9,8 +9,6 @@ import { TRANSPORTATION_UPDATED } from '~/graphql/subscriptions/transportation';
 import { TRANSPORTATION_FULL } from '~/graphql/fragments/transportation';
 import { cloneDeep } from '@apollo/client/utilities';
 import { Transportation } from '~/graphql/generated/graphql';
-import { LISTEN_ACTIVE_ELEMENTS } from '~/graphql/subscriptions/planner';
-import { GET_ACTIVE_ELEMENTS } from '~/graphql/queries/planner';
 import ActiveElementsProvider from '~/components/ActiveElementsProvider';
 
 interface TransportationProps {
@@ -44,16 +42,30 @@ export default function TransportationPage({
 
       if (!placesQuery?.places) return;
 
-      const newPlaces = cloneDeep(placesQuery);
+      const placesQueryClone = cloneDeep(placesQuery);
 
       // deletion
       if (deleted) {
-        for (let place of newPlaces.places) {
+        for (const place of placesQueryClone.places) {
+          for (const idx in place.transportation) {
+            place.transportation[idx] = place.transportation[idx].filter(
+              (transp) => transportation.id !== transp.id,
+            );
+          }
+        }
+
+        // remove empty connecting transportation arrays
+        for (const place of placesQueryClone.places) {
           place.transportation = place.transportation.filter(
-            (transp) => transportation.id !== transp.id,
+            (transportation) => transportation.length,
           );
         }
-        client.writeQuery({ query: GET_PLACES, id: tripId, data: newPlaces });
+
+        client.writeQuery({
+          query: GET_PLACES,
+          id: tripId,
+          data: placesQueryClone,
+        });
         return;
       }
 
@@ -69,31 +81,49 @@ export default function TransportationPage({
         arrivalCoords: transportation.arrivalCoords ?? null,
         departureCoords: transportation.departureCoords ?? null,
         order: transportation.order,
+        connectingId: transportation.connectingId,
+        connectingOrder: transportation.connectingOrder,
       };
       if (placeId) {
-        for (let place of newPlaces.places) {
-          if (place.id === placeId) {
-            const transportationToUpdate = place.transportation.find(
-              (transp) => transp.id === transportation.id,
-            );
-            // update
-            if (transportationToUpdate) {
-              client.writeFragment({
-                id: `Transportation:${transportation.id}`,
-                fragment: TRANSPORTATION_FULL,
-                data: newTransportation,
-              });
-              // create
-            } else {
-              place.transportation.push(newTransportation);
-              client.writeQuery({
-                query: GET_PLACES,
-                id: tripId,
-                data: newPlaces,
-              });
-            }
-          }
+        const place = placesQueryClone.places.find(
+          (place) => place.id === placeId,
+        );
+        if (!place) return;
+
+        const connections = place.transportation.find(
+          (connections) =>
+            connections[0].connectingId === transportation.connectingId,
+        );
+
+        if (!connections) {
+          place.transportation.push([transportation]);
+          client.writeQuery({
+            query: GET_PLACES,
+            id: tripId,
+            data: placesQueryClone,
+          });
+          return;
         }
+
+        const existingTransportation = connections.find(
+          (transp) => transp.id === transportation.id,
+        );
+
+        if (!existingTransportation) {
+          connections.push(transportation);
+          client.writeQuery({
+            query: GET_PLACES,
+            id: tripId,
+            data: placesQueryClone,
+          });
+          return;
+        }
+
+        client.writeFragment({
+          id: `Transportation:${transportation.id}`,
+          fragment: TRANSPORTATION_FULL,
+          data: newTransportation,
+        });
       }
     },
   });
