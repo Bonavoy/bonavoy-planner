@@ -93,16 +93,12 @@ const TransportationListItem = ({
   });
 
   const saveDetails = useCallback(
-    throttle(
-      (details: string) => {
-        updateTransportation({
-          ...transportation,
-          details,
-        });
-      },
-      300,
-      // { trailing: true },
-    ),
+    throttle((details: string) => {
+      updateTransportation({
+        ...transportation,
+        details,
+      });
+    }, 300),
     [],
   );
 
@@ -260,22 +256,16 @@ const TransportationListItem = ({
         </button>
 
         {showDetails ? (
-          <ActiveElement
-            className="col-span-2 col-start-2 "
-            elementId="a"
-            onActive={(active: boolean) => {}}
-          >
-            <Details
-              placeholder="anything more specific you wanna jot down..."
-              transportationId={transportationId}
-              tripId={tripId}
-              onChange={(val) => {
-                setDetails(val);
-                saveDetails(val);
-              }}
-              value={details}
-            />
-          </ActiveElement>
+          <Details
+            placeholder="anything more specific you wanna jot down..."
+            transportationId={transportationId}
+            tripId={tripId}
+            onChange={(val) => {
+              setDetails(val);
+              saveDetails(val);
+            }}
+            value={details}
+          />
         ) : null}
         <div className="text-md col-span-2 col-start-2 flex w-full items-center justify-between gap-4 bg-transparent">
           <div className="flex gap-2">

@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from '@apollo/client';
 import clsx from 'clsx';
-import { useContext, useEffect, useRef } from 'react';
+import { useCallback, useContext, useEffect, useRef } from 'react';
 import ActiveElement from '~/components/ActiveElement/ActiveElement';
 import { ActiveElementsContext } from '~/components/ActiveElementsProvider';
 import { UPDATE_ACTIVE_ELEMENT } from '~/graphql/mutations/planner';
@@ -29,6 +29,49 @@ const Details = ({
 
   const getUserQuery = useQuery(GET_USER);
 
+  const updateActiveElement = useCallback(
+    (active: boolean) => {
+      updateActiveElementMutation({
+        variables: {
+          tripId,
+          activeElement: {
+            active,
+            elementId,
+            userId: getUserQuery.data?.user.id ?? '',
+          },
+        },
+        update: (_cache, { data }) => {
+          const activeElement = data?.updateActiveElement;
+          if (!activeElement) return;
+          activeElementsCtx.updateActiveElement(activeElement);
+        },
+        optimisticResponse: {
+          __typename: 'Mutation',
+          updateActiveElement: {
+            __typename: 'ActiveElement',
+            tripId,
+            elementId,
+            active,
+            author: {
+              __typename: 'AuthorPresent',
+              id: getUserQuery.data?.user.id ?? '',
+              username: getUserQuery.data?.user.username ?? '',
+              avatar: getUserQuery.data?.user.avatar ?? '',
+              connected: false,
+            },
+          },
+        },
+      });
+    },
+    [
+      activeElementsCtx,
+      elementId,
+      getUserQuery,
+      tripId,
+      updateActiveElementMutation,
+    ],
+  );
+
   useEffect(() => {
     const handleFocus = () => {
       updateActiveElement(true);
@@ -51,44 +94,13 @@ const Details = ({
         textareaElement.removeEventListener('blur', handleBlur);
       }
     };
-  }, [textareaRef]);
-
-  const updateActiveElement = (active: boolean) => {
-    updateActiveElementMutation({
-      variables: {
-        tripId,
-        activeElement: {
-          active,
-          elementId,
-          userId: getUserQuery.data?.user.id ?? '',
-        },
-      },
-      update: (_cache, { data }) => {
-        const activeElement = data?.updateActiveElement;
-        if (!activeElement) return;
-        activeElementsCtx.updateActiveElement(activeElement);
-      },
-      optimisticResponse: {
-        __typename: 'Mutation',
-        updateActiveElement: {
-          __typename: 'ActiveElement',
-          tripId,
-          elementId,
-          active,
-          author: {
-            __typename: 'AuthorPresent',
-            id: getUserQuery.data?.user.id ?? '',
-            username: getUserQuery.data?.user.username ?? '',
-            avatar: getUserQuery.data?.user.avatar ?? '',
-            connected: false,
-          },
-        },
-      },
-    });
-  };
+  }, [textareaRef, updateActiveElement]);
 
   return (
-    <ActiveElement className="rounded-md" elementId={elementId}>
+    <ActiveElement
+      className="col-span-2 col-start-2 rounded-md"
+      elementId={elementId}
+    >
       <textarea
         className="w-full rounded-md px-2 py-1 text-sm text-black outline-none duration-150 placeholder:text-gray-300 hover:bg-surface hover:placeholder:text-gray-500"
         placeholder={placeholder}
