@@ -257,6 +257,7 @@ const TransportationListItem = ({
             value={details}
           />
         ) : null}
+
         <div className="text-md col-span-2 col-start-2 flex w-full items-center justify-between gap-4 bg-transparent">
           <div className="flex gap-px">
             <button
@@ -265,10 +266,12 @@ const TransportationListItem = ({
             >
               {showDetails ? 'Hide details' : 'Show details'}
             </button>
+
             <button className="rounded-md px-1 text-black duration-150 hover:bg-surface">
               <i className="fa-solid fa-paperclip "></i>
             </button>
           </div>
+
           <div className="relative">
             <button
               className="flex h-6 w-6 items-center justify-center rounded-md text-black duration-150 hover:bg-surface"

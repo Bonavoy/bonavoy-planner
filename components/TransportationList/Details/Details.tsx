@@ -102,7 +102,7 @@ const Details = ({
       elementId={elementId}
     >
       <textarea
-        className="w-full rounded-md px-2 py-1 text-sm text-black outline-none duration-150 placeholder:text-gray-300 hover:bg-surface hover:placeholder:text-gray-500"
+        className="block w-full rounded-md px-2 py-0.5 text-sm text-black outline-none duration-150 placeholder:text-gray-300 hover:bg-surface hover:placeholder:text-gray-500"
         placeholder={placeholder}
         ref={textareaRef}
         onChange={(e) => {
