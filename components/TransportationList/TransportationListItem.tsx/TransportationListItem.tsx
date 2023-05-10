@@ -1,8 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useMutation } from '@apollo/client';
 import { format } from 'date-fns';
 import cloneDeep from 'lodash.clonedeep';
 import clsx from 'clsx';
+import throttle from 'lodash.throttle';
 
 import {
   TransportationFullFragment,
@@ -17,6 +18,8 @@ import Datepicker from '~/components/Datepicker/Datepicker';
 import Modal from '~/components/Modal/Modal';
 import { GET_PLACES } from '~/graphql/queries/place';
 import { TRANSPORTATION_FULL } from '~/graphql/fragments/transportation';
+import Details from '../Details';
+import ActiveElement from '~/components/ActiveElement/ActiveElement';
 
 interface TransportationListItemProps {
   transportationId: string;
@@ -88,6 +91,16 @@ const TransportationListItem = ({
       deleteTransportation: transportationId,
     },
   });
+
+  const saveDetails = useCallback(
+    throttle((details: string) => {
+      updateTransportation({
+        ...transportation,
+        details,
+      });
+    }, 300),
+    [],
+  );
 
   const updateTransportation = (
     updatedTransportation: TransportationFullFragment,
@@ -161,15 +174,16 @@ const TransportationListItem = ({
     });
   };
 
-  // react to subscription data
+  /** react to subscription data */
   useEffect(() => {
     setArrivalLocation(transportation.arrivalLocation);
   }, [transportation.arrivalLocation]);
-
-  // react to subscription data
   useEffect(() => {
     setDepartureLocation(transportation.departureLocation);
   }, [transportation.departureLocation]);
+  useEffect(() => {
+    setDetails(transportation.details);
+  }, [transportation.details]);
 
   const formatDatetime = (date?: string): string =>
     date ? format(new Date(date), 'MMM d h:mm a') : '';
@@ -177,9 +191,9 @@ const TransportationListItem = ({
   return (
     <>
       <div className="group relative grid cursor-pointer grid-cols-[auto_3fr_auto] gap-1 p-3 duration-150">
-        <div className="h-6 w-6">
+        <div className="flex h-6 w-6 items-center justify-center">
           <i
-            className={clsx({
+            className={clsx('text-sm', {
               'fa-solid fa-plane':
                 transportation.type === TransportationType.Plane,
               'fa-solid fa-car': transportation.type === TransportationType.Car,
@@ -242,29 +256,32 @@ const TransportationListItem = ({
         </button>
 
         {showDetails ? (
-          <textarea
-            className="col-span-2 col-start-2 w-full rounded-md p-1 px-2 text-sm text-grayPrimary outline-none duration-150 placeholder:text-gray-100 hover:bg-surface hover:placeholder:text-gray-200"
+          <Details
             placeholder="anything more specific you wanna jot down..."
-            onChange={(e) => setDetails(e.target.value)}
+            transportationId={transportationId}
+            tripId={tripId}
+            onChange={(val) => {
+              setDetails(val);
+              saveDetails(val);
+            }}
             value={details}
-            rows={1}
           />
         ) : null}
         <div className="text-md col-span-2 col-start-2 flex w-full items-center justify-between gap-4 bg-transparent">
           <div className="flex gap-2">
             <button
-              className="rounded-md px-2 text-xs text-grayPrimary duration-150 hover:bg-surface"
+              className="rounded-md px-2 text-xs text-black duration-150 hover:bg-surface"
               onClick={() => setShowDetails(!showDetails)}
             >
               {showDetails ? 'Hide details' : 'Show details'}
             </button>
-            <button className="rounded-md px-1 text-grayPrimary duration-150 hover:bg-surface">
+            <button className="rounded-md px-1 text-black duration-150 hover:bg-surface">
               <i className="fa-solid fa-paperclip "></i>
             </button>
           </div>
           <div className="relative">
             <button
-              className="flex h-6 w-6 items-center justify-center rounded-md text-grayPrimary duration-150 hover:bg-surface"
+              className="flex h-6 w-6 items-center justify-center rounded-md text-black duration-150 hover:bg-surface"
               onClick={() => setShowOptionsMenu(!showOptionsMenu)}
             >
               <i className="fa-solid fa-ellipsis relative" />
