@@ -23,16 +23,18 @@ const transportationOptions: DropDownItem[] = [
   {
     val: TransportationType.Plane,
     view: (
-      <div className="flex items-center justify-between text-sm">
+      <div className="flex items-center justify-start gap-2 px-2 text-xs">
         <i className="fa-solid fa-plane"></i>
+        <span>Add flight</span>
       </div>
     ),
   },
   {
     val: TransportationType.Car,
     view: (
-      <div className="flex items-center justify-between text-sm">
+      <div className="flex items-center justify-start gap-2 px-2 text-xs">
         <i className="fa-solid fa-car"></i>
+        <span>Add car ride</span>
       </div>
     ),
   },

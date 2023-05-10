@@ -25,7 +25,7 @@ const DropDownSelect = ({
       type="button"
       id="dropDownSelect"
       onClick={toggleDropdown}
-      className="relative flex w-full cursor-pointer select-none items-center justify-center rounded-md bg-primary text-white duration-100"
+      className="relative flex w-full cursor-pointer select-none items-center justify-center rounded-md bg-primary text-white duration-100 hover:bg-primary/80"
     >
       <div className="relative flex items-center py-1 text-xs duration-100">
         {children}
