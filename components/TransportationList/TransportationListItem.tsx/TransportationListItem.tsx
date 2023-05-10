@@ -183,15 +183,13 @@ const TransportationListItem = ({
   return (
     <>
       <div className="group relative grid cursor-pointer grid-cols-[auto_3fr_auto] gap-px p-3 duration-150">
-        <div className="flex place-items-center">
-          <i
-            className={clsx('text-sm', {
-              'fa-solid fa-plane':
-                transportation.type === TransportationType.Plane,
-              'fa-solid fa-car': transportation.type === TransportationType.Car,
-            })}
-          />
-        </div>
+        <i
+          className={clsx('place-self-center  justify-self-center text-sm', {
+            'fa-solid fa-plane':
+              transportation.type === TransportationType.Plane,
+            'fa-solid fa-car': transportation.type === TransportationType.Car,
+          })}
+        />
 
         <LocationSearch
           type="departureLocation"
@@ -207,7 +205,6 @@ const TransportationListItem = ({
             })
           }
         />
-
         <SelectDateButton
           transportationId={transportationId}
           tripId={tripId}
@@ -235,7 +232,6 @@ const TransportationListItem = ({
             })
           }
         />
-
         <SelectDateButton
           transportationId={transportationId}
           tripId={tripId}
@@ -262,7 +258,7 @@ const TransportationListItem = ({
           />
         ) : null}
         <div className="text-md col-span-2 col-start-2 flex w-full items-center justify-between gap-4 bg-transparent">
-          <div className="flex gap-2">
+          <div className="flex gap-px">
             <button
               className="rounded-md px-2 text-xs text-black duration-150 hover:bg-surface"
               onClick={() => setShowDetails(!showDetails)}
