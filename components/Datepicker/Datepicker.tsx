@@ -4,11 +4,12 @@ import {
   addDays,
   startOfMonth,
   endOfMonth,
-  isBefore,
   isSameMonth,
   subMonths,
   addMonths,
 } from 'date-fns';
+
+//components
 import Calendar from './Calendar';
 
 interface DatepickerProps {
@@ -16,7 +17,7 @@ interface DatepickerProps {
 }
 
 const Datepicker = ({ onSelect }: DatepickerProps) => {
-  const today = new Date(new Date());
+  const today = new Date();
   //current date => will change when changing months using right/left icons
   const [activeDate, setActiveDate] = useState(today);
 
@@ -77,7 +78,7 @@ const Datepicker = ({ onSelect }: DatepickerProps) => {
           </h2>
         </div>
         <Calendar
-          today={new Date()}
+          today={today}
           daysOfMonth={daysOfMonth}
           dateOnClickHandler={onSelect}
           onHoverHandler={(date: Date) => {}}
@@ -101,7 +102,7 @@ const Datepicker = ({ onSelect }: DatepickerProps) => {
           </h2>
         </div>
         <Calendar
-          today={new Date()}
+          today={today}
           daysOfMonth={daysOfNextMonth}
           dateOnClickHandler={onSelect}
           onHoverHandler={(date: Date) => {}}

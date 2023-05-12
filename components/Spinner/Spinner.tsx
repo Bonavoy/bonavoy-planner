@@ -1,7 +1,3 @@
-import React from 'react';
-
-const Spinner = () => {
+export default function Spinner() {
   return <i className="fa-duotone fa-spinner-third animate-spin	" />;
-};
-
-export default Spinner;
+}
