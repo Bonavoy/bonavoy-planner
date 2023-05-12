@@ -12,9 +12,9 @@ export default function Trips() {
 
   return (
     <>
-      <div className="flex h-16 items-center border-b border-grayTertiary">
+      <div className="flex h-16 items-center border-b border-gray-100">
         <div className="container mx-auto">
-          <div className="font-heading text-xl font-semibold">Bonavoy</div>
+          <div className="px-2 font-heading text-xl font-semibold">Bonavoy</div>
         </div>
       </div>
 
@@ -22,18 +22,18 @@ export default function Trips() {
       <div className="container mx-auto px-2 pt-8">
         <div className="flex items-center justify-between pb-8">
           <h1 className="font-heading text-4xl font-bold">Trips</h1>
-          <button className="h-fit rounded-lg bg-primary p-2 text-sm text-white duration-150 hover:bg-primary/80">
+          <button className="h-fit rounded-md bg-primary p-2 text-xs text-white duration-150 hover:bg-primary/80">
             + New trip
           </button>
         </div>
 
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {!getTripsQuery.loading
             ? getTripsQuery.data?.trips.edges.map((trip) => (
                 <Link
                   href={`/trips/${trip.node.id}/planner`}
                   key={trip.node.id}
-                  className="aspect relative flex aspect-[4/3] items-center justify-center rounded-md border border-surface"
+                  className="relative flex aspect-[4/3] items-center justify-center rounded-md border border-gray-100"
                 >
                   <Image
                     src="https://banffnationalpark.com/wp-content/uploads/2022/04/banff-guide-1536x1024.jpg"

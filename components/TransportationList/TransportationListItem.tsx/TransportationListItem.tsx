@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useMutation } from '@apollo/client';
-import { format } from 'date-fns';
 import cloneDeep from 'lodash.clonedeep';
 import clsx from 'clsx';
 import throttle from 'lodash.throttle';
@@ -14,12 +13,10 @@ import {
   UPDATE_TRANSPORTATION,
 } from '~/graphql/mutations/transportation';
 import LocationSearch from '../LocationSearch';
-import Datepicker from '~/components/Datepicker/Datepicker';
-import Modal from '~/components/Modal/Modal';
 import { GET_PLACES } from '~/graphql/queries/place';
 import { TRANSPORTATION_FULL } from '~/graphql/fragments/transportation';
 import Details from '../Details';
-import ActiveElement from '~/components/ActiveElement/ActiveElement';
+import SelectDateButton from '~/components/SelectDateButton/SelectDateButton';
 
 interface TransportationListItemProps {
   transportationId: string;
@@ -32,8 +29,6 @@ const TransportationListItem = ({
   transportation,
   tripId,
 }: TransportationListItemProps) => {
-  const [showDepartureDatePicker, setShowDepartureDatePicker] = useState(false);
-  const [showArrivalDatepicker, setShowArrivalDatepicker] = useState(false);
   const [departureLocation, setDepartureLocation] = useState(
     transportation.departureLocation,
   );
@@ -185,21 +180,16 @@ const TransportationListItem = ({
     setDetails(transportation.details);
   }, [transportation.details]);
 
-  const formatDatetime = (date?: string): string =>
-    date ? format(new Date(date), 'MMM d h:mm a') : '';
-
   return (
     <>
-      <div className="group relative grid cursor-pointer grid-cols-[auto_3fr_auto] gap-1 p-3 duration-150">
-        <div className="flex h-6 w-6 items-center justify-center">
-          <i
-            className={clsx('text-sm', {
-              'fa-solid fa-plane':
-                transportation.type === TransportationType.Plane,
-              'fa-solid fa-car': transportation.type === TransportationType.Car,
-            })}
-          />
-        </div>
+      <div className="group relative grid cursor-pointer grid-cols-[auto_3fr_auto] gap-px p-3 duration-150">
+        <i
+          className={clsx('place-self-center  justify-self-center text-sm', {
+            'fa-solid fa-plane':
+              transportation.type === TransportationType.Plane,
+            'fa-solid fa-car': transportation.type === TransportationType.Car,
+          })}
+        />
 
         <LocationSearch
           type="departureLocation"
@@ -215,18 +205,18 @@ const TransportationListItem = ({
             })
           }
         />
-
-        <button
-          className="flex items-center justify-end gap-2 place-self-stretch rounded-md px-2 text-sm duration-150 hover:bg-surface"
-          onClick={() => {
-            setShowDepartureDatePicker(true);
+        <SelectDateButton
+          transportationId={transportationId}
+          tripId={tripId}
+          elementId={`transport:${transportationId}:departureTime:button`}
+          date={transportation.departureTime}
+          onSelectDate={(date) => {
+            updateTransportation({
+              ...transportation,
+              departureTime: date.toISOString(),
+            });
           }}
-        >
-          {transportation.departureTime ? (
-            <span>{formatDatetime(transportation.departureTime)}</span>
-          ) : null}
-          <i className="fa fa-calendar cursor" aria-hidden="true"></i>
-        </button>
+        />
 
         <LocationSearch
           type="arrivalLocation"
@@ -242,18 +232,18 @@ const TransportationListItem = ({
             })
           }
         />
-
-        <button
-          className="flex items-center justify-end gap-2 place-self-stretch rounded-md px-2 text-sm duration-150 hover:bg-surface"
-          onClick={() => {
-            setShowArrivalDatepicker(true);
+        <SelectDateButton
+          transportationId={transportationId}
+          tripId={tripId}
+          elementId={`transport:${transportationId}:arrivalTime:button`}
+          date={transportation.arrivalTime}
+          onSelectDate={(date) => {
+            updateTransportation({
+              ...transportation,
+              arrivalTime: date.toISOString(),
+            });
           }}
-        >
-          {transportation.arrivalTime ? (
-            <span>{formatDatetime(transportation.arrivalTime)}</span>
-          ) : null}
-          <i className="fa fa-calendar cursor" aria-hidden="true"></i>
-        </button>
+        />
 
         {showDetails ? (
           <Details
@@ -267,18 +257,21 @@ const TransportationListItem = ({
             value={details}
           />
         ) : null}
+
         <div className="text-md col-span-2 col-start-2 flex w-full items-center justify-between gap-4 bg-transparent">
-          <div className="flex gap-2">
+          <div className="flex gap-px">
             <button
               className="rounded-md px-2 text-xs text-black duration-150 hover:bg-surface"
               onClick={() => setShowDetails(!showDetails)}
             >
               {showDetails ? 'Hide details' : 'Show details'}
             </button>
+
             <button className="rounded-md px-1 text-black duration-150 hover:bg-surface">
               <i className="fa-solid fa-paperclip "></i>
             </button>
           </div>
+
           <div className="relative">
             <button
               className="flex h-6 w-6 items-center justify-center rounded-md text-black duration-150 hover:bg-surface"
@@ -287,7 +280,7 @@ const TransportationListItem = ({
               <i className="fa-solid fa-ellipsis relative" />
             </button>
             {showOptionsMenu && (
-              <ul className="absolute top-full rounded-sm border border-surface bg-white text-xs shadow-md">
+              <ul className="absolute top-full z-10 rounded-sm border border-surface bg-white text-xs shadow-md">
                 <li
                   className="rounded-inherit px-2 py-1 text-red hover:bg-surface"
                   onClick={() => {
@@ -303,61 +296,6 @@ const TransportationListItem = ({
           </div>
         </div>
       </div>
-
-      <Modal show={showDepartureDatePicker}>
-        {/* modal bg */}
-        <div className="fixed bottom-0 left-0 right-0 top-0 flex justify-center bg-black bg-opacity-70">
-          {/* content */}
-          <div className="pt-24">
-            <div className="flex justify-end rounded-t-xl bg-white">
-              <button
-                className="right-0 p-3"
-                onClick={() => setShowDepartureDatePicker(false)}
-              >
-                close
-              </button>
-            </div>
-            <div className="rounded-b-xl bg-white px-3 pb-3">
-              <Datepicker
-                onSelect={(date) => {
-                  updateTransportation({
-                    ...transportation,
-                    departureTime: date.toISOString(),
-                  });
-                  setShowDepartureDatePicker(false);
-                }}
-              />
-            </div>
-          </div>
-        </div>
-      </Modal>
-      <Modal show={showArrivalDatepicker}>
-        {/* modal bg */}
-        <div className="fixed bottom-0 left-0 right-0 top-0 flex justify-center bg-black bg-opacity-70">
-          {/* content */}
-          <div className="pt-24">
-            <div className="flex justify-end rounded-t-xl bg-white">
-              <button
-                className="right-0 p-3"
-                onClick={() => setShowArrivalDatepicker(false)}
-              >
-                close
-              </button>
-            </div>
-            <div className="rounded-b-xl bg-white px-3 pb-3">
-              <Datepicker
-                onSelect={(date) => {
-                  updateTransportation({
-                    ...transportation,
-                    arrivalTime: date.toISOString(),
-                  });
-                  setShowArrivalDatepicker(false);
-                }}
-              />
-            </div>
-          </div>
-        </div>
-      </Modal>
     </>
   );
 };

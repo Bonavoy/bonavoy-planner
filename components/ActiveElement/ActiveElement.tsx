@@ -33,7 +33,7 @@ const ActiveElement = ({
           alt={activeElementsCtx.activeElements.get(elementId)!.author.username}
           height={16}
           width={16}
-          className="absolute -right-[8px] -top-[8px] aspect-square rounded-full border border-primary bg-white object-contain"
+          className="absolute -right-[8px] -top-[8px] z-10 aspect-square rounded-full border border-primary bg-white object-contain"
         />
       ) : null}
     </div>
