@@ -33,15 +33,17 @@ export default function Trips() {
                 <Link
                   href={`/trips/${trip.node.id}/planner`}
                   key={trip.node.id}
-                  className="relative flex aspect-[4/3] items-center justify-center rounded-md border border-gray-100"
+                  className="flex aspect-[4/3] flex-col rounded-md border border-gray-100"
                 >
-                  <Image
-                    src="https://banffnationalpark.com/wp-content/uploads/2022/04/banff-guide-1536x1024.jpg"
-                    alt={trip.node.name}
-                    fill
-                    className="rounded-md"
-                  />
-                  <div className="absolute bottom-0 z-10 w-full rounded-b-md bg-white p-2">
+                  <div className="relative flex-1">
+                    <Image
+                      src="https://banffnationalpark.com/wp-content/uploads/2022/04/banff-guide-1536x1024.jpg"
+                      alt={trip.node.name}
+                      fill
+                      className="rounded-t-md object-cover"
+                    />
+                  </div>
+                  <div className="w-full rounded-b-md bg-white p-2">
                     <div className="pb-1 text-sm font-medium">
                       {trip.node.name}
                     </div>
