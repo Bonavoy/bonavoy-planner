@@ -46,7 +46,9 @@ export default function RouteMap({ places }: RouteMapProps) {
 
     let i = 0;
     const waypointSegments: InputCoords[][] = [];
-    const transportArr = places.flatMap((place) => place.transportation);
+    const transportArr = places.flatMap((place) =>
+      place.transportation.flatMap((connections) => connections),
+    );
     while (i < transportArr.length) {
       let transport = transportArr[i];
       if (
@@ -74,6 +76,7 @@ export default function RouteMap({ places }: RouteMapProps) {
 
         while (
           i < transportArr.length &&
+          transportArr[i].departureCoords &&
           transportArr[i].type === TransportationType.Car
         ) {
           waypointSegment.push({
@@ -83,7 +86,7 @@ export default function RouteMap({ places }: RouteMapProps) {
           i++;
         }
 
-        if (i - 1 < transportArr.length) {
+        if (i - 1 < transportArr.length && transportArr[i - 1].arrivalCoords) {
           waypointSegment.push({
             lat: transportArr[i - 1].arrivalCoords!.lat,
             lng: transportArr[i - 1].arrivalCoords!.lng,

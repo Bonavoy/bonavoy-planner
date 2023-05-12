@@ -18,7 +18,7 @@ const documents = {
     "\n  fragment placesFull on Place {\n    id\n    text\n    placeName\n    mapboxId\n    startDate\n    endDate\n    colour\n    center\n  }\n": types.PlacesFullFragmentDoc,
     "\n  fragment authorPresentFull on AuthorPresent {\n      id\n      username\n      avatar\n      connected\n  }\n": types.AuthorPresentFullFragmentDoc,
     "\n  fragment activeElementFull on ActiveElement {\n    elementId\n    active\n    tripId\n    author {\n      ...authorPresentFull\n    }\n  }\n": types.ActiveElementFullFragmentDoc,
-    "\n  fragment transportationFull on Transportation {\n    id\n    type\n    departureLocation\n    departureTime\n    arrivalLocation\n    arrivalTime\n    details\n    departureCoords {\n      lat\n      lng\n    }\n    arrivalCoords {\n      lat\n      lng\n    }\n    order\n  }\n": types.TransportationFullFragmentDoc,
+    "\n  fragment transportationFull on Transportation {\n    id\n    type\n    departureLocation\n    departureTime\n    arrivalLocation\n    arrivalTime\n    details\n    departureCoords {\n      lat\n      lng\n    }\n    arrivalCoords {\n      lat\n      lng\n    }\n    order\n    connectingId\n    connectingOrder\n  }\n": types.TransportationFullFragmentDoc,
     "\n  fragment tripFull on Trip {\n    id\n    name\n    isPublic\n    authors { \n      ...authorOnTripSnippet\n     }\n    banner\n    startDate\n    endDate\n  }\n": types.TripFullFragmentDoc,
     "\n  fragment userSnippet on User {\n    username\n    avatar\n    id\n  }\n": types.UserSnippetFragmentDoc,
     "\n  mutation sendInvite($tripId: ID!, $invitee: InviteInput!) {\n    sendInvite(tripId: $tripId, invitee: $invitee) {\n      ... on PendingInvite {\n        ...pendingInviteFull\n      }\n      ... on AuthorsOnTrips {\n        role\n        user {\n          email\n        }\n      }\n    }\n  }\n": types.SendInviteDocument,
@@ -81,7 +81,7 @@ export function gql(source: "\n  fragment activeElementFull on ActiveElement {\n
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "\n  fragment transportationFull on Transportation {\n    id\n    type\n    departureLocation\n    departureTime\n    arrivalLocation\n    arrivalTime\n    details\n    departureCoords {\n      lat\n      lng\n    }\n    arrivalCoords {\n      lat\n      lng\n    }\n    order\n  }\n"): (typeof documents)["\n  fragment transportationFull on Transportation {\n    id\n    type\n    departureLocation\n    departureTime\n    arrivalLocation\n    arrivalTime\n    details\n    departureCoords {\n      lat\n      lng\n    }\n    arrivalCoords {\n      lat\n      lng\n    }\n    order\n  }\n"];
+export function gql(source: "\n  fragment transportationFull on Transportation {\n    id\n    type\n    departureLocation\n    departureTime\n    arrivalLocation\n    arrivalTime\n    details\n    departureCoords {\n      lat\n      lng\n    }\n    arrivalCoords {\n      lat\n      lng\n    }\n    order\n    connectingId\n    connectingOrder\n  }\n"): (typeof documents)["\n  fragment transportationFull on Transportation {\n    id\n    type\n    departureLocation\n    departureTime\n    arrivalLocation\n    arrivalTime\n    details\n    departureCoords {\n      lat\n      lng\n    }\n    arrivalCoords {\n      lat\n      lng\n    }\n    order\n    connectingId\n    connectingOrder\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
