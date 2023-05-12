@@ -118,7 +118,7 @@ const TransportationList = ({
       <ul>
         {transportation.length ? (
           transportation.map((connectingTransportation, order) => (
-            <li className="pb-3 last:pb-5" key={connectingTransportation[0].id}>
+            <li className="pb-3 last:pb-4" key={connectingTransportation[0].id}>
               <ConnectingTransportation
                 connectingTransportation={connectingTransportation}
                 tripId={tripId}
@@ -139,6 +139,7 @@ const TransportationList = ({
           addTransportation(uuidv4(), transportation.length, 0, selection.val);
         }}
         options={transportationOptions}
+        className="w-full rounded-sm text-xs text-gray-500 duration-100 hover:bg-surface"
       >
         Add transportation
       </DropDownSelect>

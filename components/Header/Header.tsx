@@ -164,16 +164,9 @@ export default function Header({ tripId, mode }: HeaderProps) {
             title="invite friends"
             type="button"
             onClick={() => setShowInviteModal(true)}
-            className="flex items-center justify-center rounded-md border-2 border-white bg-primary px-1 py-1 text-xs text-white duration-150 hover:bg-primary/80"
+            className="flex items-center justify-center rounded-md p-1 text-sm duration-150 hover:bg-primary/80 hover:bg-surface"
           >
-            <span className="line-clamp-1">
-              Invite
-              <i className="fa-solid fa-plus pl-1" />
-            </span>
-          </button>
-
-          <button type="button" className="flex items-center">
-            <i className="fa-regular fa-gear text-lg text-grayPrimary transition-colors duration-150 hover:text-primary" />
+            <span className="line-clamp-1">Invite</span>
           </button>
         </div>
       </header>
