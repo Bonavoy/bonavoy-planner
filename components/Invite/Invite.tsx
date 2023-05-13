@@ -1,7 +1,11 @@
 import { useMutation, useQuery } from '@apollo/client';
 import { useState } from 'react';
 
-import { TripRole } from '~/graphql/generated/graphql';
+import {
+  AuthorOnTripSnippetFragment,
+  PendingInvite,
+  TripRole,
+} from '~/graphql/generated/graphql';
 import { SEND_INVITE } from '~/graphql/mutations/invite';
 import { GET_AUTHORS_ON_TRIP } from '~/graphql/queries/authorsOnTrips';
 
@@ -89,7 +93,9 @@ interface InviteProps {
 const Invite = ({ tripId, onClose }: InviteProps) => {
   const [email, setEmail] = useState<string>('');
   const [role, setRole] = useState<TripRole>(TripRole.Author);
-  const [authorIdToDelete, setAuthorIdToDelete] = useState<null | string>(null);
+  const [authorIdToDelete, setAuthorIdToDelete] = useState<
+    null | AuthorOnTripSnippetFragment | PendingInvite
+  >(null);
 
   const getAuthorsOnTripQuery = useQuery(GET_AUTHORS_ON_TRIP, {
     variables: { tripId },
@@ -128,7 +134,7 @@ const Invite = ({ tripId, onClose }: InviteProps) => {
           </button>
         </div>
         <form
-          className="flex gap-3 pt-4"
+          className="flex gap-3 "
           onSubmit={(e) => {
             e.preventDefault();
             sendInvite();
@@ -167,69 +173,62 @@ const Invite = ({ tripId, onClose }: InviteProps) => {
           {sendInviteResult.error?.message}
         </div>
 
-        <div>
+        <div className="py-2">
           {getAuthorsOnTripQuery.data?.authorsOnTrips.length &&
-          getAuthorsOnTripQuery.data.authorsOnTrips.length > 0 ? (
-            <ul className="pt-4">
-              {getAuthorsOnTripQuery.data.authorsOnTrips.map((author) => (
-                <div
-                  className="flex justify-between py-1 text-sm"
-                  key={author.user.id}
-                >
-                  <div>{author.user.email}</div>
-                  <DropDownSelect
-                    className="rounded-md px-1 text-gray-400 hover:bg-surface"
-                    onSelect={(selection: DropDownItem) => {
-                      if (selection.val === 'DELETE') {
-                        setAuthorIdToDelete(author.id);
-                        return;
-                      }
-                      console.log(selection);
-                    }}
-                    options={roles}
+            !getAuthorsOnTripQuery.loading && (
+              <ul className="">
+                {getAuthorsOnTripQuery.data.authorsOnTrips.map((author) => (
+                  <div
+                    className="flex justify-between  text-sm"
+                    key={author.user.id}
                   >
-                    {formatRole(author.role)}
-                  </DropDownSelect>
-                </div>
-              ))}
-            </ul>
-          ) : (
-            <div className="text-center text-sm text-grayTertiary">
-              Seems pretty lonely... maybe you should invite some people
-            </div>
-          )}
+                    <div>{author.user.email}</div>
+                    <DropDownSelect
+                      className="rounded-md px-1 text-gray-400 hover:bg-surface"
+                      onSelect={(selection: DropDownItem) => {
+                        if (selection.val === 'DELETE') {
+                          setAuthorIdToDelete(author);
+                          return;
+                        }
+                        console.log(selection);
+                      }}
+                      options={roles}
+                    >
+                      {formatRole(author.role)}
+                    </DropDownSelect>
+                  </div>
+                ))}
+              </ul>
+            )}
 
           {getAuthorsOnTripQuery.loading && <Skeleton />}
         </div>
-        <div className="pt-4">
-          <h2 className="font-heading text-xl font-semibold">
-            Pending Invites
-          </h2>
+
+        <div className="py-2">
+          <h2 className="font-heading text-xl font-semibold">Pending</h2>
           <ul className="text-sm">
-            {!getInvitesQuery.loading ? (
-              getInvitesQuery.data?.invites.map((invite) => (
-                <li
-                  className="flex justify-between py-1 text-sm"
-                  key={invite.email}
-                >
-                  <div>{invite.email}</div>
-                  <DropDownSelect
-                    className="rounded-md px-1 text-gray-400 hover:bg-surface"
-                    onSelect={(selection: DropDownItem) => {
-                      if (selection.val === 'DELETE') {
-                        setAuthorIdToDelete(invite.id);
-                        return;
-                      }
-                    }}
-                    options={roles}
+            {!getInvitesQuery.loading
+              ? getInvitesQuery.data?.invites.map((invite) => (
+                  <li
+                    className="flex justify-between text-sm"
+                    key={invite.email}
                   >
-                    {formatRole(invite.role)}
-                  </DropDownSelect>
-                </li>
-              ))
-            ) : (
-              <Spinner />
-            )}
+                    <div>{invite.email}</div>
+                    <DropDownSelect
+                      className="rounded-md px-1 text-gray-400 hover:bg-surface"
+                      onSelect={(selection: DropDownItem) => {
+                        if (selection.val === 'DELETE') {
+                          setAuthorIdToDelete(invite);
+                          return;
+                        }
+                      }}
+                      options={roles}
+                    >
+                      {formatRole(invite.role)}
+                    </DropDownSelect>
+                  </li>
+                ))
+              : null}
             {!getInvitesQuery.loading &&
             getInvitesQuery.data?.invites.length === 0 ? (
               <div className="text-gray-400">no pending invites</div>

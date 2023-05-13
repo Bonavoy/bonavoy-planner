@@ -87,6 +87,8 @@ export default function Header({ tripId, mode }: HeaderProps) {
     },
   ];
 
+  console.log(getUserQuery.data?.user);
+
   return (
     <>
       <header className="flex h-20 flex-shrink-0 items-center justify-between border-b border-b-grayPrimary/20 bg-background px-8 shadow-lg">
@@ -166,7 +168,7 @@ export default function Header({ tripId, mode }: HeaderProps) {
             onClick={() => setShowInviteModal(true)}
             className="flex items-center justify-center rounded-md p-1 text-sm duration-150 hover:bg-primary/80 hover:bg-surface"
           >
-            <span className="line-clamp-1">Invite</span>
+            <span className="line-clamp-1">Share</span>
           </button>
         </div>
       </header>

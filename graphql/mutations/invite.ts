@@ -15,3 +15,7 @@ export const SEND_INVITE = gql(`
     }
   }
 `);
+
+// export const UPDATE_INVITE = gql(`
+//   mutation updateInvite(id: ID!, role)
+// `);
