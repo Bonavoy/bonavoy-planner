@@ -13,6 +13,7 @@ import Spinner from '../Spinner/';
 import DropDownSelect, { DropDownItem } from '../DropDownSelect/DropDownSelect';
 import { GET_INVITES } from '~/graphql/queries/invite';
 import Modal from '../Modal/Modal';
+import { UPDATE_AUTHOR_ON_TRIP_ROLE } from '~/graphql/mutations/authorsOnTrips';
 
 const Skeleton = () => {
   return (
@@ -102,6 +103,8 @@ const Invite = ({ tripId, onClose }: InviteProps) => {
   });
   const getInvitesQuery = useQuery(GET_INVITES, { variables: { tripId } });
   const [sendInviteMutation, sendInviteResult] = useMutation(SEND_INVITE);
+  const [updateAuthorOnTripRoleMutation, updateAuthorOnTripRoleResult] =
+    useMutation(UPDATE_AUTHOR_ON_TRIP_ROLE);
 
   const sendInvite = () => {
     sendInviteMutation({
