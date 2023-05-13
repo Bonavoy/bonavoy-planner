@@ -23,7 +23,7 @@ import {
 
 const Skeleton = () => {
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-col gap-1">
       <div className="h-4 animate-pulse rounded-full bg-gray-200"></div>
       <div className="h-4 animate-pulse rounded-full bg-gray-200"></div>
     </div>
@@ -126,17 +126,6 @@ const Invite = ({ tripId, onClose }: InviteProps) => {
     });
   };
 
-  const formatRole = (tripRole: TripRole) => {
-    switch (tripRole) {
-      case TripRole.Author:
-        return 'Author';
-      case TripRole.Editor:
-        return 'Editor';
-      case TripRole.Viewer:
-        return 'Viewer';
-    }
-  };
-
   const updateAuthorOnTripRole = (id: string, role: TripRole) => {
     updateAuthorOnTripRoleMutation({ variables: { id, role } });
   };
@@ -150,13 +139,33 @@ const Invite = ({ tripId, onClose }: InviteProps) => {
   ) => {
     switch (authorOnTrip.__typename) {
       case 'AuthorsOnTrips':
-        removeAuthorOnTripMutation({ variables: { id: authorOnTrip.id } });
+        removeAuthorOnTripMutation({
+          variables: { id: authorOnTrip.id },
+          refetchQueries: [
+            { query: GET_AUTHORS_ON_TRIP, variables: { tripId } },
+          ],
+        });
         return;
       case 'PendingInvite':
-        deleteInviteMutation({ variables: { id: authorOnTrip.id } });
+        deleteInviteMutation({
+          variables: { id: authorOnTrip.id },
+          optimisticResponse: { deleteInvite: authorOnTrip.id },
+          refetchQueries: [{ query: GET_INVITES, variables: { tripId } }],
+        });
         return;
       default:
         throw new Error('unexpected type');
+    }
+  };
+
+  const formatRole = (tripRole: TripRole) => {
+    switch (tripRole) {
+      case TripRole.Author:
+        return 'Author';
+      case TripRole.Editor:
+        return 'Editor';
+      case TripRole.Viewer:
+        return 'Viewer';
     }
   };
 
@@ -273,7 +282,7 @@ const Invite = ({ tripId, onClose }: InviteProps) => {
               : null}
             {!getInvitesQuery.loading &&
             getInvitesQuery.data?.invites.length === 0 ? (
-              <div className="text-gray-400">no pending invites</div>
+              <div className="text-xs text-gray-400">no pending invites</div>
             ) : null}
 
             {getInvitesQuery.loading && <Skeleton />}
