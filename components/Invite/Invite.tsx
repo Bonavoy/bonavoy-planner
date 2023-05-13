@@ -6,7 +6,7 @@ import {
   PendingInvite,
   TripRole,
 } from '~/graphql/generated/graphql';
-import { SEND_INVITE } from '~/graphql/mutations/invite';
+import { SEND_INVITE, UPDATE_INVITE_ROLE } from '~/graphql/mutations/invite';
 import { GET_AUTHORS_ON_TRIP } from '~/graphql/queries/authorsOnTrips';
 
 import Spinner from '../Spinner/';
@@ -103,8 +103,10 @@ const Invite = ({ tripId, onClose }: InviteProps) => {
   });
   const getInvitesQuery = useQuery(GET_INVITES, { variables: { tripId } });
   const [sendInviteMutation, sendInviteResult] = useMutation(SEND_INVITE);
-  const [updateAuthorOnTripRoleMutation, updateAuthorOnTripRoleResult] =
-    useMutation(UPDATE_AUTHOR_ON_TRIP_ROLE);
+  const [updateAuthorOnTripRoleMutation] = useMutation(
+    UPDATE_AUTHOR_ON_TRIP_ROLE,
+  );
+  const [updateInviteRoleMutation] = useMutation(UPDATE_INVITE_ROLE);
 
   const sendInvite = () => {
     sendInviteMutation({
@@ -131,7 +133,9 @@ const Invite = ({ tripId, onClose }: InviteProps) => {
     updateAuthorOnTripRoleMutation({ variables: { id, role } });
   };
 
-  const updateInviteRole = (id: string, role: TripRole) => {};
+  const updateInviteRole = (id: string, role: TripRole) => {
+    updateInviteRoleMutation({ variables: { id, role } });
+  };
 
   return (
     <>
@@ -202,7 +206,7 @@ const Invite = ({ tripId, onClose }: InviteProps) => {
                           }
                           updateAuthorOnTripRole(
                             authorOnTrip.id,
-                            selection.val,
+                            selection.val as TripRole,
                           );
                         }}
                         options={roles}
@@ -235,6 +239,7 @@ const Invite = ({ tripId, onClose }: InviteProps) => {
                           setAuthorIdToDelete(invite);
                           return;
                         }
+                        updateInviteRole(invite.id, selection.val as TripRole);
                       }}
                       options={roles}
                     >

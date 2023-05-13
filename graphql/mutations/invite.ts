@@ -16,6 +16,10 @@ export const SEND_INVITE = gql(`
   }
 `);
 
-// export const UPDATE_INVITE = gql(`
-//   mutation updateInvite(id: ID!, role)
-// `);
+export const UPDATE_INVITE_ROLE = gql(`
+  mutation updateInviteRole($id: ID!, $role: TripRole!) {
+    updateInviteRole(id: $id, role: $role) {
+      ...pendingInviteFull
+    }
+  }
+`);
