@@ -7,3 +7,9 @@ export const UPDATE_AUTHOR_ON_TRIP_ROLE = gql(`
     }
   }
 `);
+
+export const REMOVE_AUTHOR_ON_TRIP = gql(`
+  mutation removeAuthorOnTrip($id: ID!) {
+    removeAuthorOnTrip(id: $id)
+  }
+`);

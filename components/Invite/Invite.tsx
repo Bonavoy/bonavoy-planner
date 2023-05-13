@@ -13,7 +13,10 @@ import Spinner from '../Spinner/';
 import DropDownSelect, { DropDownItem } from '../DropDownSelect/DropDownSelect';
 import { GET_INVITES } from '~/graphql/queries/invite';
 import Modal from '../Modal/Modal';
-import { UPDATE_AUTHOR_ON_TRIP_ROLE } from '~/graphql/mutations/authorsOnTrips';
+import {
+  REMOVE_AUTHOR_ON_TRIP,
+  UPDATE_AUTHOR_ON_TRIP_ROLE,
+} from '~/graphql/mutations/authorsOnTrips';
 
 const Skeleton = () => {
   return (
@@ -94,7 +97,7 @@ interface InviteProps {
 const Invite = ({ tripId, onClose }: InviteProps) => {
   const [email, setEmail] = useState<string>('');
   const [role, setRole] = useState<TripRole>(TripRole.Author);
-  const [authorIdToDelete, setAuthorIdToDelete] = useState<
+  const [authorToDelete, setAuthorToDelete] = useState<
     null | AuthorOnTripSnippetFragment | PendingInvite
   >(null);
 
@@ -107,6 +110,7 @@ const Invite = ({ tripId, onClose }: InviteProps) => {
     UPDATE_AUTHOR_ON_TRIP_ROLE,
   );
   const [updateInviteRoleMutation] = useMutation(UPDATE_INVITE_ROLE);
+  const [removeAuthorOnTripMutation] = useMutation(REMOVE_AUTHOR_ON_TRIP);
 
   const sendInvite = () => {
     sendInviteMutation({
@@ -135,6 +139,20 @@ const Invite = ({ tripId, onClose }: InviteProps) => {
 
   const updateInviteRole = (id: string, role: TripRole) => {
     updateInviteRoleMutation({ variables: { id, role } });
+  };
+
+  const removeAuthorOnTrip = (
+    authorOnTrip: AuthorOnTripSnippetFragment | PendingInvite,
+  ) => {
+    switch (authorOnTrip.__typename) {
+      case 'AuthorsOnTrips':
+        removeAuthorOnTripMutation({ variables: { id: authorOnTrip.id } });
+        return;
+      case 'PendingInvite':
+        return;
+      default:
+        throw new Error('unexpected type');
+    }
   };
 
   return (
@@ -201,7 +219,7 @@ const Invite = ({ tripId, onClose }: InviteProps) => {
                         className="rounded-md px-1 text-gray-400 hover:bg-surface"
                         onSelect={(selection: DropDownItem) => {
                           if (selection.val === 'DELETE') {
-                            setAuthorIdToDelete(authorOnTrip);
+                            setAuthorToDelete(authorOnTrip);
                             return;
                           }
                           updateAuthorOnTripRole(
@@ -236,7 +254,7 @@ const Invite = ({ tripId, onClose }: InviteProps) => {
                       className="rounded-md px-1 text-gray-400 hover:bg-surface"
                       onSelect={(selection: DropDownItem) => {
                         if (selection.val === 'DELETE') {
-                          setAuthorIdToDelete(invite);
+                          setAuthorToDelete(invite);
                           return;
                         }
                         updateInviteRole(invite.id, selection.val as TripRole);
@@ -258,23 +276,23 @@ const Invite = ({ tripId, onClose }: InviteProps) => {
         </div>
       </div>
 
-      <Modal show={!!authorIdToDelete}>
+      <Modal show={!!authorToDelete}>
         <div className="rounded-sm bg-white p-4 text-xs">
           <p>You sure you want to remove this author from the trip</p>
           <div className="flex justify-end gap-1 pt-2">
             <button
-              className="rounded-md bg-primary px-4 py-2 text-white"
+              className="rounded-md bg-error/20 px-4 py-2 text-error duration-100 hover:bg-error/10"
               onClick={() => {
-                console.log(authorIdToDelete);
-                setAuthorIdToDelete(null);
+                removeAuthorOnTrip(authorToDelete!);
+                setAuthorToDelete(null);
               }}
             >
               Remove
             </button>
             <button
-              className="rounded-md px-4 py-2 text-red"
+              className="rounded-md px-4 py-2 text-gray duration-100 hover:bg-surface"
               onClick={() => {
-                setAuthorIdToDelete(null);
+                setAuthorToDelete(null);
               }}
             >
               Cancel

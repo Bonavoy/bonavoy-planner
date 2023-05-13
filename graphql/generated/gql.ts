@@ -22,6 +22,7 @@ const documents = {
     "\n  fragment tripFull on Trip {\n    id\n    name\n    isPublic\n    authors { \n      ...authorOnTripSnippet\n     }\n    banner\n    startDate\n    endDate\n  }\n": types.TripFullFragmentDoc,
     "\n  fragment userSnippet on User {\n    username\n    email\n    avatar\n    id\n  }\n": types.UserSnippetFragmentDoc,
     "\n  mutation updateAuthorOnTripRole($id: ID!, $role: TripRole!) {\n    updateAuthorOnTripRole(id: $id, role: $role) {\n      ...authorOnTripSnippet\n    }\n  }\n": types.UpdateAuthorOnTripRoleDocument,
+    "\n  mutation removeAuthorOnTrip($id: ID!) {\n    removeAuthorOnTrip(id: $id)\n  }\n": types.RemoveAuthorOnTripDocument,
     "\n  mutation sendInvite($tripId: ID!, $invitee: InviteInput!) {\n    sendInvite(tripId: $tripId, invitee: $invitee) {\n      ... on PendingInvite {\n        ...pendingInviteFull\n      }\n      ... on AuthorsOnTrips {\n        role\n        user {\n          email\n        }\n      }\n    }\n  }\n": types.SendInviteDocument,
     "\n  mutation updateInviteRole($id: ID!, $role: TripRole!) {\n    updateInviteRole(id: $id, role: $role) {\n      ...pendingInviteFull\n    }\n  }\n": types.UpdateInviteRoleDocument,
     "\n  mutation updateActiveElement($tripId: ID!, $activeElement: UpdateActiveElement!) {\n    updateActiveElement(tripId: $tripId, activeElement: $activeElement) {\n      ...activeElementFull\n    }\n  }\n": types.UpdateActiveElementDocument,
@@ -95,6 +96,10 @@ export function gql(source: "\n  fragment userSnippet on User {\n    username\n 
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(source: "\n  mutation updateAuthorOnTripRole($id: ID!, $role: TripRole!) {\n    updateAuthorOnTripRole(id: $id, role: $role) {\n      ...authorOnTripSnippet\n    }\n  }\n"): (typeof documents)["\n  mutation updateAuthorOnTripRole($id: ID!, $role: TripRole!) {\n    updateAuthorOnTripRole(id: $id, role: $role) {\n      ...authorOnTripSnippet\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  mutation removeAuthorOnTrip($id: ID!) {\n    removeAuthorOnTrip(id: $id)\n  }\n"): (typeof documents)["\n  mutation removeAuthorOnTrip($id: ID!) {\n    removeAuthorOnTrip(id: $id)\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
