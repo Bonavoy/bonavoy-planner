@@ -23,3 +23,9 @@ export const UPDATE_INVITE_ROLE = gql(`
     }
   }
 `);
+
+export const DELETE_INVITE = gql(`
+  mutation deleteInvite($id: ID!) {
+    deleteInvite(id: $id) 
+  }
+`);

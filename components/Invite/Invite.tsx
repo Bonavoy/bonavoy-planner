@@ -6,9 +6,12 @@ import {
   PendingInvite,
   TripRole,
 } from '~/graphql/generated/graphql';
-import { SEND_INVITE, UPDATE_INVITE_ROLE } from '~/graphql/mutations/invite';
+import {
+  DELETE_INVITE,
+  SEND_INVITE,
+  UPDATE_INVITE_ROLE,
+} from '~/graphql/mutations/invite';
 import { GET_AUTHORS_ON_TRIP } from '~/graphql/queries/authorsOnTrips';
-
 import Spinner from '../Spinner/';
 import DropDownSelect, { DropDownItem } from '../DropDownSelect/DropDownSelect';
 import { GET_INVITES } from '~/graphql/queries/invite';
@@ -111,6 +114,7 @@ const Invite = ({ tripId, onClose }: InviteProps) => {
   );
   const [updateInviteRoleMutation] = useMutation(UPDATE_INVITE_ROLE);
   const [removeAuthorOnTripMutation] = useMutation(REMOVE_AUTHOR_ON_TRIP);
+  const [deleteInviteMutation] = useMutation(DELETE_INVITE);
 
   const sendInvite = () => {
     sendInviteMutation({
@@ -149,6 +153,7 @@ const Invite = ({ tripId, onClose }: InviteProps) => {
         removeAuthorOnTripMutation({ variables: { id: authorOnTrip.id } });
         return;
       case 'PendingInvite':
+        deleteInviteMutation({ variables: { id: authorOnTrip.id } });
         return;
       default:
         throw new Error('unexpected type');
