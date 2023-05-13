@@ -127,6 +127,12 @@ const Invite = ({ tripId, onClose }: InviteProps) => {
     }
   };
 
+  const updateAuthorOnTripRole = (id: string, role: TripRole) => {
+    updateAuthorOnTripRoleMutation({ variables: { id, role } });
+  };
+
+  const updateInviteRole = (id: string, role: TripRole) => {};
+
   return (
     <>
       <div className="h-fit w-4/12 rounded-md bg-white px-4 py-3 text-black">
@@ -180,27 +186,32 @@ const Invite = ({ tripId, onClose }: InviteProps) => {
           {getAuthorsOnTripQuery.data?.authorsOnTrips.length &&
             !getAuthorsOnTripQuery.loading && (
               <ul className="">
-                {getAuthorsOnTripQuery.data.authorsOnTrips.map((author) => (
-                  <div
-                    className="flex justify-between  text-sm"
-                    key={author.user.id}
-                  >
-                    <div>{author.user.email}</div>
-                    <DropDownSelect
-                      className="rounded-md px-1 text-gray-400 hover:bg-surface"
-                      onSelect={(selection: DropDownItem) => {
-                        if (selection.val === 'DELETE') {
-                          setAuthorIdToDelete(author);
-                          return;
-                        }
-                        console.log(selection);
-                      }}
-                      options={roles}
+                {getAuthorsOnTripQuery.data.authorsOnTrips.map(
+                  (authorOnTrip) => (
+                    <div
+                      className="flex justify-between  text-sm"
+                      key={authorOnTrip.user.id}
                     >
-                      {formatRole(author.role)}
-                    </DropDownSelect>
-                  </div>
-                ))}
+                      <div>{authorOnTrip.user.email}</div>
+                      <DropDownSelect
+                        className="rounded-md px-1 text-gray-400 hover:bg-surface"
+                        onSelect={(selection: DropDownItem) => {
+                          if (selection.val === 'DELETE') {
+                            setAuthorIdToDelete(authorOnTrip);
+                            return;
+                          }
+                          updateAuthorOnTripRole(
+                            authorOnTrip.id,
+                            selection.val,
+                          );
+                        }}
+                        options={roles}
+                      >
+                        {formatRole(authorOnTrip.role)}
+                      </DropDownSelect>
+                    </div>
+                  ),
+                )}
               </ul>
             )}
 
