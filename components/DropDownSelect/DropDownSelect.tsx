@@ -5,12 +5,6 @@ export interface DropDownItem {
   view: ReactNode;
 }
 
-export interface ItemProps {
-  value: any;
-  children: ReactNode;
-}
-
-export const Item = ({ value, children }: ItemProps) => <li>{children}</li>;
 interface DropDownSelectInterface {
   onSelect: (selection: DropDownItem) => void;
   options: DropDownItem[];
