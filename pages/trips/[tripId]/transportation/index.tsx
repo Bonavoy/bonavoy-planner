@@ -167,7 +167,7 @@ export default function TransportationPage({
                     i < getPlacesQuery.data.places.length - 1
                   ) {
                     return (
-                      <div className="pb-12" key={place.id}>
+                      <div key={place.id}>
                         <div className="flex items-center justify-center gap-2 pb-2">
                           {/* departure place */}
                           <div className="flex flex-1 justify-center">
