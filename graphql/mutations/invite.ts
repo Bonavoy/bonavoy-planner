@@ -15,3 +15,17 @@ export const SEND_INVITE = gql(`
     }
   }
 `);
+
+export const UPDATE_INVITE_ROLE = gql(`
+  mutation updateInviteRole($id: ID!, $role: TripRole!) {
+    updateInviteRole(id: $id, role: $role) {
+      ...pendingInviteFull
+    }
+  }
+`);
+
+export const DELETE_INVITE = gql(`
+  mutation deleteInvite($id: ID!) {
+    deleteInvite(id: $id) 
+  }
+`);
