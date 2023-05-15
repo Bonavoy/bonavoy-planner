@@ -20,7 +20,7 @@ import { PlannerDetailsQuery } from '~/graphql/generated/graphql';
 type HeaderProps = {
   tripId: string;
   mode: 'planner' | 'transportation' | 'notes';
-  details:  PlannerDetailsQuery['plannerDetails'];
+  details: PlannerDetailsQuery['plannerDetails'];
 };
 
 export default function Header({ tripId, mode, details }: HeaderProps) {
@@ -92,8 +92,6 @@ export default function Header({ tripId, mode, details }: HeaderProps) {
       icon: <i className="fa-solid fa-note" />,
     },
   ];
-
-  console.log(getUserQuery.data?.user);
 
   return (
     <>

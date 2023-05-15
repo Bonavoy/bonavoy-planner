@@ -3,9 +3,11 @@ import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import clsx from 'clsx';
 
+//utils
+import { formatDate } from '~/utils/date';
+
 //types
 import { Place } from '~/graphql/generated/graphql';
-import { formatDate } from '~/utils/date';
 
 type PlaceListItemProps = {
   place: Place & { index: number };
@@ -41,7 +43,7 @@ export default function PlaceListItem({ place, tripId }: PlaceListItemProps) {
         <Link
           href={{
             pathname: `/trips/${tripId}/planner`,
-            query: { place: place.id },
+            query: { placeId: place.id },
           }}
           className="relative z-20 w-full px-6 py-8 font-heading"
         >
