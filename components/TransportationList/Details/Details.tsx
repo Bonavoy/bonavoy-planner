@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from '@apollo/client';
 import clsx from 'clsx';
-import { useCallback, useContext, useEffect, useRef } from 'react';
+import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import ActiveElement from '~/components/ActiveElement/ActiveElement';
 import { ActiveElementsContext } from '~/components/ActiveElementsProvider';
 import { UPDATE_ACTIVE_ELEMENT } from '~/graphql/mutations/planner';
@@ -22,12 +22,20 @@ const Details = ({
   tripId,
 }: DetailsProps) => {
   const elementId = `transport:${transportationId}:textarea`;
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const [details, setDetails] = useState(value);
   const activeElementsCtx = useContext(ActiveElementsContext);
+  const [isFocused, setIsFocused] = useState(false);
 
   const [updateActiveElementMutation] = useMutation(UPDATE_ACTIVE_ELEMENT);
 
   const getUserQuery = useQuery(GET_USER);
+
+  useEffect(() => {
+    // don't update the textarea from subscription data
+    // if we are focused
+    // TODO: idk how good of a soluation this is to the above
+    !isFocused && setDetails(value);
+  }, [value, isFocused]);
 
   const updateActiveElement = useCallback(
     (active: boolean) => {
@@ -72,29 +80,15 @@ const Details = ({
     ],
   );
 
-  useEffect(() => {
-    const handleFocus = () => {
-      updateActiveElement(true);
-    };
+  const handleFocus = () => {
+    updateActiveElement(true);
+    setIsFocused(true);
+  };
 
-    const handleBlur = () => {
-      updateActiveElement(false);
-    };
-
-    const textareaElement = textareaRef.current;
-
-    if (textareaElement) {
-      textareaElement.addEventListener('focus', handleFocus);
-      textareaElement.addEventListener('blur', handleBlur);
-    }
-
-    return () => {
-      if (textareaElement) {
-        textareaElement.removeEventListener('focus', handleFocus);
-        textareaElement.removeEventListener('blur', handleBlur);
-      }
-    };
-  }, [textareaRef, updateActiveElement]);
+  const handleBlur = () => {
+    updateActiveElement(false);
+    setIsFocused(false);
+  };
 
   return (
     <ActiveElement
@@ -104,11 +98,13 @@ const Details = ({
       <textarea
         className="block w-full rounded-md px-2 py-0.5 text-sm text-black outline-none duration-150 placeholder:text-gray-300 hover:bg-surface hover:placeholder:text-gray-500"
         placeholder={placeholder}
-        ref={textareaRef}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
         onChange={(e) => {
+          setDetails(e.target.value);
           onChange(e.target.value);
         }}
-        value={value}
+        value={details}
         rows={1}
       />
     </ActiveElement>

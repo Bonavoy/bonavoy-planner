@@ -30,41 +30,6 @@ const Skeleton = () => {
   );
 };
 
-const roles: DropDownItem[] = [
-  {
-    val: TripRole.Author,
-    view: (
-      <div className="flex items-center justify-between px-2 text-xs">
-        Author
-      </div>
-    ),
-  },
-  {
-    val: TripRole.Editor,
-    view: (
-      <div className="flex items-center justify-between px-2 text-xs">
-        Editor
-      </div>
-    ),
-  },
-  {
-    val: TripRole.Viewer,
-    view: (
-      <div className="flex items-center justify-between px-2 text-xs">
-        Viewer
-      </div>
-    ),
-  },
-  {
-    val: 'DELETE',
-    view: (
-      <div className="flex items-center justify-between px-2 text-xs text-red">
-        Remove
-      </div>
-    ),
-  },
-];
-
 const dropDownItems: DropDownItem[] = [
   {
     val: TripRole.Author,
@@ -87,6 +52,18 @@ const dropDownItems: DropDownItem[] = [
     view: (
       <div className="flex items-center justify-between px-2 text-xs">
         Viewer
+      </div>
+    ),
+  },
+];
+
+const roles: DropDownItem[] = [
+  ...dropDownItems,
+  {
+    val: 'DELETE',
+    view: (
+      <div className="flex items-center justify-between px-2 text-xs text-red">
+        Remove
       </div>
     ),
   },
