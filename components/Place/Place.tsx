@@ -19,29 +19,14 @@ export default function Place({ placeId }: PlaceProps) {
   if (placeDetailsQuery.loading) return <article>loading..</article>;
 
   return (
-    <article>
-      <h1 className="text-3xl font-bold">
-        {placeDetailsQuery.data?.place.placeName}
-      </h1>
-      <p>
-        {formatDate(new Date(placeDetailsQuery.data?.place.startDate), {
-          month: 'short',
-          day: 'numeric',
-        })}{' '}
-        -{' '}
-        {formatDate(new Date(placeDetailsQuery.data?.place.endDate), {
-          month: 'short',
-          day: 'numeric',
-        })}
-      </p>
-
-      <div className="my-4 flex gap-8 rounded-xl bg-grayPrimary/5">
+    <article className="flex h-full">
+      <aside className="flex h-full w-max flex-col gap-12 bg-grayPrimary/5 py-32">
         {eachDayOfInterval({
           start: new Date(placeDetailsQuery.data?.place.startDate),
           end: new Date(placeDetailsQuery.data?.place.endDate),
         }).map((date, index) => (
           <h2
-            className="flex flex-col p-2 text-lg font-semibold leading-tight"
+            className="flex flex-col px-4 text-lg font-semibold leading-tight"
             key={date.getTime()}
           >
             Day {index + 1}
@@ -53,6 +38,23 @@ export default function Place({ placeId }: PlaceProps) {
             </span>
           </h2>
         ))}
+      </aside>
+
+      <div className="px-8 py-8">
+        <h1 className="text-3xl font-bold">
+          {placeDetailsQuery.data?.place.placeName}
+        </h1>
+        <p>
+          {formatDate(new Date(placeDetailsQuery.data?.place.startDate), {
+            month: 'short',
+            day: 'numeric',
+          })}{' '}
+          -{' '}
+          {formatDate(new Date(placeDetailsQuery.data?.place.endDate), {
+            month: 'short',
+            day: 'numeric',
+          })}
+        </p>
       </div>
     </article>
   );

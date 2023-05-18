@@ -42,11 +42,11 @@ export default function Plan({ tripId, placeId }: PlanProps) {
       >
         <div className="grid flex-grow grid-cols-2 bg-background">
           <section className="overflow-y-auto">
-            <div className="h-full overflow-y-auto px-16 py-8">
+            <div className="h-full overflow-y-auto">
               {placeId ? (
                 <PlaceView placeId={placeId} />
               ) : (
-                <article>
+                <article className="h-full px-16 py-8">
                   <div className="relative mb-4 flex h-2/6 items-center justify-center rounded-xl bg-surface">
                     {plannerDetailsQuery.data?.plannerDetails.banner ? (
                       <Image
