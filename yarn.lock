@@ -3659,10 +3659,10 @@ map-cache@^0.2.0:
   resolved "https://registry.yarnpkg.com/map-cache/-/map-cache-0.2.2.tgz#c32abd0bd6525d9b051645bb4f26ac5dc98a0dbf"
   integrity sha512-8y/eV9QQZCiyn1SprXSrCmqJN0yNRATe+PO8ztwqrvrbdRLA3eYJF0yaR0YayLWkMbsQSKWS9N2gPcGEc4UsZg==
 
-mapbox-gl@^2.13.0:
-  version "2.13.0"
-  resolved "https://registry.yarnpkg.com/mapbox-gl/-/mapbox-gl-2.13.0.tgz#a69b1ec4c26e075f17fa5db292757e5fe8af8310"
-  integrity sha512-G8pU1/I9HC7xNbhKPKFtRkdUDkWJBNbYPMeRjBig3lPaYtvHPIaFmXMR6BDyZ/gnwodElrwMZGdGsoH8kecX8w==
+mapbox-gl@^2.14.1:
+  version "2.14.1"
+  resolved "https://registry.yarnpkg.com/mapbox-gl/-/mapbox-gl-2.14.1.tgz#5e6aef1010e83d3dc5af7bc62ed8eec099803667"
+  integrity sha512-KfHYcjzJeEF1UXZQin3vSdyIXoTBBdpNesTMmyzP9Dv8wRg8DnRu078Vr/CJ2A6Xocsvh9UAqTWYtHlrc20nwA==
   dependencies:
     "@mapbox/geojson-rewind" "^0.5.2"
     "@mapbox/jsonlint-lines-primitives" "^2.0.2"
