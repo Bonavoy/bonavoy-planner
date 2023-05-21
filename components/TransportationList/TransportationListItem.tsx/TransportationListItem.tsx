@@ -36,7 +36,6 @@ const TransportationListItem = ({
     transportation.arrivalLocation,
   );
   const [showOptionsMenu, setShowOptionsMenu] = useState(false);
-  const [details, setDetails] = useState(transportation.details);
   const [showDetails, setShowDetails] = useState<boolean>(
     transportation.details.length > 0,
   );
@@ -176,9 +175,6 @@ const TransportationListItem = ({
   useEffect(() => {
     setDepartureLocation(transportation.departureLocation);
   }, [transportation.departureLocation]);
-  useEffect(() => {
-    setDetails(transportation.details);
-  }, [transportation.details]);
 
   return (
     <>
@@ -251,10 +247,9 @@ const TransportationListItem = ({
             transportationId={transportationId}
             tripId={tripId}
             onChange={(val) => {
-              setDetails(val);
               saveDetails(val);
             }}
-            value={details}
+            value={transportation.details}
           />
         ) : null}
 
