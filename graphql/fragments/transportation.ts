@@ -20,5 +20,9 @@ export const TRANSPORTATION_FULL = gql(`
     order
     connectingId
     connectingOrder
+    route {
+      segments
+      duration
+    }
   }
 `);

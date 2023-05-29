@@ -87,8 +87,6 @@ export default function Header({ tripId, mode }: HeaderProps) {
     },
   ];
 
-  console.log(getUserQuery.data?.user);
-
   return (
     <>
       <header className="flex h-20 flex-shrink-0 items-center justify-between border-b border-b-grayPrimary/20 bg-background px-8 shadow-lg">

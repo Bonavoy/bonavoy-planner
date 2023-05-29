@@ -108,6 +108,7 @@ const TransportationList = ({
           connectingOrder,
           connectingId,
           order,
+          route: null,
         },
       },
     });
