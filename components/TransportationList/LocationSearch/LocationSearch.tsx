@@ -96,7 +96,7 @@ const LocationSearch = ({
   );
 
   return (
-    <ActiveElement className="col-start-2 rounded-md" elementId={elementId}>
+    <ActiveElement className="rounded-md" elementId={elementId}>
       <div className="relative flex flex-1 items-center gap-2 rounded-md px-2 duration-150 hover:bg-surface">
         <i
           className={clsx('fa-location-dot text-sm', {
