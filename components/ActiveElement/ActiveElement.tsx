@@ -21,11 +21,13 @@ const ActiveElement = ({
   return (
     <div
       className={clsx('relative border duration-150', className, {
-        'border-primary': activeElementsCtx.activeElements.has(elementId),
+        'border-primary': activeElementsCtx.activeElements.has(elementId), // TODO: change this to the color of the user active on this element
         'border-transparent': !activeElementsCtx.activeElements.has(elementId),
       })}
     >
       {children}
+
+      {/* profile image */}
       {activeElementsCtx.activeElements.has(elementId) ? (
         <Image
           loader={({ src }) => src}
