@@ -197,7 +197,7 @@ const TransportationListItem = ({
             'fa-solid fa-car': transportation.type === TransportationType.Car,
           })}
         />
-        <div className="text-xs text-gray-400">
+        <div className="text-xs">
           {transportation.route?.duration
             ? formatDuration(transportation.route.duration)
             : null}
