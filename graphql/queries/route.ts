@@ -1,7 +1,10 @@
 import { gql } from '../generated';
 
 export const GET_ROUTE_SEGMENTS = gql(`
-  query routeSegments($segmentWaypoints: [[InputCoords!]!]!) {
-    routeSegments(segmentWaypoints: $segmentWaypoints)
+  query routeLegs($routeWaypoints: [[InputCoords!]!]!) {
+    routeLegs(routeWaypoints: $routeWaypoints) {
+      segments
+      duration
+    }
   }
 `);

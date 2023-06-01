@@ -18,7 +18,7 @@ const documents = {
     "\n  fragment placesFull on Place {\n    id\n    text\n    placeName\n    mapboxId\n    startDate\n    endDate\n    colour\n    center\n  }\n": types.PlacesFullFragmentDoc,
     "\n  fragment authorPresentFull on AuthorPresent {\n      id\n      username\n      avatar\n      connected\n  }\n": types.AuthorPresentFullFragmentDoc,
     "\n  fragment activeElementFull on ActiveElement {\n    elementId\n    active\n    tripId\n    author {\n      ...authorPresentFull\n    }\n  }\n": types.ActiveElementFullFragmentDoc,
-    "\n  fragment transportationFull on Transportation {\n    id\n    type\n    departureLocation\n    departureTime\n    arrivalLocation\n    arrivalTime\n    details\n    departureCoords {\n      lat\n      lng\n    }\n    arrivalCoords {\n      lat\n      lng\n    }\n    order\n    connectingId\n    connectingOrder\n  }\n": types.TransportationFullFragmentDoc,
+    "\n  fragment transportationFull on Transportation {\n    id\n    type\n    departureLocation\n    departureTime\n    arrivalLocation\n    arrivalTime\n    details\n    departureCoords {\n      lat\n      lng\n    }\n    arrivalCoords {\n      lat\n      lng\n    }\n    order\n    connectingId\n    connectingOrder\n    route {\n      segments\n      duration\n    }\n  }\n": types.TransportationFullFragmentDoc,
     "\n  fragment tripFull on Trip {\n    id\n    name\n    isPublic\n    authors { \n      ...authorOnTripSnippet\n     }\n    banner\n    startDate\n    endDate\n  }\n": types.TripFullFragmentDoc,
     "\n  fragment userSnippet on User {\n    username\n    email\n    avatar\n    id\n  }\n": types.UserSnippetFragmentDoc,
     "\n  mutation updateAuthorOnTripRole($id: ID!, $role: TripRole!) {\n    updateAuthorOnTripRole(id: $id, role: $role) {\n      ...authorOnTripSnippet\n    }\n  }\n": types.UpdateAuthorOnTripRoleDocument,
@@ -41,7 +41,7 @@ const documents = {
     "\n  query plannerDetails($tripId: ID!) {\n    plannerDetails(tripId: $tripId) {\n      name\n      startDate\n      endDate\n      banner\n      places {\n        ...placesFull\n      }\n    }\n  }\n": types.PlannerDetailsDocument,
     "\n  query authorsPresent($tripId: ID!) {\n    authorsPresent(tripId: $tripId) {\n      ...authorPresentFull\n    }\n  }\n": types.AuthorsPresentDocument,
     "\n  query activeElements($tripId: ID!) {\n    activeElements(tripId: $tripId) {\n      ...activeElementFull\n    }\n  }\n": types.ActiveElementsDocument,
-    "\n  query routeSegments($segmentWaypoints: [[InputCoords!]!]!) {\n    routeSegments(segmentWaypoints: $segmentWaypoints)\n  }\n": types.RouteSegmentsDocument,
+    "\n  query routeLegs($routeWaypoints: [[InputCoords!]!]!) {\n    routeLegs(routeWaypoints: $routeWaypoints) {\n      segments\n      duration\n    }\n  }\n": types.RouteLegsDocument,
     "\n  query Trips($limit: Int!, $after: ID) {\n    trips(limit: $limit, after: $after) {\n      edges {\n        node {\n          ...tripFull    \n        }\n      }\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n      totalCount\n    }\n  }\n": types.TripsDocument,
     "\n  query user {\n    user {\n      ...userSnippet\n    }\n  }\n": types.UserDocument,
     "\n  subscription listenAuthorPresent($tripId: ID!) {\n    listenAuthorPresent(tripId: $tripId) {\n      ...authorPresentFull\n    }\n  }\n": types.ListenAuthorPresentDocument,
@@ -86,7 +86,7 @@ export function gql(source: "\n  fragment activeElementFull on ActiveElement {\n
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "\n  fragment transportationFull on Transportation {\n    id\n    type\n    departureLocation\n    departureTime\n    arrivalLocation\n    arrivalTime\n    details\n    departureCoords {\n      lat\n      lng\n    }\n    arrivalCoords {\n      lat\n      lng\n    }\n    order\n    connectingId\n    connectingOrder\n  }\n"): (typeof documents)["\n  fragment transportationFull on Transportation {\n    id\n    type\n    departureLocation\n    departureTime\n    arrivalLocation\n    arrivalTime\n    details\n    departureCoords {\n      lat\n      lng\n    }\n    arrivalCoords {\n      lat\n      lng\n    }\n    order\n    connectingId\n    connectingOrder\n  }\n"];
+export function gql(source: "\n  fragment transportationFull on Transportation {\n    id\n    type\n    departureLocation\n    departureTime\n    arrivalLocation\n    arrivalTime\n    details\n    departureCoords {\n      lat\n      lng\n    }\n    arrivalCoords {\n      lat\n      lng\n    }\n    order\n    connectingId\n    connectingOrder\n    route {\n      segments\n      duration\n    }\n  }\n"): (typeof documents)["\n  fragment transportationFull on Transportation {\n    id\n    type\n    departureLocation\n    departureTime\n    arrivalLocation\n    arrivalTime\n    details\n    departureCoords {\n      lat\n      lng\n    }\n    arrivalCoords {\n      lat\n      lng\n    }\n    order\n    connectingId\n    connectingOrder\n    route {\n      segments\n      duration\n    }\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -178,7 +178,7 @@ export function gql(source: "\n  query activeElements($tripId: ID!) {\n    activ
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "\n  query routeSegments($segmentWaypoints: [[InputCoords!]!]!) {\n    routeSegments(segmentWaypoints: $segmentWaypoints)\n  }\n"): (typeof documents)["\n  query routeSegments($segmentWaypoints: [[InputCoords!]!]!) {\n    routeSegments(segmentWaypoints: $segmentWaypoints)\n  }\n"];
+export function gql(source: "\n  query routeLegs($routeWaypoints: [[InputCoords!]!]!) {\n    routeLegs(routeWaypoints: $routeWaypoints) {\n      segments\n      duration\n    }\n  }\n"): (typeof documents)["\n  query routeLegs($routeWaypoints: [[InputCoords!]!]!) {\n    routeLegs(routeWaypoints: $routeWaypoints) {\n      segments\n      duration\n    }\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

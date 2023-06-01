@@ -44,21 +44,27 @@ export default function RouteMap({ places }: RouteMapProps) {
     if (!places) return;
     const features: Feature[] = [];
 
-    let i = 0;
-    const waypointSegments: InputCoords[][] = [];
     const transportArr = places.flatMap((place) =>
       place.transportation.flatMap((connections) => connections),
     );
-    while (i < transportArr.length) {
-      let transport = transportArr[i];
-      if (
-        !transport.arrivalCoords?.lng ||
-        !transport.arrivalCoords?.lat ||
-        !transport.departureCoords?.lng ||
-        !transport.departureCoords?.lat
+
+    for (const transport of transportArr) {
+      if (transport.type === TransportationType.Car && transport.route) {
+        features.push({
+          type: 'Feature',
+          properties: {},
+          geometry: {
+            type: 'MultiLineString',
+            coordinates: [transport.route.segments],
+          },
+        });
+      } else if (
+        transport.type === TransportationType.Plane &&
+        transport.arrivalCoords?.lng &&
+        transport.arrivalCoords?.lat &&
+        transport.departureCoords?.lng &&
+        transport.departureCoords?.lat
       ) {
-        i++;
-      } else if (transport.type === TransportationType.Plane) {
         features.push({
           type: 'Feature',
           properties: {},
@@ -70,45 +76,8 @@ export default function RouteMap({ places }: RouteMapProps) {
             ],
           },
         });
-        i++;
-      } else if (transport.type === TransportationType.Car) {
-        const waypointSegment: InputCoords[] = [];
-
-        while (
-          i < transportArr.length &&
-          transportArr[i].departureCoords &&
-          transportArr[i].type === TransportationType.Car
-        ) {
-          waypointSegment.push({
-            lat: transportArr[i].departureCoords!.lat,
-            lng: transportArr[i].departureCoords!.lng,
-          });
-          i++;
-        }
-
-        if (i - 1 < transportArr.length && transportArr[i - 1].arrivalCoords) {
-          waypointSegment.push({
-            lat: transportArr[i - 1].arrivalCoords!.lat,
-            lng: transportArr[i - 1].arrivalCoords!.lng,
-          });
-        }
-
-        waypointSegments.push(waypointSegment);
       }
     }
-
-    const routeSegments = await getRouteSegments({
-      variables: { segmentWaypoints: waypointSegments },
-    });
-
-    features.push({
-      type: 'Feature',
-      properties: {},
-      geometry: {
-        type: 'MultiLineString',
-        coordinates: routeSegments.data?.routeSegments!,
-      },
-    });
 
     const route: GeoJSON.FeatureCollection = {
       type: 'FeatureCollection',

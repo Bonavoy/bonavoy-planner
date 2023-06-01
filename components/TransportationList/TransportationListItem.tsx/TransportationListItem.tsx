@@ -18,6 +18,9 @@ import { TRANSPORTATION_FULL } from '~/graphql/fragments/transportation';
 import Details from '../Details';
 import SelectDateButton from '~/components/SelectDateButton/SelectDateButton';
 
+const SECONDS_PER_HOUR = 3600;
+const SECONDS_PER_MIN = 60;
+
 interface TransportationListItemProps {
   transportationId: string;
   transportation: TransportationFullFragment;
@@ -36,7 +39,6 @@ const TransportationListItem = ({
     transportation.arrivalLocation,
   );
   const [showOptionsMenu, setShowOptionsMenu] = useState(false);
-  const [details, setDetails] = useState(transportation.details);
   const [showDetails, setShowDetails] = useState<boolean>(
     transportation.details.length > 0,
   );
@@ -145,6 +147,7 @@ const TransportationListItem = ({
             order: updatedTransportation.order,
             connectingId: updatedTransportation.connectingId,
             connectingOrder: updatedTransportation.connectingOrder,
+            route: updatedTransportation.route,
           },
         });
       },
@@ -164,9 +167,16 @@ const TransportationListItem = ({
           arrivalTime: updatedTransportation.arrivalTime,
           departureCoords: updatedTransportation.departureCoords,
           arrivalCoords: updatedTransportation.arrivalCoords,
+          route: null,
         },
       },
     });
+  };
+
+  const formatDuration = (seconds: number) => {
+    return `${Math.floor(seconds / SECONDS_PER_HOUR)} hrs ${Math.floor(
+      (seconds % SECONDS_PER_HOUR) / SECONDS_PER_MIN,
+    )} min`;
   };
 
   /** react to subscription data */
@@ -176,21 +186,24 @@ const TransportationListItem = ({
   useEffect(() => {
     setDepartureLocation(transportation.departureLocation);
   }, [transportation.departureLocation]);
-  useEffect(() => {
-    setDetails(transportation.details);
-  }, [transportation.details]);
 
   return (
-    <>
-      <div className="group relative grid cursor-pointer grid-cols-[auto_3fr_auto] gap-px p-3 duration-150">
+    <div className="grid grid-cols-[64px_auto] gap-1 p-3">
+      <div className="flex flex-col items-center justify-self-stretch text-center">
         <i
-          className={clsx('place-self-center  justify-self-center text-sm', {
+          className={clsx('place-self-center justify-self-center text-sm', {
             'fa-solid fa-plane':
               transportation.type === TransportationType.Plane,
             'fa-solid fa-car': transportation.type === TransportationType.Car,
           })}
         />
-
+        <div className="text-xs">
+          {transportation.route?.duration
+            ? formatDuration(transportation.route.duration)
+            : null}
+        </div>
+      </div>
+      <div className="group relative grid grow cursor-pointer grid-cols-[3fr_auto] gap-px duration-150">
         <LocationSearch
           type="departureLocation"
           tripId={tripId}
@@ -251,14 +264,13 @@ const TransportationListItem = ({
             transportationId={transportationId}
             tripId={tripId}
             onChange={(val) => {
-              setDetails(val);
               saveDetails(val);
             }}
-            value={details}
+            value={transportation.details}
           />
         ) : null}
 
-        <div className="text-md col-span-2 col-start-2 flex w-full items-center justify-between gap-4 bg-transparent">
+        <div className="text-md col-span-2 flex w-full items-center justify-between gap-4 bg-transparent">
           <div className="flex gap-px">
             <button
               className="rounded-md px-2 text-xs text-black duration-150 hover:bg-surface"
@@ -296,7 +308,7 @@ const TransportationListItem = ({
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
