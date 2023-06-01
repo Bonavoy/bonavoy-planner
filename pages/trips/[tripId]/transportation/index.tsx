@@ -1,15 +1,23 @@
 import { useQuery, useSubscription } from '@apollo/client';
 import type { GetServerSidePropsContext } from 'next';
 
+//components
 import Planner from '~/layouts/Planner';
 import TransportationMap from '~/components/RouteMap/RouteMap';
-import { GET_PLACES } from '~/graphql/queries/place';
 import TransportationList from '~/components/TransportationList/TransportationList';
+import ActiveElementsProvider from '~/components/ActiveElementsProvider';
+
+//queries
+import { GET_PLACES } from '~/graphql/queries/place';
 import { TRANSPORTATION_UPDATED } from '~/graphql/subscriptions/transportation';
 import { TRANSPORTATION_FULL } from '~/graphql/fragments/transportation';
+import { GET_PLANNER_DETAILS } from '~/graphql/queries/planner';
+
+//utils
 import { cloneDeep } from '@apollo/client/utilities';
+
+//types
 import { Transportation } from '~/graphql/generated/graphql';
-import ActiveElementsProvider from '~/components/ActiveElementsProvider';
 
 interface TransportationProps {
   tripId: string;
@@ -21,6 +29,11 @@ export default function TransportationPage({
   placeId,
 }: TransportationProps) {
   const getPlacesQuery = useQuery(GET_PLACES, {
+    variables: { tripId },
+  });
+
+  //TODO: THIS PULLS PLACES ALSO, SO WE CAN PROBABLY TEMOVE THE PLACES QUERY ABOVE, BUT I DIDNT WANT TO BREAK ANYTHING
+  const plannerDetailsQuery = useQuery(GET_PLANNER_DETAILS, {
     variables: { tripId },
   });
 
@@ -131,7 +144,12 @@ export default function TransportationPage({
   return (
     <ActiveElementsProvider tripId={tripId}>
       <main className="h-screen">
-        <Planner mode="transportation" tripId={tripId} placeId={placeId}>
+        <Planner
+          mode="transportation"
+          tripId={tripId}
+          placeId={placeId}
+          details={plannerDetailsQuery.data?.plannerDetails!}
+        >
           <section className="grid flex-grow grid-cols-2 overflow-hidden bg-white">
             <div className="flex justify-center overflow-auto px-4 py-8 sm:px-12 lg:px-28">
               <div className="w-full">

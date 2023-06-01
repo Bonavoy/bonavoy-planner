@@ -37,7 +37,8 @@ export default function Trips() {
                 >
                   <div className="relative flex-1">
                     <Image
-                      src="https://banffnationalpark.com/wp-content/uploads/2022/04/banff-guide-1536x1024.jpg"
+                      loader={() => trip.node.banner}
+                      src={trip.node.name}
                       alt={trip.node.name}
                       fill
                       className="rounded-t-md object-cover"

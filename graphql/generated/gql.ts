@@ -36,7 +36,9 @@ const documents = {
     "\n  query authorsOnTrips($tripId: ID!) {\n    authorsOnTrips(tripId: $tripId) {\n      ...authorOnTripSnippet\n    }\n  }\n": types.AuthorsOnTripsDocument,
     "\n  query invites($tripId: ID!) {\n    invites(tripId: $tripId) {\n      ...pendingInviteFull\n    }\n  }\n": types.InvitesDocument,
     "\n  query getLocationSuggestions($query: String!) {\n    getLocationSuggestions(query: $query) {\n      name\n      text\n      center {\n        lat\n        lng\n      }\n    }\n  }\n": types.GetLocationSuggestionsDocument,
+    "\n  query place($placeId: ID!) {\n    place(placeId: $placeId) {\n      ...placesFull\n    }\n  }\n": types.PlaceDocument,
     "\n  query places($tripId: ID!) {\n    places(tripId: $tripId) {\n      ...placesFull\n      transportation {\n        ...transportationFull\n      }\n    }\n  }\n": types.PlacesDocument,
+    "\n  query plannerDetails($tripId: ID!) {\n    plannerDetails(tripId: $tripId) {\n      name\n      startDate\n      endDate\n      banner\n      places {\n        ...placesFull\n      }\n    }\n  }\n": types.PlannerDetailsDocument,
     "\n  query authorsPresent($tripId: ID!) {\n    authorsPresent(tripId: $tripId) {\n      ...authorPresentFull\n    }\n  }\n": types.AuthorsPresentDocument,
     "\n  query activeElements($tripId: ID!) {\n    activeElements(tripId: $tripId) {\n      ...activeElementFull\n    }\n  }\n": types.ActiveElementsDocument,
     "\n  query routeLegs($routeWaypoints: [[InputCoords!]!]!) {\n    routeLegs(routeWaypoints: $routeWaypoints) {\n      segments\n      duration\n    }\n  }\n": types.RouteLegsDocument,
@@ -156,7 +158,15 @@ export function gql(source: "\n  query getLocationSuggestions($query: String!) {
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
+export function gql(source: "\n  query place($placeId: ID!) {\n    place(placeId: $placeId) {\n      ...placesFull\n    }\n  }\n"): (typeof documents)["\n  query place($placeId: ID!) {\n    place(placeId: $placeId) {\n      ...placesFull\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
 export function gql(source: "\n  query places($tripId: ID!) {\n    places(tripId: $tripId) {\n      ...placesFull\n      transportation {\n        ...transportationFull\n      }\n    }\n  }\n"): (typeof documents)["\n  query places($tripId: ID!) {\n    places(tripId: $tripId) {\n      ...placesFull\n      transportation {\n        ...transportationFull\n      }\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  query plannerDetails($tripId: ID!) {\n    plannerDetails(tripId: $tripId) {\n      name\n      startDate\n      endDate\n      banner\n      places {\n        ...placesFull\n      }\n    }\n  }\n"): (typeof documents)["\n  query plannerDetails($tripId: ID!) {\n    plannerDetails(tripId: $tripId) {\n      name\n      startDate\n      endDate\n      banner\n      places {\n        ...placesFull\n      }\n    }\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

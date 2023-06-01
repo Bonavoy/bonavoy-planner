@@ -3,15 +3,18 @@ import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import clsx from 'clsx';
 
+//utils
+import { formatDate } from '~/utils/date';
+
 //types
 import { Place } from '~/graphql/generated/graphql';
 
-type PlaceNavItemProps = {
+type PlaceListItemProps = {
   place: Place & { index: number };
   tripId: string;
 };
 
-export default function PlaceNavItem({ place, tripId }: PlaceNavItemProps) {
+export default function PlaceListItem({ place, tripId }: PlaceListItemProps) {
   const {
     index,
     attributes,
@@ -40,7 +43,7 @@ export default function PlaceNavItem({ place, tripId }: PlaceNavItemProps) {
         <Link
           href={{
             pathname: `/trips/${tripId}/planner`,
-            query: { place: place.id },
+            query: { placeId: place.id },
           }}
           className="relative z-20 w-full px-6 py-8 font-heading"
         >
@@ -51,7 +54,16 @@ export default function PlaceNavItem({ place, tripId }: PlaceNavItemProps) {
             <div>
               <h1 className="text-4xl">{place.placeName}</h1>
               <p className="text-base font-medium">
-                {place.startDate} - {place.endDate}
+                {formatDate(new Date(place.startDate), {
+                  month: 'short',
+                  day: '2-digit',
+                })}
+                -
+                {formatDate(new Date(place.endDate), {
+                  month: 'short',
+                  day: '2-digit',
+                  year: 'numeric',
+                })}
               </p>
             </div>
           </div>
