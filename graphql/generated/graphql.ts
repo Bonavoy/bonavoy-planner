@@ -335,11 +335,7 @@ export type Query = {
   place: Place;
   places: Array<Place>;
   plannerDetails: PlannerDetails;
-<<<<<<< HEAD
-  routeSegments: Array<Array<Array<Scalars['Float']>>>;
-=======
   routeLegs: Array<RouteLeg>;
->>>>>>> ba43d4462be5abcbef8c8f14b137f000b38769a9
   transportation: Array<Array<Transportation>>;
   trip: Trip;
   trips: TripConnection;
@@ -397,13 +393,8 @@ export type QueryPlannerDetailsArgs = {
 };
 
 
-<<<<<<< HEAD
-export type QueryRouteSegmentsArgs = {
-  segmentWaypoints: Array<Array<InputCoords>>;
-=======
 export type QueryRouteLegsArgs = {
   routeWaypoints: Array<Array<InputCoords>>;
->>>>>>> ba43d4462be5abcbef8c8f14b137f000b38769a9
 };
 
 
