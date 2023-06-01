@@ -32,7 +32,7 @@ export default function TransportationPage({
     variables: { tripId },
   });
 
-  //TODO: THIS PULLS PLACES ALSO, SO WE CAN PROBABLY TEMOVE THE PLACES QUERY ABOVE
+  //TODO: THIS PULLS PLACES ALSO, SO WE CAN PROBABLY TEMOVE THE PLACES QUERY ABOVE, BUT I DIDNT WANT TO BREAK ANYTHING
   const plannerDetailsQuery = useQuery(GET_PLANNER_DETAILS, {
     variables: { tripId },
   });
