@@ -1,4 +1,18 @@
-import { ApolloClient, InMemoryCache, from, split } from '@apollo/client';
+'use client';
+
+import {
+  ApolloClient,
+  ApolloLink,
+  HttpLink,
+  SuspenseCache,
+  from,
+  split,
+} from '@apollo/client';
+import {
+  ApolloNextAppProvider,
+  NextSSRInMemoryCache,
+  SSRMultipartLink,
+} from '@apollo/experimental-nextjs-app-support/ssr';
 import { getMainDefinition } from '@apollo/client/utilities';
 import { GraphQLWsLink } from '@apollo/client/link/subscriptions';
 import { createClient } from 'graphql-ws';
@@ -6,7 +20,6 @@ import { createClient } from 'graphql-ws';
 import httpLink from './apollo/httpLink';
 import errorLink from './apollo/errorLink';
 
-// check that we are in browser
 const wsLink =
   typeof window !== 'undefined'
     ? new GraphQLWsLink(
@@ -31,9 +44,9 @@ const splitLink =
       )
     : httpLink;
 
-const client = new ApolloClient({
+export const client = new ApolloClient({
   link: from([errorLink, splitLink]),
-  cache: new InMemoryCache({
+  cache: new NextSSRInMemoryCache({
     possibleTypes: {
       Invite: ['AuthorsOnTrips', 'PendingInvite'],
     },
@@ -45,4 +58,21 @@ const client = new ApolloClient({
   uri: process.env.NEXT_PUBLIC_BONAVOY_GRAPHQL_API!,
 });
 
-export default client;
+function makeClient() {
+  return client;
+}
+
+function makeSuspenseCache() {
+  return new SuspenseCache();
+}
+
+export function ApolloWrapper({ children }: React.PropsWithChildren) {
+  return (
+    <ApolloNextAppProvider
+      makeClient={makeClient}
+      makeSuspenseCache={makeSuspenseCache}
+    >
+      {children}
+    </ApolloNextAppProvider>
+  );
+}

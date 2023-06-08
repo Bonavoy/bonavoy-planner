@@ -39,8 +39,8 @@ module.exports = {
       },
     },
     fontFamily: {
-      sans: ['Rubik', 'sans-serif'],
-      heading: ['Montserrat', 'sans-serif'],
+      sans: ['var(--font-rubik)', 'sans-serif'],
+      heading: ['var(--font-montserrat)', 'sans-serif'],
     },
     extend: {
       boxShadow: {
