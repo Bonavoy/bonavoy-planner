@@ -1,7 +1,7 @@
 import { useMutation } from '@apollo/client';
 import { useState } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 
 import { SIGNUP } from '~/graphql/mutations/user';
 
@@ -53,7 +53,7 @@ export default function Signup() {
             id="email"
             type="email"
             onChange={(e) => setEmail(e.target.value)}
-            className="border-gray-200 w-full rounded-lg border border-grayPrimary px-4 py-2 text-sm outline-none"
+            className="w-full rounded-lg border border-gray-200 border-grayPrimary px-4 py-2 text-sm outline-none"
           />
         </div>
         <div className="w-full pt-2">
@@ -63,7 +63,7 @@ export default function Signup() {
           <input
             id="firstname"
             onChange={(e) => setFirstname(e.target.value)}
-            className="border-gray-200 w-full rounded-lg border border-grayPrimary px-4 py-2 text-sm outline-none"
+            className="w-full rounded-lg border border-gray-200 border-grayPrimary px-4 py-2 text-sm outline-none"
           />
         </div>
 
@@ -73,7 +73,7 @@ export default function Signup() {
           </label>
           <input
             onChange={(e) => setLastname(e.target.value)}
-            className="border-gray-200 w-full rounded-lg border border-grayPrimary px-4 py-2 text-sm outline-none"
+            className="w-full rounded-lg border border-gray-200 border-grayPrimary px-4 py-2 text-sm outline-none"
           />
         </div>
 
@@ -84,7 +84,7 @@ export default function Signup() {
           <input
             id="username"
             onChange={(e) => setUsername(e.target.value)}
-            className="border-gray-200 w-full rounded-lg border border-grayPrimary px-4 py-2 text-sm outline-none"
+            className="w-full rounded-lg border border-gray-200 border-grayPrimary px-4 py-2 text-sm outline-none"
           />
         </div>
 
@@ -96,7 +96,7 @@ export default function Signup() {
             id="password"
             type="password"
             onChange={(e) => setPassword(e.target.value)}
-            className="border-gray-200 w-full rounded-lg border border-grayPrimary px-4 py-2 text-sm outline-none"
+            className="w-full rounded-lg border border-gray-200 border-grayPrimary px-4 py-2 text-sm outline-none"
           />
         </div>
         <div className="w-full pt-4">

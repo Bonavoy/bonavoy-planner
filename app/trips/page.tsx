@@ -1,3 +1,5 @@
+'use client';
+
 import { useQuery } from '@apollo/client';
 import Link from 'next/link';
 import Image from 'next/image';
