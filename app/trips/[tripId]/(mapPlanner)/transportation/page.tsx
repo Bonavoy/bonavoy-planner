@@ -20,23 +20,23 @@ import { cloneDeep } from '@apollo/client/utilities';
 
 //types
 import { Transportation } from '~/graphql/generated/graphql';
-
-interface TransportationProps {
-  tripId: string;
-  placeId: string | null;
-}
+import { useSearchParams } from 'next/navigation';
 
 export default function TransportationPage({
-  tripId,
-  placeId,
-}: TransportationProps) {
+  params,
+}: {
+  params: { tripId: string };
+}) {
+  const searchParams = useSearchParams();
+  const placeId = searchParams.get('placeId');
+
   const getPlacesQuery = useQuery(GET_PLACES, {
-    variables: { tripId },
+    variables: { tripId: params.tripId },
   });
 
   //TODO: THIS PULLS PLACES ALSO, SO WE CAN PROBABLY TEMOVE THE PLACES QUERY ABOVE, BUT I DIDNT WANT TO BREAK ANYTHING
   const plannerDetailsQuery = useQuery(GET_PLANNER_DETAILS, {
-    variables: { tripId },
+    variables: { tripId: params.tripId },
   });
 
   useSubscription(TRANSPORTATION_UPDATED, {
@@ -52,7 +52,7 @@ export default function TransportationPage({
 
       const placesQuery = client.readQuery({
         query: GET_PLACES,
-        variables: { tripId: tripId },
+        variables: { tripId: params.tripId },
       });
 
       if (!placesQuery?.places) return;
@@ -78,7 +78,7 @@ export default function TransportationPage({
 
         client.writeQuery({
           query: GET_PLACES,
-          id: tripId,
+          id: params.tripId,
           data: placesQueryClone,
         });
         return;
@@ -114,7 +114,7 @@ export default function TransportationPage({
           place.transportation.push([transportation]);
           client.writeQuery({
             query: GET_PLACES,
-            id: tripId,
+            id: params.tripId,
             data: placesQueryClone,
           });
           return;
@@ -128,7 +128,7 @@ export default function TransportationPage({
           connections.push(transportation);
           client.writeQuery({
             query: GET_PLACES,
-            id: tripId,
+            id: params.tripId,
             data: placesQueryClone,
           });
           return;
@@ -144,92 +144,74 @@ export default function TransportationPage({
   });
 
   return (
-    <ActiveElementsProvider tripId={tripId}>
-      <main className="h-screen">
-        <Planner
-          mode="transportation"
-          tripId={tripId}
-          placeId={placeId}
-          details={plannerDetailsQuery.data?.plannerDetails!}
-        >
-          <section className="grid flex-grow grid-cols-2 overflow-hidden bg-white">
-            <div className="flex justify-center overflow-auto px-4 py-8 sm:px-12 lg:px-28">
-              <div className="w-full">
-                <h1 className="pb-8 font-heading text-4xl font-bold">
-                  Transportation
-                </h1>
-                {getPlacesQuery.error ? (
-                  <div className="text-center text-error">
-                    {getPlacesQuery.error.message}
-                  </div>
-                ) : null}
-                {getPlacesQuery.data?.places.map((place, i) => {
-                  if (
-                    getPlacesQuery.data?.places &&
-                    i < getPlacesQuery.data.places.length - 1
-                  ) {
-                    return (
-                      <div key={place.id}>
-                        <div className="flex items-center justify-center gap-2 pb-2">
-                          {/* departure place */}
-                          <div className="flex flex-1 justify-center">
-                            <div className="flex flex-col items-center">
-                              <div className="text-xs text-grayTertiary">
-                                Departing from:
-                              </div>
-                              <div className="line-clamp-1 cursor-pointer font-heading text-2xl font-bold duration-100 hover:underline">
-                                {place.placeName}
-                              </div>
-                              <div className="font-heading text-sm font-medium text-grayPrimary duration-100">
-                                Feb 1
-                              </div>
-                            </div>
+    <ActiveElementsProvider tripId={params.tripId}>
+      <section className="overflow-hidden bg-white">
+        <div className="flex justify-center overflow-auto px-4 py-8 sm:px-12 lg:px-28">
+          <div className="w-full">
+            <h1 className="pb-8 font-heading text-4xl font-bold">
+              Transportation
+            </h1>
+            {getPlacesQuery.error ? (
+              <div className="text-center text-error">
+                {getPlacesQuery.error.message}
+              </div>
+            ) : null}
+            {getPlacesQuery.data?.places.map((place, i) => {
+              if (
+                getPlacesQuery.data?.places &&
+                i < getPlacesQuery.data.places.length - 1
+              ) {
+                return (
+                  <div key={place.id}>
+                    <div className="flex items-center justify-center gap-2 pb-2">
+                      {/* departure place */}
+                      <div className="flex flex-1 justify-center">
+                        <div className="flex flex-col items-center">
+                          <div className="text-xs text-grayTertiary">
+                            Departing from:
                           </div>
-
-                          <div className="shrink text-graySecondary">
-                            <i className="fa-regular fa-arrow-right" />
+                          <div className="line-clamp-1 cursor-pointer font-heading text-2xl font-bold duration-100 hover:underline">
+                            {place.placeName}
                           </div>
-
-                          {/* arrival place */}
-                          <div className="flex flex-1 justify-center">
-                            <div className="flex flex-col items-center">
-                              <div className="text-xs text-grayTertiary">
-                                Arriving at:
-                              </div>
-                              <div className="line-clamp-1 cursor-pointer font-heading text-2xl font-bold duration-100 hover:underline ">
-                                {getPlacesQuery.data?.places[i + 1].placeName}
-                              </div>
-                              <div className="font-heading text-sm font-medium text-grayPrimary duration-100">
-                                Feb 1
-                              </div>
-                            </div>
+                          <div className="font-heading text-sm font-medium text-grayPrimary duration-100">
+                            Feb 1
                           </div>
                         </div>
-                        <TransportationList
-                          transportation={place.transportation}
-                          placeId={place.id}
-                          tripId={tripId}
-                        />
                       </div>
-                    );
-                  }
-                })}
-              </div>
-            </div>
 
-            <TransportationMap places={getPlacesQuery.data?.places ?? []} />
-          </section>
-        </Planner>
-      </main>
+                      <div className="shrink text-graySecondary">
+                        <i className="fa-regular fa-arrow-right" />
+                      </div>
+
+                      {/* arrival place */}
+                      <div className="flex flex-1 justify-center">
+                        <div className="flex flex-col items-center">
+                          <div className="text-xs text-grayTertiary">
+                            Arriving at:
+                          </div>
+                          <div className="line-clamp-1 cursor-pointer font-heading text-2xl font-bold duration-100 hover:underline ">
+                            {getPlacesQuery.data?.places[i + 1].placeName}
+                          </div>
+                          <div className="font-heading text-sm font-medium text-grayPrimary duration-100">
+                            Feb 1
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <TransportationList
+                      transportation={place.transportation}
+                      placeId={place.id}
+                      tripId={params.tripId}
+                    />
+                  </div>
+                );
+              }
+            })}
+          </div>
+        </div>
+
+        {/* <TransportationMap places={getPlacesQuery.data?.places ?? []} /> */}
+      </section>
     </ActiveElementsProvider>
   );
-}
-
-export async function getServerSideProps(context: GetServerSidePropsContext) {
-  return {
-    props: {
-      tripId: context.params?.tripId,
-      placeId: context.query?.placeId ?? null,
-    },
-  };
 }
