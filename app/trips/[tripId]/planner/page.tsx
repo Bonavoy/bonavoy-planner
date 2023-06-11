@@ -1,3 +1,5 @@
+'use client';
+
 import { useState } from 'react';
 import Image from 'next/image';
 import { useQuery } from '@apollo/client';
@@ -15,15 +17,13 @@ import { GET_PLANNER_DETAILS } from '~/graphql/queries/planner';
 import { formatDate } from '~/utils/date';
 
 //types
-import type { GetServerSidePropsContext } from 'next';
 import type { Place } from '~/graphql/generated/graphql';
+import { useSearchParams } from 'next/navigation';
 
-interface PlanProps {
-  tripId: string;
-  placeId: string | null;
-}
+export default function Plan({ tripId }: { tripId: string }) {
+  const searchParams = useSearchParams();
+  const placeId = searchParams.get('placeId');
 
-export default function Plan({ tripId, placeId }: PlanProps) {
   const [places, setPlaces] = useState<[] | Place[]>([]);
   const plannerDetailsQuery = useQuery(GET_PLANNER_DETAILS, {
     variables: { tripId },
@@ -114,13 +114,4 @@ export default function Plan({ tripId, placeId }: PlanProps) {
       </Planner>
     </main>
   );
-}
-
-export async function getServerSideProps(context: GetServerSidePropsContext) {
-  return {
-    props: {
-      tripId: context.params?.tripId,
-      placeId: context.query?.placeId ?? null,
-    },
-  };
 }

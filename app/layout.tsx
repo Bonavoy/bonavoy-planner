@@ -29,7 +29,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${montserrat.className} ${rubik.className}`}>
       <ApolloWrapper>
-        <body>{children}</body>
+      <body>{children}</body>
       </ApolloWrapper>
     </html>
   );

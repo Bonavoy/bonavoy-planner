@@ -1,3 +1,5 @@
+'use client';
+
 import { useQuery, useSubscription } from '@apollo/client';
 import type { GetServerSidePropsContext } from 'next';
 
