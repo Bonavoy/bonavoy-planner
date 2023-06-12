@@ -3,6 +3,7 @@ import '~/styles/globals.css';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { Montserrat, Rubik } from 'next/font/google';
 import { ApolloWrapper } from '~/graphql/apollo-wrapper';
+import Head from 'next/head';
 
 const montserrat = Montserrat({
   subsets: ['latin'],
@@ -29,7 +30,8 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${montserrat.className} ${rubik.className}`}>
       <ApolloWrapper>
-      <body>{children}</body>
+        <body>{children}</body>
+        <div id="modal-root" />
       </ApolloWrapper>
     </html>
   );
