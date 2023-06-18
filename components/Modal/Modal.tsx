@@ -18,11 +18,11 @@ export default function Modal({ children, show }: ModalProps) {
   if (!show || !isClient) return null;
 
   return createPortal(
-    <main className="fixed bottom-0 left-0 right-0 top-0 z-50 flex items-center justify-center bg-black/70 p-10">
+    <div className="fixed bottom-0 left-0 right-0 top-0 z-50 flex items-center justify-center bg-black/70 p-10">
       <dialog className="contents">
         <div className="relative">{children}</div>
       </dialog>
-    </main>,
+    </div>,
     document.querySelector('#modal-root') as HTMLElement,
   );
 }

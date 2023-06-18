@@ -34,7 +34,6 @@ export default function MapPlannerLayout({
           tripId={params.tripId}
           details={plannerDetailsQuery.data?.plannerDetails!}
         />
-        {/* put map here too */}
         {children}
       </div>
     </main>

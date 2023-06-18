@@ -1,9 +1,13 @@
-import { Metadata } from 'next';
 import '~/styles/globals.css';
 import 'mapbox-gl/dist/mapbox-gl.css';
+import { Metadata } from 'next';
 import { Montserrat, Rubik } from 'next/font/google';
-import { ApolloWrapper } from '~/graphql/apollo-wrapper';
-import Head from 'next/head';
+import { config } from '@fortawesome/fontawesome-svg-core';
+import '@fortawesome/fontawesome-svg-core/styles.css';
+
+import ApolloWrapper from '~/components/ApolloWrapper';
+
+config.autoAddCss = false;
 
 const montserrat = Montserrat({
   subsets: ['latin'],
@@ -18,8 +22,8 @@ const rubik = Rubik({
 });
 
 export const metadata: Metadata = {
-  title: 'Home',
-  description: 'Welcome to Next.js',
+  title: 'Bonavoy',
+  description: 'Welcome to Bonavoy',
 };
 
 export default function RootLayout({
@@ -29,10 +33,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${montserrat.className} ${rubik.className}`}>
-      <ApolloWrapper>
-        <body>{children}</body>
+      <body>
+        <ApolloWrapper>{children}</ApolloWrapper>
         <div id="modal-root" />
-      </ApolloWrapper>
+      </body>
     </html>
   );
 }

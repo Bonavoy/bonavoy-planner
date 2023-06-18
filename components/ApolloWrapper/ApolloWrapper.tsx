@@ -17,20 +17,17 @@ import { getMainDefinition } from '@apollo/client/utilities';
 import { GraphQLWsLink } from '@apollo/client/link/subscriptions';
 import { createClient } from 'graphql-ws';
 
-import httpLink from './apollo/httpLink';
-import errorLink from './apollo/errorLink';
+import httpLink from '~/graphql/apollo/httpLink';
+import errorLink from '~/graphql/apollo/errorLink';
 
-const wsLink =
-  typeof window !== 'undefined'
-    ? new GraphQLWsLink(
-        createClient({
-          url: process.env.NEXT_PUBLIC_BONAVOY_GRAPHQL_WS_URL!,
-        }),
-      )
-    : null;
+const wsLink = new GraphQLWsLink(
+  createClient({
+    url: process.env.NEXT_PUBLIC_BONAVOY_GRAPHQL_WS_URL!,
+  }),
+);
 
 const splitLink =
-  typeof window !== 'undefined' && wsLink != null
+  wsLink != null
     ? split(
         ({ query }) => {
           const definition = getMainDefinition(query);
@@ -44,8 +41,8 @@ const splitLink =
       )
     : httpLink;
 
-export const client = new ApolloClient({
-  link: from([errorLink, splitLink]),
+const client = new ApolloClient({
+  link: from([splitLink]),
   cache: new NextSSRInMemoryCache({
     possibleTypes: {
       Invite: ['AuthorsOnTrips', 'PendingInvite'],
@@ -66,7 +63,7 @@ function makeSuspenseCache() {
   return new SuspenseCache();
 }
 
-export function ApolloWrapper({ children }: React.PropsWithChildren) {
+export default function ApolloWrapper({ children }: React.PropsWithChildren) {
   return (
     <ApolloNextAppProvider
       makeClient={makeClient}

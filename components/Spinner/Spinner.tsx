@@ -1,3 +1,6 @@
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+
 export default function Spinner() {
-  return <i className="fa-duotone fa-spinner-third animate-spin	" />;
+  return <FontAwesomeIcon icon={faSpinner} className="animate-spin" />;
 }
