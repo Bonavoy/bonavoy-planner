@@ -1,23 +1,12 @@
 import { useRef, useEffect, useState, useCallback } from 'react';
 import mapboxgl from 'mapbox-gl'; // eslint-disable-line import/no-webpack-loader-syntax
-import { Feature, Position } from 'geojson';
-import {
-  InputCoords,
-  Place,
-  PlacesQuery,
-  TransportationType,
-} from '~/graphql/generated/graphql';
+import { Feature } from 'geojson';
+import { PlacesQuery, TransportationType } from '~/graphql/generated/graphql';
 import { useLazyQuery } from '@apollo/client';
 import { GET_ROUTE_SEGMENTS } from '~/graphql/queries/route';
 
 mapboxgl.accessToken =
   'pk.eyJ1IjoibmVpbHpvbiIsImEiOiJja2R5MjNkc3cyNDd5MnVudWVvaXptY3IyIn0.t7H18YFnJnci9cvjd3Q-Tg';
-
-export interface Location {
-  // mode: 'plane' | 'car';
-  lat: number;
-  lng: number;
-}
 
 interface RouteMapProps {
   places: PlacesQuery['places'];

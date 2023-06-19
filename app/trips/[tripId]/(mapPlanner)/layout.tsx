@@ -1,17 +1,25 @@
 'use client';
 
+import { useQuery } from '@apollo/client';
 import { ReactNode } from 'react';
-import Mapbox from '~/components/Map';
+import RouteMap from '~/components/RouteMap';
+import { GET_PLACES } from '~/graphql/queries/place';
 
 export default function MapPlannerLayout({
   children,
+  params,
 }: {
   children: ReactNode;
+  params: { tripId: string };
 }) {
+  const getPlacesQuery = useQuery(GET_PLACES, {
+    variables: { tripId: params.tripId },
+  });
+
   return (
     <div className="grid w-full flex-grow grid-cols-2">
       {children}
-      <Mapbox />
+      <RouteMap places={getPlacesQuery.data?.places ?? []} />
     </div>
   );
 }
