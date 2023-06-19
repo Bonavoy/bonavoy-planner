@@ -3,7 +3,7 @@ import { onError } from '@apollo/client/link/error';
 
 import { REFRESH_TOKEN } from '~/graphql/mutations/user';
 import Router from 'next/router';
-import { client } from '../apollo-wrapper';
+import { client } from './client';
 
 let isRefreshing = false;
 let pendingRequests: Function[] = [];
