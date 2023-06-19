@@ -29,7 +29,7 @@ const splitLink =
     : httpLink;
 
 export const client = new ApolloClient({
-  link: from([splitLink]),
+  link: from([errorLink, splitLink]),
   cache: new NextSSRInMemoryCache({
     possibleTypes: {
       Invite: ['AuthorsOnTrips', 'PendingInvite'],
