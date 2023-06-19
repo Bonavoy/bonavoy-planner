@@ -12,7 +12,7 @@ interface RouteMapProps {
   places: PlacesQuery['places'];
 }
 
-export default function RouteMap({ places }: RouteMapProps) {
+export default function PlannerMap({ places }: RouteMapProps) {
   const mapContainer = useRef<null | HTMLDivElement>(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const map = useRef<null | mapboxgl.Map>(null);

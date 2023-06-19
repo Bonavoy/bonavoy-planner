@@ -2,7 +2,7 @@
 
 import { useQuery } from '@apollo/client';
 import { ReactNode } from 'react';
-import RouteMap from '~/components/RouteMap';
+import RouteMap from '~/components/PlannerMap';
 import { GET_PLACES } from '~/graphql/queries/place';
 
 export default function MapPlannerLayout({

@@ -1,11 +1,8 @@
 'use client';
 
 import { useQuery, useSubscription } from '@apollo/client';
-import type { GetServerSidePropsContext } from 'next';
 
 //components
-import Planner from '~/layouts/Planner';
-import TransportationMap from '~/components/RouteMap/RouteMap';
 import TransportationList from '~/components/TransportationList/TransportationList';
 import ActiveElementsProvider from '~/components/ActiveElementsProvider';
 
@@ -29,15 +26,7 @@ export default function TransportationPage({
 }: {
   params: { tripId: string };
 }) {
-  const searchParams = useSearchParams();
-  const placeId = searchParams.get('placeId');
-
   const getPlacesQuery = useQuery(GET_PLACES, {
-    variables: { tripId: params.tripId },
-  });
-
-  //TODO: THIS PULLS PLACES ALSO, SO WE CAN PROBABLY TEMOVE THE PLACES QUERY ABOVE, BUT I DIDNT WANT TO BREAK ANYTHING
-  const plannerDetailsQuery = useQuery(GET_PLANNER_DETAILS, {
     variables: { tripId: params.tripId },
   });
 
