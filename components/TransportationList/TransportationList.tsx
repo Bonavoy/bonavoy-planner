@@ -13,6 +13,8 @@ import {
 } from '~/graphql/generated/graphql';
 import ConnectingTransportation from './ConnectingTransportation';
 import DropDownSelect, { DropDownItem } from '../DropDownSelect';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCar, faPlane } from '@fortawesome/free-solid-svg-icons';
 interface TransportationListProps {
   transportation: TransportationFullFragment[][];
   tripId: string;
@@ -24,7 +26,7 @@ const transportationOptions: DropDownItem[] = [
     val: TransportationType.Plane,
     view: (
       <div className="flex items-center justify-start gap-2 px-2 text-xs">
-        <i className="fa-solid fa-plane"></i>
+        <FontAwesomeIcon icon={faPlane} />
         <span>Add flight</span>
       </div>
     ),
@@ -33,7 +35,7 @@ const transportationOptions: DropDownItem[] = [
     val: TransportationType.Car,
     view: (
       <div className="flex items-center justify-start gap-2 px-2 text-xs">
-        <i className="fa-solid fa-car"></i>
+        <FontAwesomeIcon icon={faCar} />
         <span>Add car ride</span>
       </div>
     ),

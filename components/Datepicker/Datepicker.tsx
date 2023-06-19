@@ -11,6 +11,11 @@ import {
 
 //components
 import Calendar from './Calendar';
+import {
+  faChevronLeft,
+  faChevronRight,
+} from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 interface DatepickerProps {
   onSelect: (date: Date) => void;
@@ -68,7 +73,7 @@ const Datepicker = ({ onSelect }: DatepickerProps) => {
             className="hover:bg-disabled/50 absolute left-0 top-1/2 h-8 w-8 -translate-y-1/2 rounded-full transition-colors duration-150"
             onClick={() => setActiveDate(subMonths(activeDate, 1))}
           >
-            <i className="fa-solid fa-chevron-left" />
+            <FontAwesomeIcon icon={faChevronLeft} />
           </button>
           <h2 className="font-bold">
             {activeDate.toLocaleDateString('en-us', {
@@ -92,7 +97,7 @@ const Datepicker = ({ onSelect }: DatepickerProps) => {
             className="hover:bg-disabled/50 absolute right-0 top-1/2 h-8 w-8 -translate-y-1/2 rounded-full transition-colors duration-150"
             onClick={() => setActiveDate(addMonths(activeDate, 1))}
           >
-            <i className="fa-solid fa-chevron-right" />
+            <FontAwesomeIcon icon={faChevronRight} />
           </button>
           <h2 className="font-bold">
             {addMonths(activeDate, 1).toLocaleDateString('en-us', {

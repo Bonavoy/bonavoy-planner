@@ -8,6 +8,8 @@ import { useMutation, useQuery } from '@apollo/client';
 import { GET_USER } from '~/graphql/queries/user';
 import { UPDATE_ACTIVE_ELEMENT } from '~/graphql/mutations/planner';
 import { ActiveElementsContext } from '../ActiveElementsProvider';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCalendar } from '@fortawesome/free-regular-svg-icons';
 
 interface SelectDateButtonProps {
   transportationId: string;
@@ -83,7 +85,10 @@ const SelectDateButton = ({
           }}
         >
           {date ? <span>{formatDatetime(date)}</span> : null}
-          <i className="fa fa-calendar cursor" aria-hidden="true"></i>
+          <FontAwesomeIcon
+            icon={faCalendar}
+            className="fa fa-calendar cursor"
+          />
         </button>
       </ActiveElement>
 

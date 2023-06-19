@@ -8,6 +8,8 @@ import { formatDate } from '~/utils/date';
 
 //types
 import { Place } from '~/graphql/generated/graphql';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faGripVertical } from '@fortawesome/free-solid-svg-icons';
 
 type PlaceListItemProps = {
   place: Place & { index: number };
@@ -78,7 +80,7 @@ export default function PlaceListItem({ place, tripId }: PlaceListItemProps) {
             },
           )}
         >
-          <i className="fa-solid fa-grip-dots-vertical" />
+          <FontAwesomeIcon icon={faGripVertical} />
         </div>
       </div>
     </article>

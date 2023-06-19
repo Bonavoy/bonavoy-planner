@@ -1,10 +1,9 @@
-import apolloClient from '../client';
-
 import { fromPromise } from '@apollo/client';
 import { onError } from '@apollo/client/link/error';
 
 import { REFRESH_TOKEN } from '~/graphql/mutations/user';
 import Router from 'next/router';
+import { client } from './client';
 
 let isRefreshing = false;
 let pendingRequests: Function[] = [];
@@ -21,7 +20,7 @@ const resolvePendingRequests = () => {
 };
 
 const getNewToken = async () => {
-  return await apolloClient.mutate({ mutation: REFRESH_TOKEN });
+  return await client.mutate({ mutation: REFRESH_TOKEN });
 };
 
 const errorLink = onError(({ graphQLErrors, operation, forward }) => {
