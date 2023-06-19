@@ -3,6 +3,7 @@ import { useMutation } from '@apollo/client';
 import cloneDeep from 'lodash.clonedeep';
 import clsx from 'clsx';
 import throttle from 'lodash.throttle';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import {
   TransportationFullFragment,
@@ -17,6 +18,12 @@ import { GET_PLACES } from '~/graphql/queries/place';
 import { TRANSPORTATION_FULL } from '~/graphql/fragments/transportation';
 import Details from '../Details';
 import SelectDateButton from '~/components/SelectDateButton/SelectDateButton';
+import {
+  faCar,
+  faEllipsis,
+  faPaperclip,
+  faPlane,
+} from '@fortawesome/free-solid-svg-icons';
 
 const SECONDS_PER_HOUR = 3600;
 const SECONDS_PER_MIN = 60;
@@ -190,13 +197,13 @@ const TransportationListItem = ({
   return (
     <div className="grid grid-cols-[64px_auto] gap-1 p-3">
       <div className="flex flex-col items-center justify-self-stretch text-center">
-        <i
-          className={clsx('place-self-center justify-self-center text-sm', {
-            'fa-solid fa-plane':
-              transportation.type === TransportationType.Plane,
-            'fa-solid fa-car': transportation.type === TransportationType.Car,
-          })}
+        <FontAwesomeIcon
+          icon={
+            transportation.type === TransportationType.Plane ? faPlane : faCar
+          }
+          className="place-self-center justify-self-center text-sm"
         />
+
         <div className="text-xs">
           {transportation.route?.duration
             ? formatDuration(transportation.route.duration)
@@ -280,7 +287,7 @@ const TransportationListItem = ({
             </button>
 
             <button className="rounded-md px-1 text-black duration-150 hover:bg-surface">
-              <i className="fa-solid fa-paperclip "></i>
+              <FontAwesomeIcon icon={faPaperclip} />
             </button>
           </div>
 
@@ -289,7 +296,7 @@ const TransportationListItem = ({
               className="flex h-6 w-6 items-center justify-center rounded-md text-black duration-150 hover:bg-surface"
               onClick={() => setShowOptionsMenu(!showOptionsMenu)}
             >
-              <i className="fa-solid fa-ellipsis relative" />
+              <FontAwesomeIcon icon={faEllipsis} className="relative" />
             </button>
             {showOptionsMenu && (
               <ul className="absolute top-full z-10 rounded-sm border border-surface bg-white text-xs shadow-md">

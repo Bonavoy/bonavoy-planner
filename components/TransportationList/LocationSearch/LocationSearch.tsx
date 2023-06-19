@@ -7,6 +7,8 @@ import { GET_USER } from '~/graphql/queries/user';
 import clsx from 'clsx';
 import ActiveElement from '~/components/ActiveElement/ActiveElement';
 import debounce from 'lodash.debounce';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faLocationDot } from '@fortawesome/free-solid-svg-icons';
 
 type locationType = 'departureLocation' | 'arrivalLocation';
 
@@ -98,12 +100,13 @@ const LocationSearch = ({
   return (
     <ActiveElement className="rounded-md" elementId={elementId}>
       <div className="relative flex flex-1 items-center gap-2 rounded-md px-2 duration-150 hover:bg-surface">
-        <i
+        {/* <i
           className={clsx('fa-location-dot text-sm', {
             'fa-regular': type === 'departureLocation',
             'fa-solid': type === 'arrivalLocation',
           })}
-        />
+        /> */}
+        <FontAwesomeIcon icon={faLocationDot} className="text-sm" />
         <div className="flex flex-1 items-center gap-2 rounded-md">
           <div className="relative grow bg-transparent">
             <input

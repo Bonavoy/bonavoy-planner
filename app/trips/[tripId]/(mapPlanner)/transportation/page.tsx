@@ -21,6 +21,8 @@ import { cloneDeep } from '@apollo/client/utilities';
 //types
 import { Transportation } from '~/graphql/generated/graphql';
 import { useSearchParams } from 'next/navigation';
+import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 export default function TransportationPage({
   params,
@@ -146,7 +148,7 @@ export default function TransportationPage({
   return (
     <ActiveElementsProvider tripId={params.tripId}>
       <section className="overflow-hidden bg-white">
-        <div className="flex justify-center overflow-auto px-4 py-8 sm:px-12 lg:px-28">
+        <div className="flex h-full justify-center overflow-auto px-4 py-8 sm:px-12 lg:px-28">
           <div className="w-full">
             <h1 className="pb-8 font-heading text-4xl font-bold">
               Transportation
@@ -180,7 +182,7 @@ export default function TransportationPage({
                       </div>
 
                       <div className="shrink text-graySecondary">
-                        <i className="fa-regular fa-arrow-right" />
+                        <FontAwesomeIcon icon={faArrowRight} />
                       </div>
 
                       {/* arrival place */}
@@ -209,8 +211,6 @@ export default function TransportationPage({
             })}
           </div>
         </div>
-
-        {/* <TransportationMap places={getPlacesQuery.data?.places ?? []} /> */}
       </section>
     </ActiveElementsProvider>
   );

@@ -16,6 +16,14 @@ import { LISTEN_AUTHORS_PRESENT } from '~/graphql/subscriptions/planner';
 
 //types
 import { PlannerDetailsQuery } from '~/graphql/generated/graphql';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  faBook,
+  faChevronLeft,
+  faPen,
+  faPlane,
+  faStickyNote,
+} from '@fortawesome/free-solid-svg-icons';
 
 export type HeaderProps = {
   tripId: string;
@@ -81,15 +89,15 @@ export default function Header({ tripId, mode, details }: HeaderProps) {
   const navs = [
     {
       name: 'planner',
-      icon: <i className="fa-solid fa-book" />,
+      icon: <FontAwesomeIcon icon={faBook} />,
     },
     {
       name: 'transportation',
-      icon: <i className="fa-regular fa-plane" />,
+      icon: <FontAwesomeIcon icon={faPlane} />,
     },
     {
       name: 'notes',
-      icon: <i className="fa-solid fa-note" />,
+      icon: <FontAwesomeIcon icon={faStickyNote} />,
     },
   ];
 
@@ -98,7 +106,10 @@ export default function Header({ tripId, mode, details }: HeaderProps) {
       <header className="flex h-20 flex-shrink-0 items-center justify-between border-b border-b-grayPrimary/20 bg-background px-8 shadow-lg">
         <div className="flex items-center gap-6">
           <Link href="/trips">
-            <i className="fa-solid fa-chevron-left text-lg text-primary" />
+            <FontAwesomeIcon
+              icon={faChevronLeft}
+              className="text-lg text-primary"
+            />
           </Link>
           <div className="relative w-96 rounded-xl bg-surface">
             <input
@@ -108,7 +119,10 @@ export default function Header({ tripId, mode, details }: HeaderProps) {
               className="w-full rounded-xl bg-transparent px-4 py-1 text-lg font-semibold transition-shadow duration-150 placeholder:font-normal focus:shadow-md focus:outline-none"
               placeholder="Name your adventure"
             />
-            <i className="fa-regular fa-pen absolute right-4 top-1/2 -translate-y-1/2 text-sm text-grayPrimary" />
+            <FontAwesomeIcon
+              icon={faPen}
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-sm text-grayPrimary"
+            />
           </div>
 
           <div className="flex justify-center rounded-xl bg-surface text-sm">

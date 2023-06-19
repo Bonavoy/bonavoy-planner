@@ -20,6 +20,8 @@ import {
   REMOVE_AUTHOR_ON_TRIP,
   UPDATE_AUTHOR_ON_TRIP_ROLE,
 } from '~/graphql/mutations/authorsOnTrips';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faX } from '@fortawesome/free-solid-svg-icons';
 
 const Skeleton = () => {
   return (
@@ -152,7 +154,7 @@ const Invite = ({ tripId, onClose }: InviteProps) => {
         <div className="flex items-start justify-between">
           <h1 className="font-heading text-3xl font-semibold">Invite</h1>
           <button className="text-sm text-grayPrimary" onClick={onClose}>
-            <i className="fa-solid fa-x" />
+            <FontAwesomeIcon icon={faX} />
           </button>
         </div>
         <form
